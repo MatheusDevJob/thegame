@@ -28,7 +28,7 @@ public class Hud
         spriteBatch.Draw(_pixel, box, new Color(0, 0, 0, 180));
 
         Rectangle lifeBackground = new(35, 45, 180, 14);
-        Rectangle lifeBar = new(35, 45, 140, 14);
+        Rectangle lifeBar = new(35, 45, (int)_context.State.Player.Life, 14);
 
         spriteBatch.Draw(_pixel, lifeBackground, new Color(80, 80, 80, 220));
         spriteBatch.Draw(_pixel, lifeBar, new Color(180, 40, 40, 255));

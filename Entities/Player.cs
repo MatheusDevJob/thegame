@@ -27,7 +27,7 @@ public class Player : Entity
     private readonly float _scale = 1f;
     private readonly float _speed = 60f;
 
-    public Player(GameContext context, GameSave save) : base(context, new Vector2(1200, 200), save.PlayerLife)
+    public Player(GameContext context, GameSave save) : base(context, save.PlayerPosition, save.PlayerLife)
     {
         _texture = Context.Content.Load<Texture2D>("Cute_Fantasy_Free/Player/Player");
         AtualizarHitbox();

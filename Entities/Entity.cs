@@ -14,7 +14,7 @@ public abstract class Entity
     public virtual bool BloqueiaMovimento => true;
     public virtual float SortY => Hitbox.Bottom;
 
-    protected float Life;
+    public float Life;
     protected Entity(GameContext context, Vector2 posicao, float life)
     {
         Context = context;

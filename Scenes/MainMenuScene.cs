@@ -46,7 +46,11 @@ public class MainMenuScene : IScene
 
             // Troca para a cena do jogo.
             // A GameScene recebe o mesmo GameContext, então acessa o mesmo World, TimeSystem, Content, etc.
-            _context.State = new GameState(_context, new GameSave());
+            _context.State = new GameState(_context, new GameSave
+            {
+                PlayerLife = 75f,
+                PlayerPosition = new Vector2(100, 230)
+            });
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }
 
