@@ -12,7 +12,7 @@ public class Tronco : Entity
 
     private readonly Texture2D _sprite;
 
-    public Tronco(GameContext context, Vector2 posicao) : base(context, posicao)
+    public Tronco(GameContext context, Vector2 posicao) : base(context, posicao, 3)
     {
         _sprite = context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Oak_Tree_Small");
         AtualizarHitbox();

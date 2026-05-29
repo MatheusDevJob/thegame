@@ -4,7 +4,8 @@ using thegame.Entities;
 
 namespace thegame.Core;
 
-public class GameState(GameContext context)
+public class GameState(GameContext context, GameSave gameSave)
 {
-    public Player Player { get; } = new Player(context);
+    public GameSave PlayerSave = gameSave;
+    public Player Player { get; } = new Player(context, gameSave);
 }

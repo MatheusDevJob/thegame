@@ -14,10 +14,12 @@ public abstract class Entity
     public virtual bool BloqueiaMovimento => true;
     public virtual float SortY => Hitbox.Bottom;
 
-    protected Entity(GameContext context, Vector2 posicao)
+    protected float Life;
+    protected Entity(GameContext context, Vector2 posicao, float life)
     {
         Context = context;
         Posicao = posicao;
+        Life = life;
         AtualizarHitbox();
     }
 

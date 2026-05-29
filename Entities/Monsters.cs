@@ -3,7 +3,7 @@ using thegame.Core;
 
 namespace thegame.Entities;
 
-public abstract class Monsters(GameContext context, Vector2 posicao, Player player) : Entity(context, posicao)
+public abstract class Monsters(GameContext context, Vector2 posicao, Player player) : Entity(context, posicao, 10)
 {
     public int Health { get; protected set; }
     public float Damage { get; protected set; }

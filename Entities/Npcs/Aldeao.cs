@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
 namespace thegame.Entities.Npcs;
 
