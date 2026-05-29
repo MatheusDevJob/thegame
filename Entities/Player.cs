@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,7 +20,7 @@ public class Player : Entity
     public Vector2 Center => Posicao + new Vector2(_frameWidth * _scale / 2f, _frameHeight * _scale / 2f);
 
     private SpriteEffects _spriteEffects = SpriteEffects.None;
-    private readonly int _frameWidth = 32;
+    private readonly int _frameWidth = 64;
     private readonly int _frameHeight = 32;
     private int _currentFrame;
     private int _currentRow;
@@ -26,10 +28,12 @@ public class Player : Entity
     private readonly double _frameSpeed = 0.12;
     private readonly float _scale = 1f;
     private readonly float _speed = 60f;
-
+    private readonly Texture2D _hitboxPixel;
     public Player(GameContext context, GameSave save) : base(context, save.PlayerPosition, save.PlayerLife)
     {
-        _texture = Context.Content.Load<Texture2D>("Cute_Fantasy_Free/Player/Player");
+        _texture = Context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes");
+        _hitboxPixel = new Texture2D(Context.GraphicsDevice, 1, 1);
+        _hitboxPixel.SetData([Color.White]);
         AtualizarHitbox();
     }
 
@@ -41,39 +45,44 @@ public class Player : Entity
     public void Update(GameTime gameTime, Func<Rectangle, bool> collides = null)
     {
         KeyboardState keyboard = Keyboard.GetState();
+        MouseState mouse = Mouse.GetState();
+
         Vector2 direction = Vector2.Zero;
         float speed = _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         if (keyboard.IsKeyDown(Keys.D))
         {
             direction.X += 1;
-            _currentRow = 1;
+            _currentRow = 0;
             _spriteEffects = SpriteEffects.None;
         }
 
         if (keyboard.IsKeyDown(Keys.A))
         {
             direction.X -= 1;
-            _currentRow = 1;
+            _currentRow = 0;
             _spriteEffects = SpriteEffects.FlipHorizontally;
         }
 
         if (keyboard.IsKeyDown(Keys.S))
         {
             direction.Y += 1;
-            _currentRow = 3;
+            _currentRow = 0;
         }
 
         if (keyboard.IsKeyDown(Keys.W))
         {
             direction.Y -= 1;
-            _currentRow = 2;
+            _currentRow = 0;
         }
 
         bool moving = direction != Vector2.Zero;
         Vector2 oldPosition = Posicao;
-
-        if (moving)
+        if (mouse.LeftButton == ButtonState.Pressed)
+        {
+            UpdateAnimation(gameTime, 1);
+        }
+        else if (moving)
         {
             direction.Normalize();
             Vector2 velocity = direction * speed;
@@ -89,7 +98,7 @@ public class Player : Entity
                 DefinirPosicao(nextPositionY);
 
             if (Posicao != oldPosition)
-                UpdateAnimation(gameTime);
+                UpdateAnimation(gameTime, 8);
             else
                 _currentFrame = 0;
         }
@@ -108,13 +117,13 @@ public class Player : Entity
 
         return new Rectangle(
             (int)posicao.X + (int)(width * 0.25f),
-            (int)posicao.Y + (int)(height * 0.65f),
-            (int)(width * 0.5f),
-            (int)(height * 0.25f)
+            (int)posicao.Y + (int)(height * 0.70f),
+            (int)(14 * _scale),
+            (int)(10 * _scale)
         );
     }
 
-    private void UpdateAnimation(GameTime gameTime)
+    private void UpdateAnimation(GameTime gameTime, int frames)
     {
         _timer += gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -123,7 +132,7 @@ public class Player : Entity
             _timer = 0;
             _currentFrame++;
 
-            if (_currentFrame >= 6)
+            if (_currentFrame >= frames)
                 _currentFrame = 0;
         }
     }
@@ -142,6 +151,9 @@ public class Player : Entity
             (float)Math.Round(Posicao.Y)
         );
 
+        if (_spriteEffects == SpriteEffects.FlipHorizontally)
+            drawPosition.X -= 19f * _scale;
+
         spriteBatch.Draw(
             _texture,
             drawPosition,
@@ -153,10 +165,16 @@ public class Player : Entity
             _spriteEffects,
             0f
         );
+
+        // usado apenas para acompanhar a hitbox do player
+        // DrawRectangle(spriteBatch, Hitbox, Color.Red, 1);
     }
 
-    public Rectangle GetHitbox()
+    private void DrawRectangle(SpriteBatch spriteBatch, Rectangle rectangle, Color color, int thickness = 1)
     {
-        return Hitbox;
+        spriteBatch.Draw(_hitboxPixel, new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, thickness), color);
+        spriteBatch.Draw(_hitboxPixel, new Rectangle(rectangle.X, rectangle.Bottom - thickness, rectangle.Width, thickness), color);
+        spriteBatch.Draw(_hitboxPixel, new Rectangle(rectangle.X, rectangle.Y, thickness, rectangle.Height), color);
+        spriteBatch.Draw(_hitboxPixel, new Rectangle(rectangle.Right - thickness, rectangle.Y, thickness, rectangle.Height), color);
     }
 }

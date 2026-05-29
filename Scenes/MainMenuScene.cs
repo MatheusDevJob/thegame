@@ -49,7 +49,7 @@ public class MainMenuScene : IScene
             _context.State = new GameState(_context, new GameSave
             {
                 PlayerLife = 75f,
-                PlayerPosition = new Vector2(100, 230)
+                PlayerPosition = new Vector2(1200, 220)
             });
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }

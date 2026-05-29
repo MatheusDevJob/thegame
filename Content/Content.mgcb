@@ -728,6 +728,18 @@
 /processorParam:TextureFormat=Color
 /build:npc-pack/Woman/Woman Walk-Sheet.png;npc-pack/Woman/Woman Walk-Sheet
 
+#begin Player/spr_basecharacter_allframes.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Player/spr_basecharacter_allframes.png
+
 #begin Sprout Lands - UI Pack - Basic pack/emojis-free/emoji style ui/Inventory_Blocks_Spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
