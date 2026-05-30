@@ -12,6 +12,7 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private SceneManager _sceneManager;
     private GameContext _context;
+    private Texture2D _cursorTexture;
 
     public Game1()
     {
@@ -22,7 +23,6 @@ public class Game1 : Game
         };
 
         Content.RootDirectory = "Content";
-        IsMouseVisible = true;
     }
 
     protected override void Initialize()
@@ -43,6 +43,10 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        _cursorTexture = Content.Load<Texture2D>("UI/cursor/cursor_03");
+        IsMouseVisible = false;
+
         _context.LoadContent();
         _sceneManager.ChangeScene(new MainMenuScene(_context));
     }
@@ -59,6 +63,26 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         _sceneManager.Draw(_spriteBatch);
+        _spriteBatch.Begin();
+        DrawCursor(_spriteBatch);
+        _spriteBatch.End();
         base.Draw(gameTime);
+    }
+
+    private void DrawCursor(SpriteBatch spriteBatch)
+    {
+        MouseState mouse = Mouse.GetState();
+
+        spriteBatch.Draw(
+            _cursorTexture,
+            new Vector2(mouse.X, mouse.Y),
+            null,
+            Color.White,
+            0f,
+            Vector2.Zero,
+            1.3f,
+            SpriteEffects.None,
+            0f
+        );
     }
 }
