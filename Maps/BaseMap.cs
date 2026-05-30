@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Entities.Items;
+using thegame.Entities.Tools;
 
 namespace thegame.Maps;
 
@@ -103,8 +105,27 @@ public abstract class BaseMap : IMap
 
     protected virtual void OnEntityClicked(Entity entity)
     {
-        // Context.State.PlayerSave.
-        logs.Add("EVENTO FUNCIONOOOOOOOOOOOOOOOOOOOOOOOOOOOOU");
+        switch (entity)
+        {
+            case Tronco tronco when Context.State.Player.ActiveTool is AxeTool tool:
+                if (Context.State.Player.IsAnimated)
+                    return;
+
+                Context.State.Player.PlayActionAnimation(10, 8, () =>
+                {
+                    tronco.Life -= tool.Damage;
+
+                    logs.Add($"Machadada no tronco! Vida restante: {tronco.Life}");
+
+                    if (tronco.Life <= 0)
+                        EntityWorld.Remove(tronco);
+                });
+
+                break;
+
+            default:
+                return;
+        }
     }
 
     protected virtual void OnTileClicked(Point tile)

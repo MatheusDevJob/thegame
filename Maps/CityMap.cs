@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
-using thegame.Entities.Items;
 using thegame.Entities.Npcs;
 
 namespace thegame.Maps;
@@ -37,21 +36,6 @@ public class CityMap : BaseMap
             //     ));
             // }
         }
-    }
-
-    protected override void OnEntityClicked(Entity entity)
-    {
-        logs.Add($"Clicou na entidade! -> {entity.Posicao.X} - {entity.Posicao.Y} | Life => {entity.Life}");
-        if (entity is Tronco tronco)
-        {
-            // clicou no tronco
-        }
-        else if (entity is Npc npc)
-        {
-            // clicou no NPC
-        }
-
-        base.OnEntityClicked(entity);
     }
 
     protected override void OnTileClicked(Point tile)

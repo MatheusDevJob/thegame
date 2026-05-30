@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Maps;
 
 namespace thegame.UI;
 
@@ -98,7 +99,7 @@ public class Hud
         int startX = (screenWidth - totalWidth) / 2;
         int y = screenHeight - 80;
 
-        List<Entity> ListTools = _context.State.PlayerSave.ListTools;
+        List<string> ListTools = _context.State.PlayerSave.ListTools;
 
         for (int i = 0; i < boxes.Count; i++)
         {
@@ -106,7 +107,7 @@ public class Hud
                 continue;
 
             int x = startX + (boxes[i] - minX);
-            Entity tool = ListTools[i];
+            Entity tool = EntityFactory.Create(_context, new TiledObjectData { Type = ListTools[i], X = 1, Y = 1 });
 
             if (tool == null || tool.Sprite == null)
                 continue;

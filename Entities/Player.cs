@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
+using thegame.Maps;
 
 namespace thegame.Entities;
 
@@ -29,13 +28,21 @@ public class Player : Entity
     private readonly float _scale = 1f;
     private readonly float _speed = 60f;
     private readonly Texture2D _hitboxPixel;
-    private bool _isAnimated;
+    public bool _isAnimated;
+    public readonly GameSave ActualGameSave;
+    public Entity ActiveTool;
+    private Action _onAnimationFinished;
+    private int _animationFrames;
+    public bool IsAnimated => _isAnimated;
     public Player(GameContext context, GameSave save) : base(context, "Player/spr_basecharacter_allframes", save.PlayerPosition, save.PlayerLife)
     {
         _texture = Context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes");
         _hitboxPixel = new Texture2D(Context.GraphicsDevice, 1, 1);
         _hitboxPixel.SetData([Color.White]);
         AtualizarHitbox();
+
+        ActualGameSave = save;
+        ActiveTool = EntityFactory.Create(context, new TiledObjectData { Type = save.ActiveTool, X = 1, Y = 1 });
     }
 
     public override void Update(GameTime gameTime)
@@ -47,15 +54,7 @@ public class Player : Entity
     {
         if (_isAnimated)
         {
-            UpdateAnimation(gameTime, 8);
-            return;
-        }
-
-        if (Context.Input.IsLeftClickPressed())
-        {
-            _isAnimated = true;
-            _currentFrame = 0;
-            _currentRow = 10;
+            UpdateAnimation(gameTime, _animationFrames);
             return;
         }
 
@@ -121,6 +120,19 @@ public class Player : Entity
         AtualizarHitbox();
     }
 
+    public void PlayActionAnimation(int row, int frames, Action onFinished)
+    {
+        if (_isAnimated)
+            return;
+
+        _isAnimated = true;
+        _currentFrame = 0;
+        _currentRow = row;
+        _timer = 0;
+        _animationFrames = frames;
+        _onAnimationFinished = onFinished;
+    }
+
     protected override Rectangle CalcularHitbox(Vector2 posicao)
     {
         int width = (int)(_frameWidth * _scale);
@@ -138,17 +150,20 @@ public class Player : Entity
     {
         _timer += gameTime.ElapsedGameTime.TotalSeconds;
 
-        if (_timer >= _frameSpeed)
-        {
-            _timer = 0;
-            _currentFrame++;
+        if (_timer < _frameSpeed)
+            return;
 
-            if (_currentFrame >= frames)
-            {
-                _currentFrame = 0;
-                _isAnimated = false;
-            }
-        }
+        _timer = 0;
+        _currentFrame++;
+
+        if (_currentFrame < frames)
+            return;
+
+        _currentFrame = 0;
+        _isAnimated = false;
+
+        _onAnimationFinished?.Invoke();
+        _onAnimationFinished = null;
     }
 
     public override void Draw(SpriteBatch spriteBatch)

@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
+using thegame.Entities;
 using thegame.Entities.Tools;
 
 namespace thegame.Scenes;
@@ -62,12 +64,13 @@ public class MainMenuScene : IScene
             // int startX = (screenWidth - totalWidth) / 2;
             // int y = screenHeight - 80;
 
-
+            List<string> lista = ["axe"];
             _context.State = new GameState(_context, new GameSave
             {
                 PlayerLife = 75f,
                 PlayerPosition = new Vector2(1200, 220),
-                ListTools = [new AxeTool(_context, new Vector2())]
+                ListTools = lista,
+                ActiveTool = lista[0],
             });
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }

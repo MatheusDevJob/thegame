@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities.Items;
 using thegame.Entities.Npcs;
+using thegame.Entities.Tools;
 using thegame.Maps;
 
 namespace thegame.Entities;
@@ -17,6 +18,7 @@ public static class EntityFactory
             // "Pedra" => new Pedra(context, posicao),
 
             "tronco" => new Tronco(context, posicao),
+            "axe" => new AxeTool(context, posicao),
 
             _ => null
         };

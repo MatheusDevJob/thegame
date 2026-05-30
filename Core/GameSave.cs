@@ -13,5 +13,6 @@ public class GameSave
         itens do player
     */
 
-    public List<Entity> ListTools { get; set; }
+    public List<string> ListTools { get; set; }
+    public string ActiveTool { get; set; }
 }
