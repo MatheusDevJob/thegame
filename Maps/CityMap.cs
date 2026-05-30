@@ -41,9 +41,9 @@ public class CityMap : BaseMap
 
     protected override void OnEntityClicked(Entity entity)
     {
+        logs.Add($"Clicou na entidade! -> {entity.Posicao.X} - {entity.Posicao.Y} | Life => {entity.Life}");
         if (entity is Tronco tronco)
         {
-            Debug.WriteLine("Clicou! -> " + tronco.Posicao.X + " - " + tronco.Posicao.Y);
             // clicou no tronco
             return;
         }
@@ -57,7 +57,7 @@ public class CityMap : BaseMap
 
     protected override void OnTileClicked(Point tile)
     {
-        Debug.WriteLine("Clicou no tile! -> " + tile.X + " - " + tile.Y);
+        logs.Add($"Clicou no tile! -> {tile.X} - {tile.Y}");
         // clicou no chão/tile
     }
 

@@ -54,6 +54,7 @@ public abstract class BaseMap : IMap
         if (isKeyPressed)
         {
             Entity entity = EntityUnderMouse;
+            logs.Add("\n");
 
             if (entity != null)
             {
@@ -69,8 +70,8 @@ public abstract class BaseMap : IMap
                 OnTileClicked(_tileCursor.TilePosition);
             }
 
-            if (logs.Count > 30)
-                logs.RemoveRange(0, logs.Count - 30);
+            if (logs.Count > 6)
+                logs.RemoveRange(0, logs.Count - 6);
         }
 
         UpdateMap(gameTime);

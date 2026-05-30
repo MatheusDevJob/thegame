@@ -7,14 +7,16 @@ namespace thegame.Entities.Items;
 
 public class Tronco : Entity
 {
-    private const int FrameWidth = 32;
-    private const int FrameHeight = 48;
+    private const int FrameWidth = 16;
+    private const int FrameHeight = 16;
+    private const int SpriteRow = 5;
+    private const int SpriteColumn = 31;
 
     private readonly Texture2D _sprite;
 
     public Tronco(GameContext context, Vector2 posicao) : base(context, posicao, 3)
     {
-        _sprite = context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Oak_Tree_Small");
+        _sprite = context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px");
         AtualizarHitbox();
     }
 
@@ -27,7 +29,12 @@ public class Tronco : Entity
             FrameHeight
         );
 
-        Rectangle source = new(0, 0, FrameWidth, FrameHeight);
+        Rectangle source = new(
+            SpriteColumn * FrameWidth,
+            SpriteRow * FrameHeight,
+            FrameWidth,
+            FrameHeight
+        );
 
         spriteBatch.Draw(_sprite, destination, source, Color.White);
     }
@@ -39,10 +46,10 @@ public class Tronco : Entity
     protected override Rectangle CalcularHitbox(Vector2 posicao)
     {
         return new Rectangle(
-            (int)posicao.X + 13,
-            (int)posicao.Y + 30,
-            6,
-            5
+            (int)posicao.X,
+            (int)posicao.Y,
+            FrameWidth,
+            FrameHeight
         );
     }
 }
