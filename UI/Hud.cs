@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
@@ -8,20 +10,30 @@ public class Hud
 {
     private readonly GameContext _context;
     private readonly Texture2D _pixel;
+    private readonly Texture2D _hudBoxItem;
+    private readonly Texture2D _hudAxeItem;
+    private readonly int _scale = 2;
+
+    public readonly List<int> boxes = [20, 60, 100, 140, 180, 220, 260];
+    public int screenWidth;
+    public int screenHeight;
 
     public Hud(GameContext context)
     {
         _context = context;
         _pixel = new Texture2D(_context.GraphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
+
+        _hudBoxItem = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
+        _hudAxeItem = context.Content.Load<Texture2D>("UI/Hud/axe");
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         Viewport viewport = _context.GraphicsDevice.Viewport;
 
-        int screenWidth = viewport.Width;
-        int screenHeight = viewport.Height;
+        screenWidth = viewport.Width;
+        screenHeight = viewport.Height;
 
         Rectangle box = new(20, 20, 220, 70);
 
@@ -38,8 +50,65 @@ public class Hud
         Rectangle moneyBox = new(screenWidth - 220, 20, 200, 50);
         spriteBatch.Draw(_pixel, moneyBox, new Color(0, 0, 0));
 
-
-        Rectangle bottomBox = new(20, screenHeight - 80, 300, 60);
-        spriteBatch.Draw(_pixel, bottomBox, new Color(0, 0, 0));
+        DrawItensBar(spriteBatch);
+        DrawItensOnBar(spriteBatch);
     }
+
+    private void DrawItensBar(SpriteBatch spriteBatch)
+    {
+        Viewport viewport = _context.GraphicsDevice.Viewport;
+
+        int screenWidth = viewport.Width;
+        int screenHeight = viewport.Height;
+
+        int itemWidth = 18 * _scale;
+        int itemHeight = 19 * _scale;
+
+        int minX = boxes.Min();
+        int maxX = boxes.Max() + itemWidth;
+        int totalWidth = maxX - minX;
+
+        int startX = (screenWidth - totalWidth) / 2;
+        int y = screenHeight - 80;
+
+        for (int i = 0; i < boxes.Count; i++)
+        {
+            int x = startX + (boxes[i] - minX);
+
+            Rectangle bottomBox = new(x, y, itemWidth, itemHeight);
+            spriteBatch.Draw(_hudBoxItem, bottomBox, Color.White);
+        }
+    }
+
+private void DrawItensOnBar(SpriteBatch spriteBatch)
+{
+    Viewport viewport = _context.GraphicsDevice.Viewport;
+
+    int screenWidth = viewport.Width;
+    int screenHeight = viewport.Height;
+
+    int itemWidth = 18 * _scale;
+    int itemHeight = 19 * _scale;
+
+    int minX = boxes.Min();
+    int maxX = boxes.Max() + itemWidth;
+    int totalWidth = maxX - minX;
+
+    int startX = (screenWidth - totalWidth) / 2;
+    int y = screenHeight - 80;
+
+    for (int i = 0; i < boxes.Count; i++)
+    {
+        int x = startX + (boxes[i] - minX);
+
+        Rectangle itemRect = new(
+            x + 6,
+            y + 4,
+            itemWidth - 12,
+            itemHeight - 8
+        );
+
+        spriteBatch.Draw(_hudAxeItem, itemRect, Color.White);
+    }
+}
 }
