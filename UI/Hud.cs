@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
+using thegame.Entities;
 
 namespace thegame.UI;
 
@@ -11,7 +12,7 @@ public class Hud
     private readonly GameContext _context;
     private readonly Texture2D _pixel;
     private readonly Texture2D _hudBoxItem;
-    private readonly Texture2D _hudAxeItem;
+    // private readonly Texture2D _hudAxeItem;
     private readonly int _scale = 3;
 
     public readonly List<int> boxes = [20, 74, 128, 182, 236, 290, 344];
@@ -25,7 +26,7 @@ public class Hud
         _pixel.SetData([Color.White]);
 
         _hudBoxItem = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
-        _hudAxeItem = context.Content.Load<Texture2D>("UI/Hud/axe");
+        // _hudAxeItem = context.Content.Load<Texture2D>("Items/axe");
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -97,9 +98,18 @@ public class Hud
         int startX = (screenWidth - totalWidth) / 2;
         int y = screenHeight - 80;
 
+        List<Entity> ListTools = _context.State.PlayerSave.ListTools;
+
         for (int i = 0; i < boxes.Count; i++)
         {
+            if (i >= ListTools.Count)
+                continue;
+
             int x = startX + (boxes[i] - minX);
+            Entity tool = ListTools[i];
+
+            if (tool == null || tool.Sprite == null)
+                continue;
 
             Rectangle itemRect = new(
                 x + 6,
@@ -108,7 +118,7 @@ public class Hud
                 itemHeight - 8
             );
 
-            spriteBatch.Draw(_hudAxeItem, itemRect, Color.White);
+            spriteBatch.Draw(tool.Sprite, itemRect, Color.White);
         }
     }
 }

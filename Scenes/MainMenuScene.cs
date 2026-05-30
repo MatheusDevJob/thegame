@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
+using thegame.Entities.Tools;
 
 namespace thegame.Scenes;
 
@@ -46,10 +47,27 @@ public class MainMenuScene : IScene
 
             // Troca para a cena do jogo.
             // A GameScene recebe o mesmo GameContext, então acessa o mesmo World, TimeSystem, Content, etc.
+            // Viewport viewport = _context.GraphicsDevice.Viewport;
+
+            // int screenWidth = viewport.Width;
+            // int screenHeight = viewport.Height;
+
+            // int itemWidth = 18 * _scale;
+            // int itemHeight = 19 * _scale;
+
+            // int minX = boxes.Min();
+            // int maxX = boxes.Max() + itemWidth;
+            // int totalWidth = maxX - minX;
+
+            // int startX = (screenWidth - totalWidth) / 2;
+            // int y = screenHeight - 80;
+
+
             _context.State = new GameState(_context, new GameSave
             {
                 PlayerLife = 75f,
-                PlayerPosition = new Vector2(1200, 220)
+                PlayerPosition = new Vector2(1200, 220),
+                ListTools = [new AxeTool(_context, new Vector2())]
             });
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }

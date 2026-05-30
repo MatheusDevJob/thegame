@@ -45,14 +45,13 @@ public class CityMap : BaseMap
         if (entity is Tronco tronco)
         {
             // clicou no tronco
-            return;
         }
-
-        if (entity is Npc npc)
+        else if (entity is Npc npc)
         {
             // clicou no NPC
-            return;
         }
+
+        base.OnEntityClicked(entity);
     }
 
     protected override void OnTileClicked(Point tile)

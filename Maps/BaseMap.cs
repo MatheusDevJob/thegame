@@ -103,6 +103,8 @@ public abstract class BaseMap : IMap
 
     protected virtual void OnEntityClicked(Entity entity)
     {
+        // Context.State.PlayerSave.
+        logs.Add("EVENTO FUNCIONOOOOOOOOOOOOOOOOOOOOOOOOOOOOU");
     }
 
     protected virtual void OnTileClicked(Point tile)

@@ -30,7 +30,7 @@ public class Player : Entity
     private readonly float _speed = 60f;
     private readonly Texture2D _hitboxPixel;
     private bool _isAnimated;
-    public Player(GameContext context, GameSave save) : base(context, save.PlayerPosition, save.PlayerLife)
+    public Player(GameContext context, GameSave save) : base(context, "Player/spr_basecharacter_allframes", save.PlayerPosition, save.PlayerLife)
     {
         _texture = Context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes");
         _hitboxPixel = new Texture2D(Context.GraphicsDevice, 1, 1);

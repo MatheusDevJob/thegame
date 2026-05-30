@@ -15,11 +15,15 @@ public abstract class Entity
     public virtual float SortY => Hitbox.Bottom;
 
     public float Life;
-    protected Entity(GameContext context, Vector2 posicao, float life)
+    public float Damage;
+    public readonly Texture2D Sprite;
+    protected Entity(GameContext context, string sprite, Vector2 posicao, float life = 0, float damage = 0)
     {
         Context = context;
         Posicao = posicao;
         Life = life;
+        Damage = damage;
+        Sprite = context.Content.Load<Texture2D>(sprite);
         AtualizarHitbox();
     }
 
