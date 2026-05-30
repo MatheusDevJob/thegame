@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Scenes;
 
@@ -37,7 +38,6 @@ public class Game1 : Game
         );
 
         base.Initialize();
-        IsMouseVisible = true;
     }
 
     protected override void LoadContent()
@@ -51,6 +51,8 @@ public class Game1 : Game
     {
         _context.Input.Update();
         _sceneManager.Update(gameTime);
+        if (_context.Input.IsKeyPressed(Keys.Escape))
+            Exit();
         base.Update(gameTime);
     }
 

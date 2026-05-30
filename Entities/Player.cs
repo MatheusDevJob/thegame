@@ -21,7 +21,7 @@ public class Player : Entity
 
     private SpriteEffects _spriteEffects = SpriteEffects.None;
     private readonly int _frameWidth = 64;
-    private readonly int _frameHeight = 32;
+    private readonly int _frameHeight = 34;
     private int _currentFrame;
     private int _currentRow;
     private double _timer;
@@ -29,6 +29,7 @@ public class Player : Entity
     private readonly float _scale = 1f;
     private readonly float _speed = 60f;
     private readonly Texture2D _hitboxPixel;
+    private bool _isAnimated;
     public Player(GameContext context, GameSave save) : base(context, save.PlayerPosition, save.PlayerLife)
     {
         _texture = Context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes");
@@ -44,8 +45,21 @@ public class Player : Entity
 
     public void Update(GameTime gameTime, Func<Rectangle, bool> collides = null)
     {
+        if (_isAnimated)
+        {
+            UpdateAnimation(gameTime, 8);
+            return;
+        }
+
+        if (Context.Input.IsLeftClickPressed())
+        {
+            _isAnimated = true;
+            _currentFrame = 0;
+            _currentRow = 10;
+            return;
+        }
+
         KeyboardState keyboard = Keyboard.GetState();
-        MouseState mouse = Mouse.GetState();
 
         Vector2 direction = Vector2.Zero;
         float speed = _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -78,11 +92,8 @@ public class Player : Entity
 
         bool moving = direction != Vector2.Zero;
         Vector2 oldPosition = Posicao;
-        if (mouse.LeftButton == ButtonState.Pressed)
-        {
-            UpdateAnimation(gameTime, 1);
-        }
-        else if (moving)
+
+        if (moving)
         {
             direction.Normalize();
             Vector2 velocity = direction * speed;
@@ -133,7 +144,10 @@ public class Player : Entity
             _currentFrame++;
 
             if (_currentFrame >= frames)
+            {
                 _currentFrame = 0;
+                _isAnimated = false;
+            }
         }
     }
 
