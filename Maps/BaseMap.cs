@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -55,6 +56,12 @@ public abstract class BaseMap : IMap
 
         if (isKeyPressed)
         {
+            if (IsClickFartherThanPlayer(tileCursor.TilePosition))
+            {
+                logs.Add("Entidade muito longe.");
+                return;
+            }
+
             Entity entity = EntityUnderMouse;
             logs.Add("\n");
 
@@ -131,6 +138,21 @@ public abstract class BaseMap : IMap
     protected virtual void OnTileClicked(Point tile)
     {
     }
+    protected bool IsClickFartherThanPlayer(Point clickedTile, int maxTiles = 2)
+    {
+        int tileSize = 16;
+
+        Point playerTile = new(
+            Context.State.Player.Hitbox.Center.X / tileSize,
+            Context.State.Player.Hitbox.Center.Y / tileSize
+        );
+
+        int distanceX = Math.Abs(clickedTile.X - playerTile.X);
+        int distanceY = Math.Abs(clickedTile.Y - playerTile.Y);
+
+        return distanceX > maxTiles || distanceY > maxTiles;
+    }
+
     public virtual void DrawDebug(SpriteBatch spriteBatch)
     {
         debugVisual.Draw(spriteBatch, logs);
