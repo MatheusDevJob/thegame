@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Entities.Items;
 using thegame.Entities.Npcs;
 
 namespace thegame.Maps;
@@ -37,6 +39,27 @@ public class CityMap : BaseMap
         }
     }
 
+    protected override void OnEntityClicked(Entity entity)
+    {
+        if (entity is Tronco tronco)
+        {
+            Debug.WriteLine("Clicou! -> " + tronco.Posicao.X + " - " + tronco.Posicao.Y);
+            // clicou no tronco
+            return;
+        }
+
+        if (entity is Npc npc)
+        {
+            // clicou no NPC
+            return;
+        }
+    }
+
+    protected override void OnTileClicked(Point tile)
+    {
+        Debug.WriteLine("Clicou no tile! -> " + tile.X + " - " + tile.Y);
+        // clicou no chão/tile
+    }
 
     protected override void UpdateMap(GameTime gameTime)
     {

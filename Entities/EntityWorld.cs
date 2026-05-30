@@ -55,4 +55,15 @@ public class EntityWorld
         foreach (Entity entity in _entities.Concat(extras).Distinct().OrderBy(entity => entity.SortY))
             entity.Draw(spriteBatch);
     }
+
+    public Entity GetEntityAt(Vector2 worldPosition, Entity ignore = null)
+    {
+        Point point = new((int)worldPosition.X, (int)worldPosition.Y);
+
+        return _entities
+            .Where(entity => entity != ignore)
+            .Where(entity => entity.Hitbox.Contains(point))
+            .OrderByDescending(entity => entity.SortY)
+            .FirstOrDefault();
+    }
 }

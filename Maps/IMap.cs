@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using thegame.Core;
 
 namespace thegame.Maps;
 
@@ -10,7 +11,8 @@ public interface IMap
 
     void OnEnter();
     void OnExit();
-    void Update(GameTime gameTime);
+    void Update(GameTime gameTime, TileCursor tileCursor);
     void Draw(SpriteBatch spriteBatch);
+    void DrawDebug(SpriteBatch spriteBatch);
     bool Collides(Rectangle hitbox);
 }

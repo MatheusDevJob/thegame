@@ -14,6 +14,7 @@ public class GameScene : IScene
     private IMap _currentMap;
     private readonly Camera2D _camera;
     private readonly Hud _hud;
+    private readonly TileCursor _tileCursor;
 
     public GameScene(GameContext context)
     {
@@ -22,13 +23,16 @@ public class GameScene : IScene
         _hud = new Hud(_context);
         _currentMap = new CityMap(_context);
         _camera = new();
+        _tileCursor = new TileCursor(context);
 
         _currentMap.OnEnter();
     }
 
     public void Update(GameTime gameTime)
     {
-        _currentMap.Update(gameTime);
+        _tileCursor.Update(_camera);
+
+        _currentMap.Update(gameTime, _tileCursor);
         _player.Update(gameTime, _currentMap.Collides);
         _camera.Follow(
             _player.Center,
@@ -47,15 +51,20 @@ public class GameScene : IScene
             transformMatrix: _camera.GetTransform(_context.GraphicsDevice.Viewport)
         );
         _currentMap.Draw(spriteBatch);
+        _tileCursor.Draw(spriteBatch);
         spriteBatch.End();
 
 
 
 
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        spriteBatch.Begin(
+        samplerState: SamplerState.PointClamp,
+        blendState: BlendState.AlphaBlend
+    );
         // HUD fixa da tela futuramente
         // Exemplo: vida, dinheiro, inventário, menu rápido
         _hud.Draw(spriteBatch);
+        _currentMap.DrawDebug(spriteBatch);
         spriteBatch.End();
     }
 
