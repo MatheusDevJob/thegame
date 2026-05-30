@@ -12,9 +12,9 @@ public class Hud
     private readonly Texture2D _pixel;
     private readonly Texture2D _hudBoxItem;
     private readonly Texture2D _hudAxeItem;
-    private readonly int _scale = 2;
+    private readonly int _scale = 3;
 
-    public readonly List<int> boxes = [20, 60, 100, 140, 180, 220, 260];
+    public readonly List<int> boxes = [20, 74, 128, 182, 236, 290, 344];
     public int screenWidth;
     public int screenHeight;
 
@@ -80,35 +80,35 @@ public class Hud
         }
     }
 
-private void DrawItensOnBar(SpriteBatch spriteBatch)
-{
-    Viewport viewport = _context.GraphicsDevice.Viewport;
-
-    int screenWidth = viewport.Width;
-    int screenHeight = viewport.Height;
-
-    int itemWidth = 18 * _scale;
-    int itemHeight = 19 * _scale;
-
-    int minX = boxes.Min();
-    int maxX = boxes.Max() + itemWidth;
-    int totalWidth = maxX - minX;
-
-    int startX = (screenWidth - totalWidth) / 2;
-    int y = screenHeight - 80;
-
-    for (int i = 0; i < boxes.Count; i++)
+    private void DrawItensOnBar(SpriteBatch spriteBatch)
     {
-        int x = startX + (boxes[i] - minX);
+        Viewport viewport = _context.GraphicsDevice.Viewport;
 
-        Rectangle itemRect = new(
-            x + 6,
-            y + 4,
-            itemWidth - 12,
-            itemHeight - 8
-        );
+        int screenWidth = viewport.Width;
+        int screenHeight = viewport.Height;
 
-        spriteBatch.Draw(_hudAxeItem, itemRect, Color.White);
+        int itemWidth = 18 * _scale - 5;
+        int itemHeight = 19 * _scale - 5;
+
+        int minX = boxes.Min();
+        int maxX = boxes.Max() + itemWidth;
+        int totalWidth = maxX - minX;
+
+        int startX = (screenWidth - totalWidth) / 2;
+        int y = screenHeight - 80;
+
+        for (int i = 0; i < boxes.Count; i++)
+        {
+            int x = startX + (boxes[i] - minX);
+
+            Rectangle itemRect = new(
+                x + 6,
+                y + 4,
+                itemWidth - 12,
+                itemHeight - 8
+            );
+
+            spriteBatch.Draw(_hudAxeItem, itemRect, Color.White);
+        }
     }
-}
 }
