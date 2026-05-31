@@ -48,5 +48,7 @@ public class CityMap : BaseMap
     {
         foreach (Npc npc in EntityWorld.GetEntities<Npc>())
             npc.UpdateInteraction(Context.State.Player);
+
+        base.UpdateMap(gameTime);
     }
 }

@@ -66,4 +66,17 @@ public class EntityWorld
             .OrderByDescending(entity => entity.SortY)
             .FirstOrDefault();
     }
+    public bool IntersectsAny(Rectangle hitbox, Entity ignore = null)
+    {
+        foreach (Entity entity in _entities)
+        {
+            if (entity == ignore)
+                continue;
+
+            if (hitbox.Intersects(entity.Hitbox))
+                return true;
+        }
+
+        return false;
+    }
 }

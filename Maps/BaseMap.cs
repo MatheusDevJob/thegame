@@ -104,6 +104,8 @@ public abstract class BaseMap : IMap
 
     protected virtual void UpdateMap(GameTime gameTime)
     {
+        bool rep = EntityWorld.IntersectsAny(Context.State.Player.Hitbox, Context.State.Player);
+        logs.Add($"{rep}");
     }
 
     protected virtual void DrawObjects(SpriteBatch spriteBatch)
@@ -125,7 +127,16 @@ public abstract class BaseMap : IMap
                     logs.Add($"Machadada no tronco! Vida restante: {tronco.Life}");
 
                     if (tronco.Life <= 0)
+                    {
+                        Entity wood = EntityFactory.Create(Context, new TiledObjectData
+                        {
+                            Type = "wood",
+                            X = tronco.Posicao.X + 5,
+                            Y = tronco.Posicao.Y - 8
+                        });
+                        EntityWorld.Add(wood);
                         EntityWorld.Remove(tronco);
+                    }
                 });
 
                 break;
