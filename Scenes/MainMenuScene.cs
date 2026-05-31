@@ -3,8 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
-using thegame.Entities;
-using thegame.Entities.Tools;
+using thegame.UI;
 
 namespace thegame.Scenes;
 
@@ -13,6 +12,7 @@ public class MainMenuScene : IScene
     private readonly GameContext _context;
     private readonly SpriteFont _font;
     private readonly Texture2D _pixel;
+    private readonly AnimatedBackground _background;
     private MouseState _previousMouse;
 
     private Rectangle _startButton;
@@ -21,50 +21,40 @@ public class MainMenuScene : IScene
     public MainMenuScene(GameContext context)
     {
         _context = context;
-
-        // Assets do menu
         _font = _context.Content.Load<SpriteFont>("Fonts/MenuFont");
 
         _pixel = new Texture2D(_context.GraphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
 
-        int buttonWidth = 280;
-        int buttonHeight = 55;
-        int x = (_context.GraphicsDevice.Viewport.Width - buttonWidth) / 2;
-        int y = (_context.GraphicsDevice.Viewport.Height / 2) - 20;
+        Texture2D backgroundTexture = _context.Content.Load<Texture2D>("UI/animate_background");
+        _background = new AnimatedBackground(backgroundTexture, 640, 384, 5, 30, 0.08);
 
-        _startButton = new Rectangle(x, y, buttonWidth, buttonHeight);
-        _exitButton = new Rectangle(x, y + 70, buttonWidth, buttonHeight);
+        int buttonWidth = 180;
+        int buttonHeight = 55;
+        int buttonSpacing = 20;
+
+        float titleY = 120f;
+        float titleScale = 2f;
+        Vector2 titleSize = _font.MeasureString("THE GAME") * titleScale;
+
+        int totalButtonsWidth = buttonWidth * 2 + buttonSpacing;
+        int startX = (_context.GraphicsDevice.Viewport.Width - totalButtonsWidth) / 2;
+        int buttonY = (int)(titleY + titleSize.Y + 35);
+
+        _startButton = new Rectangle(startX, buttonY, buttonWidth, buttonHeight);
+        _exitButton = new Rectangle(startX + buttonWidth + buttonSpacing, buttonY, buttonWidth, buttonHeight);
     }
 
     public void Update(GameTime gameTime)
     {
+        _background.Update(gameTime);
+
         MouseState mouse = Mouse.GetState();
 
         if (WasClicked(mouse, _startButton))
         {
-            // Aqui começa o jogo.
-            // Se quiser começar um jogo novo, pode criar World/TimeSystem aqui.
-
-
-            // Troca para a cena do jogo.
-            // A GameScene recebe o mesmo GameContext, então acessa o mesmo World, TimeSystem, Content, etc.
-            // Viewport viewport = _context.GraphicsDevice.Viewport;
-
-            // int screenWidth = viewport.Width;
-            // int screenHeight = viewport.Height;
-
-            // int itemWidth = 18 * _scale;
-            // int itemHeight = 19 * _scale;
-
-            // int minX = boxes.Min();
-            // int maxX = boxes.Max() + itemWidth;
-            // int totalWidth = maxX - minX;
-
-            // int startX = (screenWidth - totalWidth) / 2;
-            // int y = screenHeight - 80;
-
             List<string> lista = ["axe"];
+
             _context.State = new GameState(_context, new GameSave
             {
                 PlayerLife = 75f,
@@ -72,31 +62,30 @@ public class MainMenuScene : IScene
                 ListTools = lista,
                 ActiveTool = lista[0],
             });
+
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }
 
         if (WasClicked(mouse, _exitButton))
-        {
             _context.Game.Exit();
-        }
 
         _previousMouse = mouse;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        int width = _context.GraphicsDevice.Viewport.Width;
-        int height = _context.GraphicsDevice.Viewport.Height;
+        Viewport viewport = _context.GraphicsDevice.Viewport;
 
         _context.GraphicsDevice.Clear(Color.Black);
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        spriteBatch.Draw(_pixel, new Rectangle(0, 0, width, height), new Color(18, 20, 28));
+        _background.Draw(spriteBatch, viewport);
 
         DrawCenteredText(spriteBatch, "THE GAME", 120, Color.White, 2f);
 
         DrawButton(spriteBatch, _startButton, "Iniciar");
         DrawButton(spriteBatch, _exitButton, "Sair");
+
         spriteBatch.End();
     }
 
@@ -110,8 +99,7 @@ public class MainMenuScene : IScene
     private void DrawButton(SpriteBatch spriteBatch, Rectangle rectangle, string text)
     {
         bool hovering = rectangle.Contains(Mouse.GetState().Position);
-
-        Color background = hovering ? new Color(75, 85, 120) : new Color(45, 50, 70);
+        Color background = hovering ? new Color(75, 85, 120, 220) : new Color(45, 50, 70, 200);
 
         spriteBatch.Draw(_pixel, rectangle, background);
 
@@ -124,11 +112,28 @@ public class MainMenuScene : IScene
         spriteBatch.DrawString(_font, text, position, Color.White);
     }
 
-    private void DrawCenteredText(SpriteBatch spriteBatch, string text, float y, Color color, float scale = 1f)
+    private void DrawCenteredText(SpriteBatch spriteBatch, string text, float y, Color textColor, float scale = 1f)
     {
-        Vector2 size = _font.MeasureString(text) * scale;
-        Vector2 position = new((_context.GraphicsDevice.Viewport.Width - size.X) / 2, y);
 
-        spriteBatch.DrawString(_font, text, position, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+        Vector2 size = _font.MeasureString(text) * scale;
+
+        int paddingX = 35;
+        int paddingY = 18;
+
+        Rectangle background = new(
+            (int)((_context.GraphicsDevice.Viewport.Width - size.X) / 2 - paddingX),
+            (int)(y - paddingY),
+            (int)(size.X + paddingX * 2),
+            (int)(size.Y + paddingY * 2)
+        );
+
+        spriteBatch.Draw(_pixel, background, new Color(0, 0, 0, 180));
+
+        Vector2 position = new(
+            background.X + (background.Width - size.X) / 2,
+            background.Y + (background.Height - size.Y) / 2
+        );
+
+        spriteBatch.DrawString(_font, text, position, textColor, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
     }
 }

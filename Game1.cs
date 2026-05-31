@@ -36,6 +36,7 @@ public class Game1 : Game
             _sceneManager,
             new InputManager()
         );
+        _context.Game.Window.Title = "THE GAME";
 
         base.Initialize();
     }
