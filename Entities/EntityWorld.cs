@@ -66,7 +66,7 @@ public class EntityWorld
             .OrderByDescending(entity => entity.SortY)
             .FirstOrDefault();
     }
-    public bool IntersectsAny(Rectangle hitbox, Entity ignore = null)
+    public Entity IntersectsAny(Rectangle hitbox, Entity ignore = null)
     {
         foreach (Entity entity in _entities)
         {
@@ -74,9 +74,9 @@ public class EntityWorld
                 continue;
 
             if (hitbox.Intersects(entity.Hitbox))
-                return true;
+                return entity;
         }
 
-        return false;
+        return null;
     }
 }

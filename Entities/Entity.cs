@@ -14,13 +14,16 @@ public abstract class Entity
     public virtual bool BloqueiaMovimento => true;
     public virtual float SortY => Hitbox.Bottom;
 
+    public string Id;
+    public virtual bool IsColetavel => false;
     public float Life;
     public float Damage;
     public readonly Texture2D Sprite;
-    protected Entity(GameContext context, string sprite, Vector2 posicao, float life = 0, float damage = 0)
+    protected Entity(GameContext context, string sprite, string id, Vector2 posicao, float life = 0, float damage = 0)
     {
         Context = context;
         Posicao = posicao;
+        Id = id;
         Life = life;
         Damage = damage;
         Sprite = context.Content.Load<Texture2D>(sprite);

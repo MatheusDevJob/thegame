@@ -53,7 +53,7 @@ public class MainMenuScene : IScene
 
         if (WasClicked(mouse, _startButton))
         {
-            List<string> lista = ["axe"];
+            List<string> lista = ["AxeTool"];
 
             _context.State = new GameState(_context, new GameSave
             {

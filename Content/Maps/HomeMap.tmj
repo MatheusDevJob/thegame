@@ -520,8 +520,8 @@
                  "type":"",
                  "visible":true,
                  "width":283.818,
-                 "x":911.515333333334,
-                 "y":210.424333333333
+                 "x":911.515,
+                 "y":210.424
                 }, 
                 {
                  "height":10.9091,
@@ -598,53 +598,53 @@
                  "gid":823,
                  "height":16,
                  "id":39,
-                 "name":"tronco",
+                 "name":"Tronco",
                  "opacity":1,
                  "rotation":0,
-                 "type":"tronco",
+                 "type":"Tronco",
                  "visible":true,
                  "width":16,
                  "x":1120,
-                 "y":64.3333333333333
+                 "y":64.3333
                 }, 
                 {
                  "gid":823,
                  "height":16,
                  "id":41,
-                 "name":"tronco",
+                 "name":"Tronco",
                  "opacity":1,
                  "rotation":0,
-                 "type":"tronco",
+                 "type":"Tronco",
                  "visible":true,
                  "width":16,
                  "x":1072,
-                 "y":112.666666666667
+                 "y":112.667
                 }, 
                 {
                  "gid":823,
                  "height":16,
                  "id":42,
-                 "name":"tronco",
+                 "name":"Tronco",
                  "opacity":1,
                  "rotation":0,
-                 "type":"tronco",
+                 "type":"Tronco",
                  "visible":true,
                  "width":16,
-                 "x":1088.33333333333,
-                 "y":160.666666666667
+                 "x":1088.33,
+                 "y":160.667
                 }, 
                 {
                  "gid":823,
                  "height":16,
                  "id":43,
-                 "name":"tronco",
+                 "name":"Tronco",
                  "opacity":1,
                  "rotation":0,
-                 "type":"tronco",
+                 "type":"Tronco",
                  "visible":true,
                  "width":16,
-                 "x":1023.66666666667,
-                 "y":192.666666666667
+                 "x":1023.67,
+                 "y":192.667
                 }],
          "opacity":1,
          "type":"objectgroup",

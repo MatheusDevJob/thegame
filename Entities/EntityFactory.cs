@@ -17,9 +17,9 @@ public static class EntityFactory
         {
             // "Pedra" => new Pedra(context, posicao),
 
-            "tronco" => new Tronco(context, posicao),
-            "axe" => new AxeTool(context, posicao),
-            "wood" => new Wood(context, posicao),
+            "Tronco" => new Tronco(context, posicao),
+            "AxeTool" => new AxeTool(context, posicao),
+            "Wood" => new Wood(context, posicao),
 
             _ => null
         };

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
+using thegame.Items;
 using thegame.Maps;
 
 namespace thegame.Entities;
@@ -34,7 +35,8 @@ public class Player : Entity
     private Action _onAnimationFinished;
     private int _animationFrames;
     public bool IsAnimated => _isAnimated;
-    public Player(GameContext context, GameSave save) : base(context, "Player/spr_basecharacter_allframes", save.PlayerPosition, save.PlayerLife)
+    public Inventory Inventory { get; private set; } = new();
+    public Player(GameContext context, GameSave save) : base(context, "Player/spr_basecharacter_allframes", "Player", save.PlayerPosition, save.PlayerLife)
     {
         _texture = Context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes");
         _hitboxPixel = new Texture2D(Context.GraphicsDevice, 1, 1);

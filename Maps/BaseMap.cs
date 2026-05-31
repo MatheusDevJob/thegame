@@ -104,8 +104,13 @@ public abstract class BaseMap : IMap
 
     protected virtual void UpdateMap(GameTime gameTime)
     {
-        bool rep = EntityWorld.IntersectsAny(Context.State.Player.Hitbox, Context.State.Player);
-        logs.Add($"{rep}");
+        Player player = Context.State.Player;
+        Entity item = EntityWorld.IntersectsAny(player.Hitbox, player);
+        if (item != null && item.IsColetavel)
+        {
+            player.Inventory.AddItem(item.Id, item.Id, 1);
+            EntityWorld.Remove(item);
+        }
     }
 
     protected virtual void DrawObjects(SpriteBatch spriteBatch)
@@ -130,7 +135,7 @@ public abstract class BaseMap : IMap
                     {
                         Entity wood = EntityFactory.Create(Context, new TiledObjectData
                         {
-                            Type = "wood",
+                            Type = "Wood",
                             X = tronco.Posicao.X + 5,
                             Y = tronco.Posicao.Y - 8
                         });
