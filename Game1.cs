@@ -13,6 +13,7 @@ public class Game1 : Game
     private SceneManager _sceneManager;
     private GameContext _context;
     private Texture2D _cursorTexture;
+    private readonly InputManager inputManager;
 
     public Game1()
     {
@@ -21,6 +22,8 @@ public class Game1 : Game
             HardwareModeSwitch = false,
             IsFullScreen = true
         };
+
+        inputManager = new();
 
         Content.RootDirectory = "Content";
     }
@@ -34,7 +37,7 @@ public class Game1 : Game
             Content,
             GraphicsDevice,
             _sceneManager,
-            new InputManager()
+            inputManager
         );
         _context.Game.Window.Title = "THE GAME";
 
@@ -56,8 +59,8 @@ public class Game1 : Game
     {
         _context.Input.Update();
         _sceneManager.Update(gameTime);
-        if (_context.Input.IsKeyPressed(Keys.Escape))
-            Exit();
+        inputManager.Update();
+
         base.Update(gameTime);
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities;
 using thegame.Entities.Items;
@@ -36,7 +37,7 @@ public abstract class BaseMap : IMap
         Map = new TiledMap();
         Map.Load(Context.Content, mapPath);
 
-        inputManager = new();
+        inputManager = context.Input;
         debugVisual = new(context);
     }
 
@@ -51,7 +52,6 @@ public abstract class BaseMap : IMap
     public virtual void Update(GameTime gameTime, TileCursor tileCursor)
     {
         _tileCursor = tileCursor;
-        inputManager.Update();
         isKeyPressed = inputManager.IsLeftClickPressed();
 
         if (isKeyPressed)
