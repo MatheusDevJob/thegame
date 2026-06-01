@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace thegame.Core;
@@ -8,6 +9,7 @@ public class InputManager
     private KeyboardState _previousKeyboard;
     private MouseState _currentMouse;
     private MouseState _previousMouse;
+    public virtual Point Position => Mouse.GetState().Position;
 
     public void Update()
     {
@@ -36,6 +38,15 @@ public class InputManager
     public bool IsLeftClickPressed()
     {
         return _currentMouse.LeftButton == ButtonState.Pressed &&
+               _previousMouse.LeftButton == ButtonState.Released;
+    }
+
+
+    public bool WasClicked(Rectangle rectangle)
+    {
+        MouseState mouse = _currentMouse;
+        return rectangle.Contains(mouse.Position) &&
+               mouse.LeftButton == ButtonState.Pressed &&
                _previousMouse.LeftButton == ButtonState.Released;
     }
 }

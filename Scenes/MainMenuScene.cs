@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.UI;
 
@@ -13,8 +12,6 @@ public class MainMenuScene : IScene
     private readonly SpriteFont _font;
     private readonly Texture2D _pixel;
     private readonly AnimatedBackground _background;
-    private MouseState _previousMouse;
-
     private Rectangle _startButton;
     private Rectangle _exitButton;
 
@@ -49,9 +46,7 @@ public class MainMenuScene : IScene
     {
         _background.Update(gameTime);
 
-        MouseState mouse = Mouse.GetState();
-
-        if (WasClicked(mouse, _startButton))
+        if (_context.Input.WasClicked(_startButton))
         {
             List<string> lista = ["AxeTool"];
 
@@ -67,10 +62,8 @@ public class MainMenuScene : IScene
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }
 
-        if (WasClicked(mouse, _exitButton))
+        if (_context.Input.WasClicked(_exitButton))
             _context.Game.Exit();
-
-        _previousMouse = mouse;
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -84,35 +77,11 @@ public class MainMenuScene : IScene
 
         DrawCenteredText(spriteBatch, "THE GAME", 120, Color.White, 2f);
 
-        DrawButton(spriteBatch, _startButton, "Iniciar");
-        DrawButton(spriteBatch, _exitButton, "Sair");
+        _context.UI.DrawButton(spriteBatch, _startButton, "Iniciar");
+        _context.UI.DrawButton(spriteBatch, _exitButton, "Sair");
 
         spriteBatch.End();
     }
-
-    private bool WasClicked(MouseState mouse, Rectangle rectangle)
-    {
-        return rectangle.Contains(mouse.Position) &&
-               mouse.LeftButton == ButtonState.Pressed &&
-               _previousMouse.LeftButton == ButtonState.Released;
-    }
-
-    private void DrawButton(SpriteBatch spriteBatch, Rectangle rectangle, string text)
-    {
-        bool hovering = rectangle.Contains(Mouse.GetState().Position);
-        Color background = hovering ? new Color(75, 85, 120, 220) : new Color(45, 50, 70, 200);
-
-        spriteBatch.Draw(_pixel, rectangle, background);
-
-        Vector2 textSize = _font.MeasureString(text);
-        Vector2 position = new(
-            rectangle.X + (rectangle.Width - textSize.X) / 2,
-            rectangle.Y + (rectangle.Height - textSize.Y) / 2
-        );
-
-        spriteBatch.DrawString(_font, text, position, Color.White);
-    }
-
     private void DrawCenteredText(SpriteBatch spriteBatch, string text, float y, Color textColor, float scale = 1f)
     {
 

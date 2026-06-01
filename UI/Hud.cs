@@ -23,9 +23,12 @@ public class Hud
     public int screenHeight;
 
     protected InputManager inputManager;
-    private readonly Texture2D _layoutMenuTexture;
+    private readonly Texture2D _layoutUiTexture;
     private readonly Texture2D _slotTexture;
     private readonly SpriteFont _font;
+    private readonly GameState gameState;
+    private Rectangle bag;
+    private Rectangle _botaoSair;
     public Hud(GameContext context)
     {
         _context = context;
@@ -36,9 +39,10 @@ public class Hud
 
         _hudBoxItem = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
         // _hudAxeItem = context.Content.Load<Texture2D>("Items/axe");
-        _layoutMenuTexture = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown");
+        _layoutUiTexture = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown");
         _slotTexture = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
         inputManager = context.Input;
+        gameState = _context.State;
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -53,7 +57,7 @@ public class Hud
         spriteBatch.Draw(_pixel, box, new Color(0, 0, 0, 180));
 
         Rectangle lifeBackground = new(35, 45, 180, 14);
-        Rectangle lifeBar = new(35, 45, (int)_context.State.Player.Life, 14);
+        Rectangle lifeBar = new(35, 45, (int)gameState.Player.Life, 14);
 
         spriteBatch.Draw(_pixel, lifeBackground, new Color(80, 80, 80, 220));
         spriteBatch.Draw(_pixel, lifeBar, new Color(180, 40, 40, 255));
@@ -65,21 +69,22 @@ public class Hud
 
         DrawItensBar(spriteBatch);
         DrawItensOnBar(spriteBatch);
-        if (_context.State.LayoutMenu) DrawLayoutMenu(spriteBatch);
+        if (gameState.LayoutMenu) DrawLayoutMenu(spriteBatch);
+        if (gameState.LayoutBag) DrawLayoutBag(spriteBatch);
     }
 
-    private void DrawLayoutMenu(SpriteBatch spriteBatch)
+    private void DrawLayoutBag(SpriteBatch spriteBatch)
     {
-        Rectangle menu = new(
+        Rectangle bag = new(
             150,
             100,
             screenWidth - 300,
             screenHeight - 200
         );
-        int LimiteItensBag = _context.State.Player.Inventory.GetLimiteItensBag;
+        int LimiteItensBag = gameState.Player.Inventory.GetLimiteItensBag;
 
-        DrawNineSlice(spriteBatch, _layoutMenuTexture, menu, 16);
-        DrawBagSlots(spriteBatch, menu, 8, LimiteItensBag);
+        DrawNineSlice(spriteBatch, _layoutUiTexture, bag, 16);
+        DrawBagSlots(spriteBatch, bag, 8, LimiteItensBag);
     }
 
     private static void DrawNineSlice(SpriteBatch spriteBatch, Texture2D texture, Rectangle dest, int sliceSize)
@@ -135,7 +140,7 @@ public class Hud
         int startX = bag.X + (bag.Width - totalWidth) / 2;
         int startY = bag.Y + 90;
 
-        List<ItemStack> items = _context.State.Player.Inventory.Itens;
+        List<ItemStack> items = gameState.Player.Inventory.Itens;
 
         for (int i = 0; i < itens; i++)
         {
@@ -179,8 +184,22 @@ public class Hud
 
     public void Update(GameTime gameTime)
     {
+        if (inputManager.IsKeyPressed(Keys.I))
+        {
+            gameState.LayoutBag = !gameState.LayoutBag;
+            gameState.LayoutMenu = false;
+        }
+
         if (inputManager.IsKeyPressed(Keys.Escape))
-            _context.State.LayoutMenu = !_context.State.LayoutMenu;
+        {
+            gameState.LayoutBag = false;
+            gameState.LayoutMenu = !gameState.LayoutMenu;
+        }
+
+        if (_context.Input.WasClicked(_botaoSair))
+        {
+            _context.Game.Exit();
+        }
     }
 
     private void DrawItensBar(SpriteBatch spriteBatch)
@@ -226,7 +245,7 @@ public class Hud
         int startX = (screenWidth - totalWidth) / 2;
         int y = screenHeight - 80;
 
-        List<string> ListTools = _context.State.PlayerSave.ListTools;
+        List<string> ListTools = gameState.PlayerSave.ListTools;
 
         for (int i = 0; i < boxes.Count; i++)
         {
@@ -248,5 +267,31 @@ public class Hud
 
             spriteBatch.Draw(tool.Sprite, itemRect, Color.White);
         }
+    }
+
+    private void DrawLayoutMenu(SpriteBatch spriteBatch)
+    {
+        DrawNineSlice(spriteBatch, _layoutUiTexture, bag, 16);
+
+        int tamanhoX = 300;
+        int tamanhoY = 450;
+
+        int Width = screenWidth / 2 - tamanhoX / 2;
+        int Height = screenHeight / 2 - tamanhoY / 2;
+
+        bag = new(
+           Width,
+           Height,
+           tamanhoX,
+           tamanhoY
+       );
+
+        _botaoSair = new(
+           bag.X + tamanhoX / 4,
+           bag.Y + tamanhoY - 65,
+           150,
+           30
+       );
+        _context.UI.DrawButton(spriteBatch, _botaoSair, "Sair");
     }
 }

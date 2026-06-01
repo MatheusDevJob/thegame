@@ -12,9 +12,11 @@ public class UiRenderer
     private readonly Texture2D _buttonsTile;
     private readonly Texture2D _dialogTile;
     private readonly Color _textColor;
+    private readonly GameContext _context;
 
     public UiRenderer(GameContext context)
     {
+        _context = context;
         _font = context.Content.Load<SpriteFont>("Fonts/MenuFont");
         _pixel = new Texture2D(context.GraphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
@@ -94,5 +96,22 @@ public class UiRenderer
         );
 
         spriteBatch.DrawString(_font, fullText, textPosition, _textColor, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+    }
+
+
+    public void DrawButton(SpriteBatch spriteBatch, Rectangle rectangle, string text)
+    {
+        bool hovering = rectangle.Contains(_context.Input.Position);
+        Color background = hovering ? new Color(75, 85, 120, 220) : new Color(45, 50, 70, 200);
+
+        spriteBatch.Draw(_pixel, rectangle, background);
+
+        Vector2 textSize = _font.MeasureString(text);
+        Vector2 position = new(
+            rectangle.X + (rectangle.Width - textSize.X) / 2,
+            rectangle.Y + (rectangle.Height - textSize.Y) / 2
+        );
+
+        spriteBatch.DrawString(_font, text, position, Color.White);
     }
 }

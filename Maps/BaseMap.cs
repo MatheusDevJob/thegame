@@ -53,8 +53,9 @@ public abstract class BaseMap : IMap
     {
         _tileCursor = tileCursor;
         isKeyPressed = inputManager.IsLeftClickPressed();
+        GameState State = Context.State;
 
-        if (isKeyPressed && !Context.State.LayoutMenu)
+        if (isKeyPressed && (!State.LayoutMenu || !State.LayoutBag))
         {
             if (IsClickFartherThanPlayer(tileCursor.TilePosition))
             {
