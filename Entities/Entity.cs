@@ -15,6 +15,8 @@ public abstract class Entity
     public virtual float SortY => Hitbox.Bottom;
 
     public string Id;
+    public string SaveId { get; set; } = "";
+    public bool Persistente { get; set; } = true;
     public virtual bool IsColetavel => false;
     public float Life;
     public float Damage;

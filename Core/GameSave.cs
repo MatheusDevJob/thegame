@@ -1,20 +1,56 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using thegame.Entities;
 
 namespace thegame.Core;
 
 public class GameSave
 {
-    public float PlayerLife { get; set; }
-    public Vector2 PlayerPosition { get; set; }
+    public int Version { get; set; } = 1;
+    public string CurrentMap { get; set; } = "city";
+    public float PlayerLife { get; set; } = 100f;
+    public Vector2 PlayerPosition { get; set; } = new(1200, 220);
+    public List<string> ListTools { get; set; } = [];
+    public string ActiveTool { get; set; } = "";
+    public int BagLevel { get; set; } = 1;
+    public List<ItemStackSave> BagItems { get; set; } = [];
+    public Dictionary<string, MapSave> Maps { get; set; } = [];
 
-    /* 
-        itens do player
-    */
+    public MapSave GetMapSave(string mapId)
+    {
+        if (!Maps.ContainsKey(mapId))
+            Maps[mapId] = new MapSave();
 
-    public List<string> ListTools { get; set; }
-    public string ActiveTool { get; set; }
+        return Maps[mapId];
+    }
+}
 
-    public int BagLevel { get; set; }
+public class ItemStackSave
+{
+    public string ItemId { get; set; } = "";
+    public int Amount { get; set; } = 1;
+}
+
+public class MapSave
+{
+    public List<string> RemovedEntities { get; set; } = [];
+    public List<WorldEntitySave> SpawnedEntities { get; set; } = [];
+    public List<WorldItemSave> DroppedItems { get; set; } = [];
+}
+
+public class WorldEntitySave
+{
+    public string SaveId { get; set; } = "";
+    public string EntityId { get; set; } = "";
+    public float X { get; set; }
+    public float Y { get; set; }
+    public Dictionary<string, string> Data { get; set; } = [];
+}
+
+public class WorldItemSave
+{
+    public string SaveId { get; set; } = "";
+    public string ItemId { get; set; } = "";
+    public int Amount { get; set; } = 1;
+    public float X { get; set; }
+    public float Y { get; set; }
 }

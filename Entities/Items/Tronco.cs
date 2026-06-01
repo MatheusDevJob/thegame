@@ -17,6 +17,7 @@ public class Tronco : Entity
     public Tronco(GameContext context, Vector2 posicao) : base(context, "Tronco", posicao, 3)
     {
         _sprite = Sprite;
+        Persistente = true;
         AtualizarHitbox();
     }
 

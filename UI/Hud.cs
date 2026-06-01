@@ -81,7 +81,7 @@ public class Hud
             screenWidth - 300,
             screenHeight - 200
         );
-        int LimiteItensBag = gameState.Player.Inventory.GetLimiteItensBag;
+        int LimiteItensBag = gameState.Inventory.GetLimiteItensBag;
 
         DrawNineSlice(spriteBatch, _layoutUiTexture, bag, 16);
         DrawBagSlots(spriteBatch, bag, 8, LimiteItensBag);
@@ -140,7 +140,7 @@ public class Hud
         int startX = bag.X + (bag.Width - totalWidth) / 2;
         int startY = bag.Y + 90;
 
-        List<ItemStack> items = gameState.Player.Inventory.Itens;
+        List<ItemStack> items = gameState.Inventory.Itens;
 
         for (int i = 0; i < itens; i++)
         {
@@ -198,6 +198,7 @@ public class Hud
 
         if (_context.Input.WasClicked(_botaoSair))
         {
+            _context.State.SaveGame();
             _context.Game.Exit();
         }
     }

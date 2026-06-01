@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
@@ -48,17 +47,9 @@ public class MainMenuScene : IScene
 
         if (_context.Input.WasClicked(_startButton))
         {
-            List<string> lista = ["AxeTool"];
+            GameSave save = SaveManager.LoadOrCreate();
 
-            _context.State = new GameState(_context, new GameSave
-            {
-                PlayerLife = 75f,
-                PlayerPosition = new Vector2(1200, 220),
-                ListTools = lista,
-                ActiveTool = lista[0],
-                BagLevel = 4
-            });
-
+            _context.State = new GameState(_context, save);
             _context.SceneManager.ChangeScene(new GameScene(_context));
         }
 
@@ -77,14 +68,16 @@ public class MainMenuScene : IScene
 
         DrawCenteredText(spriteBatch, "THE GAME", 120, Color.White, 2f);
 
-        _context.UI.DrawButton(spriteBatch, _startButton, "Iniciar");
+        string startText = SaveManager.HasSave() ? "Continuar" : "Iniciar";
+
+        _context.UI.DrawButton(spriteBatch, _startButton, startText);
         _context.UI.DrawButton(spriteBatch, _exitButton, "Sair");
 
         spriteBatch.End();
     }
+
     private void DrawCenteredText(SpriteBatch spriteBatch, string text, float y, Color textColor, float scale = 1f)
     {
-
         Vector2 size = _font.MeasureString(text) * scale;
 
         int paddingX = 35;

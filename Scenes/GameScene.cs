@@ -65,7 +65,7 @@ public class GameScene : IScene
         // HUD fixa da tela futuramente
         // Exemplo: vida, dinheiro, inventário, menu rápido
         _hud.Draw(spriteBatch);
-        // _currentMap.DrawDebug(spriteBatch);
+        _currentMap.DrawDebug(spriteBatch);
         spriteBatch.End();
     }
 

@@ -13,13 +13,14 @@ public class EntityWorld
 
     public void Add(Entity entity)
     {
-        if (!_entities.Contains(entity))
+        if (entity != null && !_entities.Contains(entity))
             _entities.Add(entity);
     }
 
     public void Remove(Entity entity)
     {
-        _entities.Remove(entity);
+        if (entity != null)
+            _entities.Remove(entity);
     }
 
     public IEnumerable<T> GetEntities<T>() where T : Entity
@@ -46,7 +47,7 @@ public class EntityWorld
 
     public void Update(GameTime gameTime)
     {
-        foreach (Entity entity in _entities)
+        foreach (Entity entity in _entities.ToArray())
             entity.Update(gameTime);
     }
 
@@ -66,6 +67,17 @@ public class EntityWorld
             .OrderByDescending(entity => entity.SortY)
             .FirstOrDefault();
     }
+
+    public Entity GetCollectableIntersecting(Rectangle hitbox, Entity ignore = null)
+    {
+        return _entities
+            .Where(entity => entity != ignore)
+            .Where(entity => entity.IsColetavel)
+            .Where(entity => hitbox.Intersects(entity.Hitbox))
+            .OrderByDescending(entity => entity.SortY)
+            .FirstOrDefault();
+    }
+
     public Entity IntersectsAny(Rectangle hitbox, Entity ignore = null)
     {
         foreach (Entity entity in _entities)
@@ -78,5 +90,10 @@ public class EntityWorld
         }
 
         return null;
+    }
+
+    public void ClearAll()
+    {
+        _entities.Clear();
     }
 }

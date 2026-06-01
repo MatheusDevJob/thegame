@@ -30,23 +30,15 @@ public class Player : Entity
     private readonly float _speed = 60f;
     private readonly Texture2D _hitboxPixel;
     public bool _isAnimated;
-    public readonly GameSave ActualGameSave;
-    public Entity ActiveTool;
     private Action _onAnimationFinished;
     private int _animationFrames;
     public bool IsAnimated => _isAnimated;
-    public Inventory Inventory { get; private set; } = new();
     public Player(GameContext context, GameSave save) : base(context, "Player", save.PlayerPosition, save.PlayerLife)
     {
         _texture = Sprite;
         _hitboxPixel = new Texture2D(Context.GraphicsDevice, 1, 1);
         _hitboxPixel.SetData([Color.White]);
         AtualizarHitbox();
-
-        ActualGameSave = save;
-        Inventory.BagLevel = ActualGameSave.BagLevel;
-        Inventory.UpdateLimiteItens();
-        ActiveTool = EntityFactory.Create(context, new TiledObjectData { Type = save.ActiveTool, X = 1, Y = 1 });
     }
 
     public override void Update(GameTime gameTime)

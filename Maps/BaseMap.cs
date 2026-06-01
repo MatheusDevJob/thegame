@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities;
-using thegame.Entities.Items;
-using thegame.Entities.Tools;
+using thegame.Entities.Npcs;
 
 namespace thegame.Maps;
 
@@ -15,6 +13,8 @@ public abstract class BaseMap : IMap
     protected readonly GameContext Context;
     protected readonly TiledMap Map;
     protected readonly EntityWorld EntityWorld = new();
+    protected readonly WorldActionService _worldActionService;
+    protected readonly EntityInteractionManager _entityInteractionManager;
 
     protected virtual string[] LayersBeforeEntities => ["Ground", "Back"];
     protected virtual string[] LayersAfterEntities => ["Front"];
@@ -34,19 +34,48 @@ public abstract class BaseMap : IMap
     {
         Context = context;
         Id = id;
-        Map = new TiledMap();
-        Map.Load(Context.Content, mapPath);
 
         inputManager = context.Input;
-        // debugVisual = new(context);
+        _worldActionService = new(context, EntityWorld, id);
+        _entityInteractionManager = new(context, _worldActionService);
+        debugVisual = new(context);
+
+        Map = new TiledMap();
+        Map.Load(Context.Content, mapPath);
     }
 
     public virtual void OnEnter()
     {
+        EntityWorld.ClearAll();
+
+        EntityWorld.Add(new Aldeao(
+            Context,
+            "Aldeão",
+            "Olá, viajante!",
+            new Vector2(1100, 205)
+        ));
+
+        foreach (var obj in Map.GetObjects("Objects"))
+        {
+            Entity entity = EntityFactory.Create(Context, obj);
+
+            if (entity == null)
+                continue;
+
+            entity.SaveId = $"{Id}:{obj.Id}";
+
+            if (Context.State.IsEntityRemoved(Id, entity.SaveId))
+                continue;
+
+            EntityWorld.Add(entity);
+        }
+
+        _worldActionService.LoadDroppedItems();
     }
 
     public virtual void OnExit()
     {
+        // EntityWorld.clearAll();
     }
 
     public virtual void Update(GameTime gameTime, TileCursor tileCursor)
@@ -55,7 +84,7 @@ public abstract class BaseMap : IMap
         isKeyPressed = inputManager.IsLeftClickPressed();
         GameState State = Context.State;
 
-        if (isKeyPressed && (!State.LayoutMenu || !State.LayoutBag))
+        if (isKeyPressed && !State.LayoutMenu && !State.LayoutBag)
         {
             if (IsClickFartherThanPlayer(tileCursor.TilePosition))
             {
@@ -69,7 +98,8 @@ public abstract class BaseMap : IMap
             if (entity != null)
             {
                 logs.Add($"Clicou na entidade: {entity.GetType().Name}");
-                logs.Add($"Mouse World: {_tileCursor.WorldPosition}");
+                logs.Add($"Entity Id: {entity.Id}");
+                logs.Add($"SaveId: {entity.SaveId}");
                 logs.Add($"Hitbox: {entity.Hitbox}");
                 OnEntityClicked(entity);
             }
@@ -94,6 +124,8 @@ public abstract class BaseMap : IMap
         EntityWorld.Draw(spriteBatch, Context.State.Player);
         Map.DrawLayers(spriteBatch, LayersAfterEntities);
         DrawObjects(spriteBatch);
+
+        DrawDebug(spriteBatch);
     }
 
     public bool Collides(Rectangle hitbox)
@@ -106,12 +138,10 @@ public abstract class BaseMap : IMap
     protected virtual void UpdateMap(GameTime gameTime)
     {
         Player player = Context.State.Player;
-        Entity item = EntityWorld.IntersectsAny(player.Hitbox, player);
-        if (item != null && item.IsColetavel)
-        {
-            player.Inventory.AddItem(item.Id, item.Id, 1);
-            EntityWorld.Remove(item);
-        }
+        Entity item = EntityWorld.GetCollectableIntersecting(player.Hitbox, player);
+
+        if (item != null)
+            _worldActionService.PickupItem(item);
     }
 
     protected virtual void DrawObjects(SpriteBatch spriteBatch)
@@ -120,41 +150,13 @@ public abstract class BaseMap : IMap
 
     protected virtual void OnEntityClicked(Entity entity)
     {
-        switch (entity)
-        {
-            case Tronco tronco when Context.State.Player.ActiveTool is AxeTool tool:
-                if (Context.State.Player.IsAnimated)
-                    return;
-
-                Context.State.Player.PlayActionAnimation(10, 8, () =>
-                {
-                    tronco.Life -= tool.Damage;
-
-                    logs.Add($"Machadada no tronco! Vida restante: {tronco.Life}");
-
-                    if (tronco.Life <= 0)
-                    {
-                        Entity wood = EntityFactory.Create(Context, new TiledObjectData
-                        {
-                            Type = "Wood",
-                            X = tronco.Posicao.X + 5,
-                            Y = tronco.Posicao.Y - 8
-                        });
-                        EntityWorld.Add(wood);
-                        EntityWorld.Remove(tronco);
-                    }
-                });
-
-                break;
-
-            default:
-                return;
-        }
+        _entityInteractionManager.HandleClick(entity);
     }
 
     protected virtual void OnTileClicked(Point tile)
     {
     }
+
     protected bool IsClickFartherThanPlayer(Point clickedTile, int maxTiles = 2)
     {
         int tileSize = 16;
