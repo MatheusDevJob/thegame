@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities.Items;
-using thegame.Entities.Npcs;
 using thegame.Entities.Tools;
 using thegame.Maps;
 
@@ -15,7 +14,8 @@ public static class EntityFactory
 
         return obj.Type switch
         {
-            // "Pedra" => new Pedra(context, posicao),
+            "Pedra1" => new PedraPequena(context, posicao),
+            "Pedra2" => new PedraMedia(context, posicao),
 
             "Tronco" => new Tronco(context, posicao),
             "AxeTool" => new AxeTool(context, posicao),

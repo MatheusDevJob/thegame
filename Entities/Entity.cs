@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
@@ -21,6 +22,11 @@ public abstract class Entity
     public float Life;
     public float Damage;
     public readonly Texture2D Sprite;
+    protected int FrameWidth = 16;
+    protected int FrameHeight = 16;
+    protected int SpriteRow = 5;
+    protected int SpriteColumn = 31;
+
     protected Entity(GameContext context, string id, Vector2 posicao, float life = 0, float damage = 0)
     {
         Context = context;
@@ -32,8 +38,25 @@ public abstract class Entity
         AtualizarHitbox();
     }
 
-    public abstract void Update(GameTime gameTime);
-    public abstract void Draw(SpriteBatch spriteBatch);
+    public virtual void Update(GameTime gameTime) { }
+    public virtual void Draw(SpriteBatch spriteBatch)
+    {
+        Rectangle destination = new(
+            (int)Math.Round(Posicao.X),
+            (int)Math.Round(Posicao.Y),
+            FrameWidth,
+            FrameHeight
+        );
+
+        Rectangle source = new(
+            SpriteColumn * FrameWidth,
+            SpriteRow * FrameHeight,
+            FrameWidth,
+            FrameHeight
+        );
+
+        spriteBatch.Draw(Sprite, destination, source, Color.White);
+    }
 
     public Rectangle ObterHitboxFutura(Vector2 novaPosicao)
     {
@@ -53,6 +76,11 @@ public abstract class Entity
 
     protected virtual Rectangle CalcularHitbox(Vector2 posicao)
     {
-        return new Rectangle((int)posicao.X, (int)posicao.Y, 32, 32);
+        return new Rectangle(
+            (int)posicao.X,
+            (int)posicao.Y,
+            FrameWidth,
+            FrameHeight
+        );
     }
 }
