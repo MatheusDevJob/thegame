@@ -21,7 +21,7 @@ public abstract class Npc : Entity
     private readonly float _scale = 0.7f;
     private readonly Texture2D _texture;
 
-    protected float DistanciaInteracao = 70f;
+    protected float DistanciaInteracao = 30f;
     protected bool PlayerPerto;
     protected Vector2 Center => Posicao + new Vector2(_frameWidth * _scale / 2f, _frameHeight * _scale / 2f);
 
