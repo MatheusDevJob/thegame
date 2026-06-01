@@ -2,7 +2,6 @@ using System;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
-using thegame.Entities.Items;
 
 namespace thegame.Maps;
 
@@ -29,7 +28,9 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             return;
 
         string saveId = $"{_mapId}:drop:{Guid.NewGuid()}";
-        Entity item = CreateItemEntity(itemId, position);
+        if (!int.TryParse(itemId, out int itemIntId))
+            return;
+        Entity item = EntityFactory.Create(_context, new TiledObjectData { Id = itemIntId, X = position.X, Y = position.Y });
 
         if (item == null)
             return;
@@ -58,7 +59,10 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
 
         foreach (WorldItemSave savedItem in mapSave.DroppedItems)
         {
-            Entity item = CreateItemEntity(savedItem.ItemId, new Vector2(savedItem.X, savedItem.Y));
+            if (!int.TryParse(savedItem.ItemId, out int itemId))
+                continue;
+
+            Entity item = EntityFactory.Create(_context, new TiledObjectData { Id = itemId, X = savedItem.X, Y = savedItem.Y });
 
             if (item == null)
                 continue;
@@ -68,14 +72,5 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
 
             _entityWorld.Add(item);
         }
-    }
-
-    private Entity CreateItemEntity(string itemId, Vector2 position)
-    {
-        return itemId switch
-        {
-            "Wood" => new Wood(_context, position),
-            _ => null
-        };
     }
 }

@@ -10,6 +10,7 @@ public static class SaveManager
 {
     private const int CurrentVersion = 1;
     private const string SaveFileName = "save_01.json";
+    private static readonly List<string> tools = ["AxeTool", "PickaxeTool"];
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -36,11 +37,6 @@ public static class SaveManager
 
     public static GameSave CreateNewSave()
     {
-        List<string> tools =
-        [
-            "AxeTool"
-        ];
-
         return new GameSave
         {
             Version = CurrentVersion,
@@ -141,7 +137,6 @@ public static class SaveManager
 
         public GameSave ToGameSave()
         {
-            List<string> tools = ListTools ?? [];
             string activeTool = ActiveTool ?? "";
 
             if (tools.Count > 0 && !tools.Contains(activeTool))
