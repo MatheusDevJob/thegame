@@ -27,7 +27,7 @@ public abstract class Npc : Entity
 
     private bool _mostrarFala;
 
-    protected Npc(GameContext context, string nome, string fala, Vector2 posicao, string sprite) : base(context, sprite, nome, posicao, 0)
+    protected Npc(GameContext context, string nome, string fala, Vector2 posicao) : base(context, nome, posicao, 0)
     {
         Nome = nome;
         Fala = fala;

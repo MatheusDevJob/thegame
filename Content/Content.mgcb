@@ -320,18 +320,6 @@
 /processorParam:TextureFormat=Color
 /build:Items/axe.png
 
-#begin Items/axe.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Items/axe.png
-
 #begin Items/beetroot_00.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1111,18 +1099,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Items/soil_04.png
-
-#begin Items/spr_tileset_sunnysideworld_16px.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Items/spr_tileset_sunnysideworld_16px.png
 
 #begin Items/spr_tileset_sunnysideworld_16px.png
 /importer:TextureImporter
@@ -2264,6 +2240,42 @@
 /processorParam:TextureFormat=Color
 /build:UI/cursor/cursor_03.png
 
+#begin UI/Hud/9-slice/Ancient/brown_inlay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Hud/9-slice/Ancient/brown_inlay.png
+
+#begin UI/Hud/9-slice/Ancient/brown_pressed.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Hud/9-slice/Ancient/brown_pressed.png
+
+#begin UI/Hud/9-slice/Ancient/brown.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Hud/9-slice/Ancient/brown.png;UI/Hud/9-slice/Ancient/brown
+
 #begin UI/Hud/itemdisc_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2275,4 +2287,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/Hud/itemdisc_01.png
+
+#begin UI/Hud/UIpackSheet_transparent.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Hud/UIpackSheet_transparent.png;UI/Hud/UIpackSheet_transparent
 

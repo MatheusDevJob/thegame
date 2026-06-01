@@ -15,4 +15,6 @@ public class GameSave
 
     public List<string> ListTools { get; set; }
     public string ActiveTool { get; set; }
+
+    public int BagLevel { get; set; }
 }

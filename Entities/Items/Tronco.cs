@@ -14,9 +14,9 @@ public class Tronco : Entity
 
     private readonly Texture2D _sprite;
 
-    public Tronco(GameContext context, Vector2 posicao) : base(context, "Items/spr_tileset_sunnysideworld_16px", "Tronco", posicao, 3)
+    public Tronco(GameContext context, Vector2 posicao) : base(context, "Tronco", posicao, 3)
     {
-        _sprite = context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px");
+        _sprite = Sprite;
         AtualizarHitbox();
     }
 

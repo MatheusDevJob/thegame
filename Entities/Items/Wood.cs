@@ -5,7 +5,7 @@ using thegame.Core;
 
 namespace thegame.Entities.Items;
 
-public class Wood(GameContext context, Vector2 position) : Entity(context, "Items/wood", "Wood", position)
+public class Wood(GameContext context, Vector2 position) : Entity(context, "Wood", position)
 {
     public override bool BloqueiaMovimento => false;
     public override bool IsColetavel => true;

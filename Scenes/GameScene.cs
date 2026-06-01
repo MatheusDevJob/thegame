@@ -13,7 +13,7 @@ public class GameScene : IScene
     private readonly Player _player;
     private IMap _currentMap;
     private readonly Camera2D _camera;
-    private readonly Hud _hud;
+    protected readonly Hud _hud;
     private readonly TileCursor _tileCursor;
 
     public GameScene(GameContext context)
@@ -40,6 +40,7 @@ public class GameScene : IScene
             _currentMap.PixelWidth,
             _currentMap.PixelHeight
         );
+        _hud.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -58,13 +59,13 @@ public class GameScene : IScene
 
 
         spriteBatch.Begin(
-        samplerState: SamplerState.PointClamp,
-        blendState: BlendState.AlphaBlend
-    );
+            samplerState: SamplerState.PointClamp,
+            blendState: BlendState.AlphaBlend
+        );
         // HUD fixa da tela futuramente
         // Exemplo: vida, dinheiro, inventário, menu rápido
         _hud.Draw(spriteBatch);
-        _currentMap.DrawDebug(spriteBatch);
+        // _currentMap.DrawDebug(spriteBatch);
         spriteBatch.End();
     }
 

@@ -17,8 +17,7 @@ public class CityMap : BaseMap
             context,
             "Aldeão",
             "Olá, viajante!",
-            new Vector2(1100, 205),
-            "npc-pack/Old man/Old man walk-Sheet"
+            new Vector2(1100, 205)
         ));
 
         foreach (var obj in Map.GetObjects("Objects"))

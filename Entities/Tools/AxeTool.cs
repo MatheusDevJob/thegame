@@ -4,7 +4,7 @@ using thegame.Core;
 
 namespace thegame.Entities.Tools;
 
-public class AxeTool(GameContext context, Vector2 posicao) : Entity(context, "Items/axe", "AxeTool", posicao, 0, 1)
+public class AxeTool(GameContext context, Vector2 posicao) : Entity(context, "AxeTool", posicao, 0, 5)
 {
     public override void Draw(SpriteBatch spriteBatch)
     {

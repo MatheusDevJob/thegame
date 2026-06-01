@@ -61,6 +61,7 @@ public class MainMenuScene : IScene
                 PlayerPosition = new Vector2(1200, 220),
                 ListTools = lista,
                 ActiveTool = lista[0],
+                BagLevel = 4
             });
 
             _context.SceneManager.ChangeScene(new GameScene(_context));

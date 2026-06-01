@@ -38,7 +38,7 @@ public abstract class BaseMap : IMap
         Map.Load(Context.Content, mapPath);
 
         inputManager = context.Input;
-        debugVisual = new(context);
+        // debugVisual = new(context);
     }
 
     public virtual void OnEnter()
@@ -54,7 +54,7 @@ public abstract class BaseMap : IMap
         _tileCursor = tileCursor;
         isKeyPressed = inputManager.IsLeftClickPressed();
 
-        if (isKeyPressed)
+        if (isKeyPressed && !Context.State.LayoutMenu)
         {
             if (IsClickFartherThanPlayer(tileCursor.TilePosition))
             {

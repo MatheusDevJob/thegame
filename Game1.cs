@@ -19,6 +19,8 @@ public class Game1 : Game
     {
         _graphics = new GraphicsDeviceManager(this)
         {
+            // PreferredBackBufferWidth = 1280,
+            // PreferredBackBufferHeight = 720,
             HardwareModeSwitch = false,
             IsFullScreen = true
         };

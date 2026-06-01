@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Items;
 using thegame.Maps;
 
 namespace thegame.UI;
@@ -20,14 +22,23 @@ public class Hud
     public int screenWidth;
     public int screenHeight;
 
+    protected InputManager inputManager;
+    private readonly Texture2D _layoutMenuTexture;
+    private readonly Texture2D _slotTexture;
+    private readonly SpriteFont _font;
     public Hud(GameContext context)
     {
         _context = context;
         _pixel = new Texture2D(_context.GraphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
 
+        _font = context.Content.Load<SpriteFont>("Fonts/MenuFont");
+
         _hudBoxItem = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
         // _hudAxeItem = context.Content.Load<Texture2D>("Items/axe");
+        _layoutMenuTexture = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown");
+        _slotTexture = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
+        inputManager = context.Input;
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -54,6 +65,122 @@ public class Hud
 
         DrawItensBar(spriteBatch);
         DrawItensOnBar(spriteBatch);
+        if (_context.State.LayoutMenu) DrawLayoutMenu(spriteBatch);
+    }
+
+    private void DrawLayoutMenu(SpriteBatch spriteBatch)
+    {
+        Rectangle menu = new(
+            150,
+            100,
+            screenWidth - 300,
+            screenHeight - 200
+        );
+        int LimiteItensBag = _context.State.Player.Inventory.GetLimiteItensBag;
+
+        DrawNineSlice(spriteBatch, _layoutMenuTexture, menu, 16);
+        DrawBagSlots(spriteBatch, menu, 8, LimiteItensBag);
+    }
+
+    private static void DrawNineSlice(SpriteBatch spriteBatch, Texture2D texture, Rectangle dest, int sliceSize)
+    {
+        int w = texture.Width;
+        int h = texture.Height;
+
+        Rectangle srcTopLeft = new(0, 0, sliceSize, sliceSize);
+        Rectangle srcTop = new(sliceSize, 0, w - sliceSize * 2, sliceSize);
+        Rectangle srcTopRight = new(w - sliceSize, 0, sliceSize, sliceSize);
+
+        Rectangle srcLeft = new(0, sliceSize, sliceSize, h - sliceSize * 2);
+        Rectangle srcCenter = new(sliceSize, sliceSize, w - sliceSize * 2, h - sliceSize * 2);
+        Rectangle srcRight = new(w - sliceSize, sliceSize, sliceSize, h - sliceSize * 2);
+
+        Rectangle srcBottomLeft = new(0, h - sliceSize, sliceSize, sliceSize);
+        Rectangle srcBottom = new(sliceSize, h - sliceSize, w - sliceSize * 2, sliceSize);
+        Rectangle srcBottomRight = new(w - sliceSize, h - sliceSize, sliceSize, sliceSize);
+
+        Rectangle dstTopLeft = new(dest.X, dest.Y, sliceSize, sliceSize);
+        Rectangle dstTop = new(dest.X + sliceSize, dest.Y, dest.Width - sliceSize * 2, sliceSize);
+        Rectangle dstTopRight = new(dest.Right - sliceSize, dest.Y, sliceSize, sliceSize);
+
+        Rectangle dstLeft = new(dest.X, dest.Y + sliceSize, sliceSize, dest.Height - sliceSize * 2);
+        Rectangle dstCenter = new(dest.X + sliceSize, dest.Y + sliceSize, dest.Width - sliceSize * 2, dest.Height - sliceSize * 2);
+        Rectangle dstRight = new(dest.Right - sliceSize, dest.Y + sliceSize, sliceSize, dest.Height - sliceSize * 2);
+
+        Rectangle dstBottomLeft = new(dest.X, dest.Bottom - sliceSize, sliceSize, sliceSize);
+        Rectangle dstBottom = new(dest.X + sliceSize, dest.Bottom - sliceSize, dest.Width - sliceSize * 2, sliceSize);
+        Rectangle dstBottomRight = new(dest.Right - sliceSize, dest.Bottom - sliceSize, sliceSize, sliceSize);
+
+        spriteBatch.Draw(texture, dstTopLeft, srcTopLeft, Color.White);
+        spriteBatch.Draw(texture, dstTop, srcTop, Color.White);
+        spriteBatch.Draw(texture, dstTopRight, srcTopRight, Color.White);
+
+        spriteBatch.Draw(texture, dstLeft, srcLeft, Color.White);
+        spriteBatch.Draw(texture, dstCenter, srcCenter, Color.White);
+        spriteBatch.Draw(texture, dstRight, srcRight, Color.White);
+
+        spriteBatch.Draw(texture, dstBottomLeft, srcBottomLeft, Color.White);
+        spriteBatch.Draw(texture, dstBottom, srcBottom, Color.White);
+        spriteBatch.Draw(texture, dstBottomRight, srcBottomRight, Color.White);
+    }
+
+    private void DrawBagSlots(SpriteBatch spriteBatch, Rectangle bag, int columns, int itens)
+    {
+        int slotSize = 64;
+        int gap = 2;
+
+        int totalWidth = columns * slotSize + (columns - 1) * gap;
+        int totalHeight = itens * slotSize + (itens - 1) * gap;
+
+        int startX = bag.X + (bag.Width - totalWidth) / 2;
+        int startY = bag.Y + 90;
+
+        List<ItemStack> items = _context.State.Player.Inventory.Itens;
+
+        for (int i = 0; i < itens; i++)
+        {
+            int row = i / columns;
+            int col = i % columns;
+
+            Rectangle slot = new(
+                startX + col * (slotSize + gap),
+                startY + row * (slotSize + gap),
+                slotSize,
+                slotSize
+            );
+            spriteBatch.Draw(_slotTexture, slot, Color.White);
+
+            Rectangle itemRect = new(
+                slot.X + 10,
+                slot.Y + 8,
+                slot.Width - 20,
+                slot.Height - 20
+            );
+
+            if (items.Count <= i) continue;
+            ItemStack item = items[i];
+            if (item == null) continue;
+
+            Texture2D textureItem = EntityTexture2D.GetEntityTextureById(_context, item.Id);
+            spriteBatch.Draw(textureItem, itemRect, Color.White);
+
+            string quantidade = item.Quantidade.ToString();
+            float textScale = 1f;
+            Vector2 textSize = _font.MeasureString(quantidade) * textScale;
+            Vector2 textPosition = new(
+                slot.Right - textSize.X - 8,
+                slot.Bottom - textSize.Y - 6
+            );
+
+            spriteBatch.DrawString(_font, quantidade, textPosition + new Vector2(1, 1), Color.Black, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(_font, quantidade, textPosition, Color.White, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+        }
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        if (inputManager.IsKeyPressed(Keys.Escape))
+            _context.State.LayoutMenu = !_context.State.LayoutMenu;
     }
 
     private void DrawItensBar(SpriteBatch spriteBatch)
