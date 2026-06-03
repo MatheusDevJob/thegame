@@ -89,9 +89,8 @@ public abstract class BaseMap : IMap
         if (isKeyPressed && !State.LayoutMenu && !State.LayoutBag)
         {
             Entity entity = EntityUnderMouse;
-            // logs.Add("\n");
-            var (row, frames) = AnimationTool.GetAnimationToolById(State.ActiveEquipe.Id);
-            State.Player.PlayActionAnimation(row, frames, () =>
+            // logs.Add("\n"); 
+            State.Player.PlayActionAnimation(State.ActiveEquipe.Id, () =>
             {
                 if (entity != null)
                 {

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
+using thegame.Entities.Tools;
 
 namespace thegame.Entities;
 
@@ -114,8 +115,9 @@ public class Player : Entity
         AtualizarHitbox();
     }
 
-    public void PlayActionAnimation(int row, int frames, Action onFinished)
+    public void PlayActionAnimation(string toolId, Action onFinished)
     {
+        var (row, frames) = AnimationTool.GetAnimationToolById(toolId);
         if (_isAnimated)
             return;
 

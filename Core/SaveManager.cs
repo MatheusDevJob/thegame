@@ -9,7 +9,7 @@ namespace thegame.Core;
 public static class SaveManager
 {
     private const int CurrentVersion = 1;
-    private const string SaveFileName = "save_01.json";
+    private const string SaveFileName = "save_02.json";
     private const int EquipableSlotCount = 8;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -47,7 +47,7 @@ public static class SaveManager
             [
                 "AxeTool",
                 "PickaxeTool",
-                "",
+                "ShovelTool",
                 "",
                 "",
                 "",
@@ -56,7 +56,20 @@ public static class SaveManager
             ],
             ActiveEquipe = "",
             BagLevel = 4,
-            BagItems = [],
+            BagItems = [
+                new ItemStackSave{
+                    ItemId= "AxeTool",
+                    Amount= 1
+                },
+                new ItemStackSave{
+                    ItemId= "PickaxeTool",
+                    Amount= 1
+                },
+                new ItemStackSave  {
+                    ItemId= "ShovelTool",
+                    Amount= 1
+                },
+            ],
             Maps = []
         };
     }

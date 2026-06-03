@@ -45,6 +45,7 @@ public class MapSave
     public List<string> RemovedEntities { get; set; } = [];
     public List<WorldEntitySave> SpawnedEntities { get; set; } = [];
     public List<WorldItemSave> DroppedItems { get; set; } = [];
+    public List<WorldTileSave> WorldTileState { get; set; } = [];
 }
 
 public class WorldEntitySave
@@ -63,4 +64,12 @@ public class WorldItemSave
     public int Amount { get; set; } = 1;
     public float X { get; set; }
     public float Y { get; set; }
+}
+
+public class WorldTileSave
+{
+    public string Id { get; set; } = "";
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Quantity { get; set; } = 1;
 }
