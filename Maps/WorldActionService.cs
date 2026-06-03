@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Entities.Items.WorldObjects.Interactables;
 
 namespace thegame.Maps;
 
@@ -28,9 +29,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             return;
 
         string saveId = $"{_mapId}:drop:{Guid.NewGuid()}";
-        if (!int.TryParse(itemId, out int itemIntId))
-            return;
-        Entity item = EntityFactory.Create(_context, new TiledObjectData { Id = itemIntId, X = position.X, Y = position.Y });
+        Entity item = EntityFactory.Create(_context, new TiledObjectData { Type = itemId, X = position.X, Y = position.Y });
 
         if (item == null)
             return;

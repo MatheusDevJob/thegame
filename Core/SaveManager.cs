@@ -10,7 +10,7 @@ public static class SaveManager
 {
     private const int CurrentVersion = 1;
     private const string SaveFileName = "save_01.json";
-    private static readonly List<string> tools = ["AxeTool", "PickaxeTool"];
+    private const int EquipableSlotCount = 8;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -43,8 +43,18 @@ public static class SaveManager
             CurrentMap = "city",
             PlayerLife = 75f,
             PlayerPosition = new Vector2(1200, 220),
-            ListTools = tools,
-            ActiveTool = tools[0],
+            EquipableIds =
+            [
+                "AxeTool",
+                "PickaxeTool",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+            ],
+            ActiveEquipe = "",
             BagLevel = 4,
             BagItems = [],
             Maps = []
@@ -89,6 +99,19 @@ public static class SaveManager
             File.Delete(SavePath);
     }
 
+    private static List<string> NormalizeEquipableIds(List<string> equipableIds)
+    {
+        List<string> normalized = equipableIds ?? [];
+
+        while (normalized.Count < EquipableSlotCount)
+            normalized.Add("");
+
+        if (normalized.Count > EquipableSlotCount)
+            normalized = normalized.GetRange(0, EquipableSlotCount);
+
+        return normalized;
+    }
+
     private static void TryBackupCorruptedSave()
     {
         try
@@ -112,8 +135,8 @@ public static class SaveManager
         public float PlayerLife { get; set; }
         public float PlayerX { get; set; }
         public float PlayerY { get; set; }
-        public List<string> ListTools { get; set; } = [];
-        public string ActiveTool { get; set; } = "";
+        public List<string> EquipableIds { get; set; } = [];
+        public string ActiveEquipe { get; set; } = "";
         public int BagLevel { get; set; }
         public List<ItemStackSave> BagItems { get; set; } = [];
         public Dictionary<string, MapSave> Maps { get; set; } = [];
@@ -127,8 +150,8 @@ public static class SaveManager
                 PlayerLife = save.PlayerLife,
                 PlayerX = save.PlayerPosition.X,
                 PlayerY = save.PlayerPosition.Y,
-                ListTools = save.ListTools ?? [],
-                ActiveTool = save.ActiveTool ?? "",
+                EquipableIds = NormalizeEquipableIds(save.EquipableIds),
+                ActiveEquipe = save.ActiveEquipe ?? "",
                 BagLevel = save.BagLevel,
                 BagItems = save.BagItems ?? [],
                 Maps = save.Maps ?? []
@@ -137,20 +160,15 @@ public static class SaveManager
 
         public GameSave ToGameSave()
         {
-            string activeTool = ActiveTool ?? "";
-
-            if (tools.Count > 0 && !tools.Contains(activeTool))
-                activeTool = tools[0];
-
             return new GameSave
             {
                 Version = Version,
                 CurrentMap = string.IsNullOrWhiteSpace(CurrentMap) ? "city" : CurrentMap,
                 PlayerLife = PlayerLife,
                 PlayerPosition = new Vector2(PlayerX, PlayerY),
-                ListTools = tools,
-                ActiveTool = activeTool,
-                BagLevel = BagLevel,
+                EquipableIds = NormalizeEquipableIds(EquipableIds),
+                ActiveEquipe = ActiveEquipe ?? "",
+                BagLevel = BagLevel <= 0 ? 4 : BagLevel,
                 BagItems = BagItems ?? [],
                 Maps = Maps ?? []
             };

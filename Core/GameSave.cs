@@ -7,11 +7,21 @@ public class GameSave
 {
     public int Version { get; set; } = 1;
     public string CurrentMap { get; set; } = "city";
-    public float PlayerLife { get; set; } = 100f;
+    public float PlayerLife { get; set; } = 75f;
     public Vector2 PlayerPosition { get; set; } = new(1200, 220);
-    public List<string> ListTools { get; set; } = [];
-    public string ActiveTool { get; set; } = "";
-    public int BagLevel { get; set; } = 1;
+    public List<string> EquipableIds { get; set; } =
+    [
+        "AxeTool",
+        "PickaxeTool",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ];
+    public string ActiveEquipe { get; set; } = "";
+    public int BagLevel { get; set; } = 4;
     public List<ItemStackSave> BagItems { get; set; } = [];
     public Dictionary<string, MapSave> Maps { get; set; } = [];
 

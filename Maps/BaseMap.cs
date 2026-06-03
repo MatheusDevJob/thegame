@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities;
 using thegame.Entities.Npcs;
@@ -26,8 +26,9 @@ public abstract class BaseMap : IMap
     protected TileCursor _tileCursor;
     protected InputManager inputManager;
     protected bool isKeyPressed;
+    protected bool isRMPressed;
 
-    public DebugVisual debugVisual;
+    // public DebugVisual debugVisual;
     public List<string> logs = [];
 
     protected BaseMap(GameContext context, string id, string mapPath)
@@ -38,7 +39,7 @@ public abstract class BaseMap : IMap
         inputManager = context.Input;
         _worldActionService = new(context, EntityWorld, id);
         _entityInteractionManager = new(context, _worldActionService);
-        debugVisual = new(context);
+        // debugVisual = new(context);
 
         Map = new TiledMap();
         Map.Load(Context.Content, mapPath);
@@ -86,35 +87,34 @@ public abstract class BaseMap : IMap
 
         if (isKeyPressed && !State.LayoutMenu && !State.LayoutBag)
         {
-            if (IsClickFartherThanPlayer(tileCursor.TilePosition))
-            {
-                logs.Add("Entidade muito longe.");
-                return;
-            }
-
             Entity entity = EntityUnderMouse;
-            logs.Add("\n");
+            // logs.Add("\n");
 
-            if (entity != null)
+            State.Player.PlayActionAnimation(10, 8, () =>
             {
-                logs.Add($"Clicou na entidade: {entity.GetType().Name}");
-                logs.Add($"Entity Id: {entity.Id}");
-                logs.Add($"SaveId: {entity.SaveId}");
-                logs.Add($"Hitbox: {entity.Hitbox}");
-                OnEntityClicked(entity);
-            }
-            else
-            {
-                logs.Add($"Clicou no tile: {_tileCursor.TilePosition}");
-                logs.Add($"Mouse World: {_tileCursor.WorldPosition}");
-                OnTileClicked(_tileCursor.TilePosition);
-            }
+                if (entity != null)
+                {
+                    // logs.Add($"Clicou na entidade: {entity.GetType().Name}");
+                    // logs.Add($"Entity Id: {entity.Id}");
+                    // logs.Add($"SaveId: {entity.SaveId}");
+                    // logs.Add($"Hitbox: {entity.Hitbox}");
+                    OnEntityClicked(entity);
+                }
+                else
+                {
+                    // logs.Add($"Clicou no tile: {_tileCursor.TilePosition}");
+                    // logs.Add($"Mouse World: {_tileCursor.WorldPosition}");
+                    OnTileClicked(_tileCursor.TilePosition);
+                }
+            });
 
-            if (logs.Count > 6)
-                logs.RemoveRange(0, logs.Count - 6);
+            // if (logs.Count > 6)
+            // // logs.RemoveRange(0, logs.Count - 6);
         }
+        IsM2Clicked(gameTime);
 
         UpdateMap(gameTime);
+        TrocaTool();
         EntityWorld.Update(gameTime);
     }
 
@@ -125,7 +125,7 @@ public abstract class BaseMap : IMap
         Map.DrawLayers(spriteBatch, LayersAfterEntities);
         DrawObjects(spriteBatch);
 
-        DrawDebug(spriteBatch);
+        // DrawDebug(spriteBatch);
     }
 
     public bool Collides(Rectangle hitbox)
@@ -144,36 +144,68 @@ public abstract class BaseMap : IMap
             _worldActionService.PickupItem(item);
     }
 
+    protected virtual void IsM2Clicked(GameTime gameTime)
+    {
+        isRMPressed = inputManager.IsRightClickPressed();
+        if (!isRMPressed) return;
+
+        Entity entity = EntityUnderMouse;
+        if (entity == null) return;
+
+        OnEntityClicked(entity, "right");
+    }
+
     protected virtual void DrawObjects(SpriteBatch spriteBatch)
     {
     }
 
-    protected virtual void OnEntityClicked(Entity entity)
+    protected virtual void OnEntityClicked(Entity entity, string click = "left")
     {
-        _entityInteractionManager.HandleClick(entity);
+        _entityInteractionManager.HandleClick(entity, click);
     }
 
     protected virtual void OnTileClicked(Point tile)
     {
     }
 
-    protected bool IsClickFartherThanPlayer(Point clickedTile, int maxTiles = 2)
+    private void TrocaTool()
     {
-        int tileSize = 16;
-
-        Point playerTile = new(
-            Context.State.Player.Hitbox.Center.X / tileSize,
-            Context.State.Player.Hitbox.Center.Y / tileSize
-        );
-
-        int distanceX = Math.Abs(clickedTile.X - playerTile.X);
-        int distanceY = Math.Abs(clickedTile.Y - playerTile.Y);
-
-        return distanceX > maxTiles || distanceY > maxTiles;
+        InputManager input = Context.Input;
+        if (input.IsKeyPressed(Keys.D1))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D2))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D3))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D4))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D5))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D6))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D7))
+        {
+            Context.State.SetActiveEquipe("");
+        }
+        else if (input.IsKeyPressed(Keys.D8))
+        {
+            Context.State.SetActiveEquipe("");
+        }
     }
-
     public virtual void DrawDebug(SpriteBatch spriteBatch)
     {
-        debugVisual.Draw(spriteBatch, logs);
+        // debugVisual.Draw(spriteBatch, logs);
     }
 }

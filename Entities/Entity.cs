@@ -12,7 +12,7 @@ public abstract class Entity
     public Vector2 Posicao { get; protected set; }
     public Rectangle Hitbox { get; protected set; }
 
-    public virtual bool BloqueiaMovimento => true;
+    public virtual bool BloqueiaMovimento { get; set; } = true;
     public virtual float SortY => Hitbox.Bottom;
 
     public string Id;
@@ -82,5 +82,27 @@ public abstract class Entity
             FrameWidth,
             FrameHeight
         );
+    }
+
+    protected bool IsPlayerFartherThanMe(int maxTiles = 2)
+    {
+        const int tileSize = 16;
+
+        if (Context.State.Player == null) return true;
+
+        Point playerTile = new(
+            Context.State.Player.Hitbox.Center.X / tileSize,
+            Context.State.Player.Hitbox.Center.Y / tileSize
+        );
+
+        Point entityTile = new(
+            Hitbox.Center.X / tileSize,
+            Hitbox.Center.Y / tileSize
+        );
+
+        int distanceX = Math.Abs(entityTile.X - playerTile.X);
+        int distanceY = Math.Abs(entityTile.Y - playerTile.Y);
+
+        return distanceX > maxTiles || distanceY > maxTiles;
     }
 }

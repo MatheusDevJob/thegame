@@ -1,5 +1,8 @@
+using System;
+using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Entities.Items.WorldObjects.Interactables;
 
 namespace thegame.Maps;
 
@@ -7,9 +10,11 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
 {
     private readonly GameContext _context = context;
     private readonly WorldActionService _worldActions = worldActions;
+    private string Click;
 
-    public void HandleClick(Entity entity)
+    public void HandleClick(Entity entity, string click = "left")
     {
+        Click = click;
         if (entity == null)
             return;
 
@@ -26,6 +31,22 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
             case "Wood":
                 _worldActions.PickupItem(entity);
                 break;
+
+            // objetos do mundo
+            case "Bau":
+                if (click == "left")
+                { }
+                else
+                {
+                    if (IsEntityFartherThanPlayer(entity)) return;
+                    Bau bau = (Bau)entity;
+
+                    if (bau.Aberto)
+                        bau.CloseBau();
+                    else
+                        bau.OpenBau();
+                }
+                break;
         }
     }
 
@@ -37,19 +58,19 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
         if (_context.State.Player.IsAnimated)
             return;
 
-        if (_context.State.ActiveTool == null)
+        if (_context.State.ActiveEquipe == null)
             return;
 
-        _context.State.Player.PlayActionAnimation(10, 8, () =>
-        {
-            tronco.Life -= _context.State.ActiveTool.Damage;
+        if (IsEntityFartherThanPlayer(tronco))
+            return;
 
-            if (tronco.Life > 0)
-                return;
+        tronco.Life -= _context.State.ActiveEquipe.Damage;
 
-            _worldActions.DestroyEntity(tronco);
-            _worldActions.DropItem("Wood", 1, tronco.Posicao);
-        });
+        if (tronco.Life > 0)
+            return;
+
+        _worldActions.DestroyEntity(tronco);
+        _worldActions.DropItem("Wood", 1, tronco.Posicao);
     }
 
     private void HandlePedra(Entity pedra)
@@ -57,15 +78,38 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
         if (!_context.State.PlayerHasTool("PickaxeTool"))
             return;
 
-        if (_context.State.ActiveTool == null)
+        if (_context.State.ActiveEquipe == null)
             return;
 
-        pedra.Life -= _context.State.ActiveTool.Damage;
+        if (IsEntityFartherThanPlayer(pedra))
+            return;
+        pedra.Life -= _context.State.ActiveEquipe.Damage;
 
         if (pedra.Life > 0)
             return;
 
         _worldActions.DestroyEntity(pedra);
         _worldActions.DropItem("Stone", 1, pedra.Posicao);
+    }
+
+    private void HandleBau(Entity bau) { }
+    protected bool IsEntityFartherThanPlayer(Entity entity, int maxTiles = 2)
+    {
+        int tileSize = 16;
+
+        Point playerTile = new(
+            _context.State.Player.Hitbox.Center.X / tileSize,
+            _context.State.Player.Hitbox.Center.Y / tileSize
+        );
+
+        Point entityTile = new(
+            entity.Hitbox.Center.X / tileSize,
+            entity.Hitbox.Center.Y / tileSize
+        );
+
+        int distanceX = Math.Abs(entityTile.X - playerTile.X);
+        int distanceY = Math.Abs(entityTile.Y - playerTile.Y);
+
+        return distanceX > maxTiles || distanceY > maxTiles;
     }
 }

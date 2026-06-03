@@ -13,7 +13,7 @@ public class GameState
     public GameSave PlayerSave { get; private set; }
     public Player Player { get; private set; }
     public Inventory Inventory { get; private set; } = new();
-    public Entity ActiveTool { get; private set; }
+    public Entity ActiveEquipe { get; set; }
     public bool LayoutMenu = false;
     public bool LayoutBag = false;
 
@@ -29,7 +29,7 @@ public class GameState
     private void LoadRuntimeFromSave()
     {
         Inventory.LoadFromSave(PlayerSave.BagItems, PlayerSave.BagLevel);
-        SetActiveTool(PlayerSave.ActiveTool);
+        SetActiveEquipe(PlayerSave.ActiveEquipe);
     }
 
     private void SyncSaveFromRuntime()
@@ -39,8 +39,8 @@ public class GameState
         PlayerSave.BagLevel = Inventory.BagLevel;
         PlayerSave.BagItems = Inventory.ToSaveItems();
 
-        if (ActiveTool != null)
-            PlayerSave.ActiveTool = ActiveTool.Id;
+        if (ActiveEquipe != null)
+            PlayerSave.ActiveEquipe = ActiveEquipe.Id;
     }
 
     public void SaveGame()
@@ -51,7 +51,7 @@ public class GameState
 
     public bool PlayerHasTool(string toolId)
     {
-        return PlayerSave.ListTools != null && PlayerSave.ListTools.Contains(toolId);
+        return PlayerSave.EquipableIds != null && PlayerSave.EquipableIds.Contains(toolId);
     }
 
     public void AddTool(string toolId)
@@ -59,16 +59,16 @@ public class GameState
         if (string.IsNullOrWhiteSpace(toolId))
             return;
 
-        PlayerSave.ListTools ??= [];
+        PlayerSave.EquipableIds ??= [];
 
-        if (!PlayerSave.ListTools.Contains(toolId))
-            PlayerSave.ListTools.Add(toolId);
+        if (!PlayerSave.EquipableIds.Contains(toolId))
+            PlayerSave.EquipableIds.Add(toolId);
 
-        if (string.IsNullOrWhiteSpace(PlayerSave.ActiveTool))
-            SetActiveTool(toolId);
+        if (string.IsNullOrWhiteSpace(PlayerSave.ActiveEquipe))
+            SetActiveEquipe(toolId);
     }
 
-    public void SetActiveTool(string toolId)
+    public void SetActiveEquipe(string toolId)
     {
         if (string.IsNullOrWhiteSpace(toolId))
             return;
@@ -86,8 +86,8 @@ public class GameState
         if (tool == null)
             return;
 
-        ActiveTool = tool;
-        PlayerSave.ActiveTool = toolId;
+        ActiveEquipe = tool;
+        PlayerSave.ActiveEquipe = toolId;
     }
 
     public void AddItemToBag(string itemId, int amount = 1)

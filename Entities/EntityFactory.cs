@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities.Items;
+using thegame.Entities.Items.WorldObjects.Interactables;
 using thegame.Entities.Tools;
 using thegame.Maps;
 
@@ -21,6 +22,9 @@ public static class EntityFactory
             "AxeTool" => new AxeTool(context, posicao),
             "PickaxeTool" => new PickaxeTool(context, posicao),
             "Wood" => new Wood(context, posicao),
+
+            // objetos do mundo
+            "Bau" => new Bau(context, posicao),
 
             _ => null
         };
