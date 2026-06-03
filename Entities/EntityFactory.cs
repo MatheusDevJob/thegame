@@ -18,9 +18,12 @@ public static class EntityFactory
             "Pedra1" => new PedraPequena(context, posicao),
             "Pedra2" => new PedraMedia(context, posicao),
 
-            "Tronco" => new Tronco(context, posicao),
+            // ferramentas
             "AxeTool" => new AxeTool(context, posicao),
             "PickaxeTool" => new PickaxeTool(context, posicao),
+            "ShovelTool" => new ShovelTool(context, posicao),
+
+            "Tronco" => new Tronco(context, posicao),
             "Wood" => new Wood(context, posicao),
 
             // objetos do mundo

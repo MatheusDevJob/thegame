@@ -23,7 +23,7 @@ public class Player : Entity
     private int _currentFrame;
     private int _currentRow;
     private double _timer;
-    private readonly double _frameSpeed = 0.12;
+    private readonly double _frameSpeed = 0.06;
     private readonly float _scale = 1f;
     private readonly float _speed = 60f;
     private readonly Texture2D _hitboxPixel;

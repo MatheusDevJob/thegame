@@ -12,6 +12,8 @@ public static class EntityTexture2D
             "Aldeão" => context.Content.Load<Texture2D>("npc-pack/Old man/Old man walk-Sheet"),
             "Player" => context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes"),
             "Tronco" => context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px"),
+            // Ferramentas
+            "ShovelTool" => context.Content.Load<Texture2D>("Items/shovel"),
             "AxeTool" => context.Content.Load<Texture2D>("Items/axe"),
             "PickaxeTool" => context.Content.Load<Texture2D>("Items/pickaxe"),
             "Wood" => context.Content.Load<Texture2D>("Items/wood"),

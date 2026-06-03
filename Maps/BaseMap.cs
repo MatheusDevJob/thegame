@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities;
 using thegame.Entities.Npcs;
+using thegame.Entities.Tools;
 
 namespace thegame.Maps;
 
@@ -89,8 +90,8 @@ public abstract class BaseMap : IMap
         {
             Entity entity = EntityUnderMouse;
             // logs.Add("\n");
-
-            State.Player.PlayActionAnimation(10, 8, () =>
+            var (row, frames) = AnimationTool.GetAnimationToolById(State.ActiveEquipe.Id);
+            State.Player.PlayActionAnimation(row, frames, () =>
             {
                 if (entity != null)
                 {
