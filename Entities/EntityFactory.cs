@@ -24,7 +24,10 @@ public static class EntityFactory
             "ShovelTool" => new ShovelTool(context, posicao),
 
             "Tronco" => new Tronco(context, posicao),
+
+            // itens
             "Wood" => new Wood(context, posicao),
+            "Dirt" => new Terra(context, posicao),
 
             // objetos do mundo
             "Bau" => new Bau(context, posicao),

@@ -13,6 +13,7 @@ public class TiledMap
 {
     private TiledMapData _map;
     private readonly Dictionary<TiledTilesetData, Texture2D> _textures = [];
+    private readonly Dictionary<string, Dictionary<Point, int>> _tileOverrides = [];
     private readonly List<Rectangle> _collisionRectangles = [];
     public int TileWidth => _map.TileWidth;
     public int TileHeight => _map.TileHeight;
@@ -142,7 +143,9 @@ public class TiledMap
             for (int x = 0; x < layer.Width; x++)
             {
                 var index = y * layer.Width + x;
-                var gid = layer.Data[index];
+                Point tile = new(x, y);
+
+                var gid = GetTileOverrideGid(layer.Name, tile) ?? layer.Data[index];
 
                 if (gid == 0)
                     continue;
@@ -238,6 +241,84 @@ public class TiledMap
     public int GetTilePropertyInt(string layerName, Point tile, string propertyName)
     {
         return GetTileProperty(layerName, tile, propertyName)?.AsInt() ?? 0;
+    }
+
+    public void SetTileOverride(string layerName, Point tile, string overrideKey)
+    {
+        int gid = GetGidByTileKey(overrideKey);
+
+        if (gid == 0)
+            return;
+
+        SetTileOverride(layerName, tile, gid);
+    }
+
+    public void SetTileOverride(string layerName, Point tile, int gid)
+    {
+        var layer = GetTileLayer(layerName);
+
+        if (layer == null)
+            return;
+
+        if (tile.X < 0 || tile.Y < 0 || tile.X >= layer.Width || tile.Y >= layer.Height)
+            return;
+
+        if (!_tileOverrides.ContainsKey(layerName))
+            _tileOverrides[layerName] = [];
+
+        _tileOverrides[layerName][tile] = gid;
+    }
+
+    public void ClearTileOverride(string layerName, Point tile)
+    {
+        if (!_tileOverrides.ContainsKey(layerName))
+            return;
+
+        _tileOverrides[layerName].Remove(tile);
+    }
+
+    private int? GetTileOverrideGid(string layerName, Point tile)
+    {
+        if (!_tileOverrides.TryGetValue(layerName, out var layerOverrides))
+            return null;
+
+        if (!layerOverrides.TryGetValue(tile, out int gid))
+            return null;
+
+        return gid;
+    }
+
+    private TiledLayerData GetTileLayer(string layerName)
+    {
+        return _map.Layers.FirstOrDefault(layer =>
+            layer.Name == layerName &&
+            layer.Type == "tilelayer" &&
+            layer.Data != null
+        );
+    }
+
+    private int GetGidByTileKey(string tileKey)
+    {
+        if (string.IsNullOrEmpty(tileKey))
+            return 0;
+
+        foreach (TiledTilesetData tileset in _map.Tilesets)
+        {
+            if (tileset.Tiles == null)
+                continue;
+
+            foreach (TiledTileData tile in tileset.Tiles)
+            {
+                string key = tile.Properties?
+                    .FirstOrDefault(property => property.Name == "tileKey")?
+                    .Value.ToString();
+
+                if (string.Equals(key, tileKey, System.StringComparison.OrdinalIgnoreCase))
+                    return tileset.FirstGid + tile.Id;
+            }
+        }
+
+        return 0;
     }
 }
 

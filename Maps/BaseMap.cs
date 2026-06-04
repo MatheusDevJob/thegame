@@ -166,11 +166,7 @@ public abstract class BaseMap : IMap
 
     protected virtual void OnTileClicked(Point tile)
     {
-        string terrainType = Map.GetTilePropertyString("Ground", tile, "terrainType");
-        bool diggable = Map.GetTilePropertyBool("Ground", tile, "diggable");
-        string drop = Map.GetTilePropertyString("Ground", tile, "drop");
-
-
+        _worldActionService.DigTile(tile, Map);
     }
     private void TrocaTool()
     {

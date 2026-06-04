@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
@@ -11,6 +12,17 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
     private readonly GameContext _context = context;
     private readonly EntityWorld _entityWorld = entityWorld;
     private readonly string _mapId = mapId;
+    private static readonly HashSet<string> DiggableTerrains = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Grass",
+            "Sand",
+            "Dirt"
+        };
+
+    public bool IsDiggable(string terrainType)
+    {
+        return !string.IsNullOrEmpty(terrainType) && DiggableTerrains.Contains(terrainType) && _context.State.ActiveEquipe.Id == "ShovelTool";
+    }
 
     public void DestroyEntity(Entity entity)
     {
@@ -23,6 +35,50 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         _entityWorld.Remove(entity);
     }
 
+    public void DigTile(Point tile, TiledMap Map)
+    {
+        string layer = "Ground";
+        string terrainType = Map.GetTilePropertyString(layer, tile, "terrainType");
+        bool diggable = Map.GetTilePropertyBool(layer, tile, "diggable");
+        string drop = Map.GetTilePropertyString(layer, tile, "drop");
+
+
+        if (string.IsNullOrEmpty(terrainType) || !diggable) return;
+        if (!IsDiggable(terrainType)) return;
+
+
+        string overrideKey = terrainType switch
+        {
+            "Grass" => "DugGrass",
+            "Sand" => "DugSand",
+            "Dirt" => "DugDirt",
+            _ => null
+        };
+        if (overrideKey == null) return;
+
+
+        MapSave mapSave = _context.State.PlayerSave.GetMapSave(_mapId);
+
+        mapSave.SetTileState(new WorldTileSave
+        {
+            Layer = layer,
+            X = tile.X,
+            Y = tile.Y,
+            BaseTerrain = terrainType,
+            State = "Dug",
+            OverrideKey = overrideKey
+        });
+
+        Map.SetTileOverride(layer, tile, overrideKey);
+
+        // dropar item no meio do Tile.
+        int tileSize = 16;
+        Vector2 position = new(
+            tile.X * tileSize + tileSize / 2,
+            tile.Y * tileSize + tileSize / 2
+        );
+        if (drop != null) DropItem(drop, 3, position);
+    }
     public void DropItem(string itemId, int amount, Vector2 position)
     {
         if (string.IsNullOrWhiteSpace(itemId) || amount <= 0)
