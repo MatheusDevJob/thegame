@@ -51,9 +51,20 @@ public class EntityWorld
             entity.Update(gameTime);
     }
 
-    public void Draw(SpriteBatch spriteBatch, params Entity[] extras)
+    public void Draw(SpriteBatch spriteBatch, Player player)
     {
-        foreach (Entity entity in _entities.Concat(extras).Distinct().OrderBy(entity => entity.SortY))
+        foreach (var entity in _entities.Where(e => e.RenderLayer == EntityRenderLayer.Ground))
+            entity.Draw(spriteBatch);
+
+        var normalEntities = _entities
+            .Where(e => e.RenderLayer == EntityRenderLayer.Normal)
+            .Append(player)
+            .OrderBy(e => e.SortY);
+
+        foreach (var entity in normalEntities)
+            entity.Draw(spriteBatch);
+
+        foreach (var entity in _entities.Where(e => e.RenderLayer == EntityRenderLayer.Top))
             entity.Draw(spriteBatch);
     }
 

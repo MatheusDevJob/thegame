@@ -2,7 +2,8 @@ using System;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
-using thegame.Entities.Items.WorldObjects.Interactables;
+using thegame.Entities.WorldObjects.Interactables;
+using thegame.Entities.WorldObjects.Solo;
 
 namespace thegame.Maps;
 
@@ -12,7 +13,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
     private readonly WorldActionService _worldActions = worldActions;
     private string Click;
 
-    public void HandleClick(Entity entity, string click = "left")
+    public void HandleClick(Entity entity, Point point, string click = "left")
     {
         Click = click;
         if (entity == null)
@@ -38,7 +39,6 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                 { }
                 else
                 {
-                    if (IsEntityFartherThanPlayer(entity)) return;
                     Bau bau = (Bau)entity;
 
                     if (bau.Aberto)
@@ -46,6 +46,9 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                     else
                         bau.OpenBau();
                 }
+                break;
+            default:
+                HandleIsGround(entity, point);
                 break;
         }
     }
@@ -93,6 +96,17 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
     }
 
     private void HandleBau(Entity bau) { }
+    private void HandleIsGround(Entity ground, Point point)
+    {
+        if (ground is Soil01)
+        {
+            _worldActions.ChangeEntity(point, ground, "Soil02");
+        }
+        else if (ground is Soil02)
+        {
+            _worldActions.ChangeEntity(point, ground, "Soil03");
+        }
+    }
     protected bool IsEntityFartherThanPlayer(Entity entity, int maxTiles = 2)
     {
         int tileSize = 16;

@@ -5,8 +5,16 @@ using thegame.Core;
 
 namespace thegame.Entities;
 
+public enum EntityRenderLayer
+{
+    Ground,
+    Normal,
+    Top
+}
+
 public abstract class Entity
 {
+    public virtual EntityRenderLayer RenderLayer => EntityRenderLayer.Normal;
     protected readonly GameContext Context;
 
     public Vector2 Posicao { get; protected set; }
@@ -24,8 +32,8 @@ public abstract class Entity
     public readonly Texture2D Sprite;
     protected int FrameWidth = 16;
     protected int FrameHeight = 16;
-    protected int SpriteRow = 5;
-    protected int SpriteColumn = 31;
+    protected int SpriteRow = 0;
+    protected int SpriteColumn = 0;
 
     protected Entity(GameContext context, string id, Vector2 posicao, float life = 0, float damage = 0)
     {

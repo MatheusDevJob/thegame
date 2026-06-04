@@ -22,6 +22,9 @@ public static class EntityTexture2D
             "Wood" => context.Content.Load<Texture2D>("Items/wood"),
             "Pedra1" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Outdoor_Decor_Free"),
             "Pedra2" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Outdoor_Decor_Free"),
+            "Soil01" => context.Content.Load<Texture2D>("Items/Soil_01"),
+            "Soil02" => context.Content.Load<Texture2D>("Items/Soil_03"),
+            "Soil03" => context.Content.Load<Texture2D>("Items/Soil_04"),
             "Bau" => context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px"),
             _ => throw new System.AccessViolationException($"Entidade não encontrada: {entityId}")
         };

@@ -85,8 +85,12 @@ public abstract class BaseMap : IMap
         _tileCursor = tileCursor;
         isKeyPressed = inputManager.IsLeftClickPressed();
         GameState State = Context.State;
-
-        if (isKeyPressed && !State.LayoutMenu && !State.LayoutBag)
+        Point PosicaoMouse = _tileCursor.TilePosition;
+        if (_worldActionService.IsPlayerFartherThanMe(PosicaoMouse))
+        {
+            // no futuro fazer o boneco xingar igual nordestino
+        }
+        else if (isKeyPressed && !State.LayoutMenu && !State.LayoutBag)
         {
             Entity entity = EntityUnderMouse;
             // logs.Add("\n"); 
@@ -98,20 +102,20 @@ public abstract class BaseMap : IMap
                     // logs.Add($"Entity Id: {entity.Id}");
                     // logs.Add($"SaveId: {entity.SaveId}");
                     // logs.Add($"Hitbox: {entity.Hitbox}");
-                    OnEntityClicked(entity);
+                    OnEntityClicked(entity, PosicaoMouse, "left");
                 }
                 else
                 {
                     // logs.Add($"Clicou no tile: {_tileCursor.TilePosition}");
                     // logs.Add($"Mouse World: {_tileCursor.WorldPosition}");
-                    OnTileClicked(_tileCursor.TilePosition);
+                    OnTileClicked(PosicaoMouse);
                 }
             });
 
             // if (logs.Count > 6)
             // // logs.RemoveRange(0, logs.Count - 6);
         }
-        IsM2Clicked(gameTime);
+        IsM2Clicked(gameTime, PosicaoMouse);
 
         UpdateMap(gameTime);
         TrocaTool();
@@ -144,7 +148,7 @@ public abstract class BaseMap : IMap
             _worldActionService.PickupItem(item);
     }
 
-    protected virtual void IsM2Clicked(GameTime gameTime)
+    protected virtual void IsM2Clicked(GameTime gameTime, Point PosicaoMouse)
     {
         isRMPressed = inputManager.IsRightClickPressed();
         if (!isRMPressed) return;
@@ -152,16 +156,16 @@ public abstract class BaseMap : IMap
         Entity entity = EntityUnderMouse;
         if (entity == null) return;
 
-        OnEntityClicked(entity, "right");
+        OnEntityClicked(entity, PosicaoMouse, "right");
     }
 
     protected virtual void DrawObjects(SpriteBatch spriteBatch)
     {
     }
 
-    protected virtual void OnEntityClicked(Entity entity, string click = "left")
+    protected virtual void OnEntityClicked(Entity entity, Point PosicaoMouse, string click = "left")
     {
-        _entityInteractionManager.HandleClick(entity, click);
+        _entityInteractionManager.HandleClick(entity, PosicaoMouse, click);
     }
 
     protected virtual void OnTileClicked(Point tile)

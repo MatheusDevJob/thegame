@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 
-namespace thegame.Entities.Items.WorldObjects.Interactables;
+namespace thegame.Entities.WorldObjects.Interactables;
 
 public class Bau : Entity
 {
@@ -21,7 +21,7 @@ public class Bau : Entity
     {
         if (!Aberto) return;
 
-        if (IsPlayerFartherThanMe(2))
+        if (IsPlayerFartherThanMe(1))
             CloseBau();
     }
 
