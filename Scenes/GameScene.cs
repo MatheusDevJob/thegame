@@ -23,7 +23,7 @@ public class GameScene : IScene
         _hud = new Hud(_context);
         _currentMap = new CityMap(_context);
         _camera = new();
-        _tileCursor = new TileCursor(context);
+        _tileCursor = context.TileCursor;
 
         _currentMap.OnEnter();
     }

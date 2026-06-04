@@ -15,8 +15,10 @@ public class GameContext(Game game, ContentManager content, GraphicsDevice graph
     public GameState State { get; set; }
     public UiRenderer UI { get; private set; }
     public InputManager Input { get; } = input;
+    public TileCursor TileCursor { get; private set; }
     public void LoadContent()
     {
         UI = new UiRenderer(this);
+        TileCursor = new TileCursor(this);
     }
 }

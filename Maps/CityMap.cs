@@ -10,11 +10,11 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
     protected override string[] LayersBeforeEntities => ["Ground", "cerca casa", "Back"];
     protected override string[] LayersAfterEntities => ["Front"];
 
-    protected override void OnTileClicked(Point tile)
-    {
-        logs.Add($"Clicou no tile! -> {tile.X} - {tile.Y}");
-        // clicou no chão/tile
-    }
+    // protected override void OnTileClicked(Point tile)
+    // {
+    //     logs.Add($"Clicou no tile! -> {tile.X} - {tile.Y}");
+    //     // clicou no chão/tile
+    // }
 
     protected override void UpdateMap(GameTime gameTime)
     {

@@ -149,7 +149,7 @@ public class TiledMap
 
                 gid = ClearFlipFlags(gid);
 
-                var tileset = GetTileset(gid);
+                TiledTilesetData tileset = GetTileset(gid);
 
                 if (tileset == null)
                     continue;
@@ -178,6 +178,66 @@ public class TiledMap
                 spriteBatch.Draw(texture, destination, source, Color.White);
             }
         }
+    }
+
+    public int GetTileGid(string layerName, Point tile)
+    {
+        var layer = _map.Layers.FirstOrDefault(layer =>
+            layer.Name == layerName &&
+            layer.Type == "tilelayer" &&
+            layer.Data != null
+        );
+
+        if (layer == null)
+            return 0;
+
+        if (tile.X < 0 || tile.Y < 0 || tile.X >= layer.Width || tile.Y >= layer.Height)
+            return 0;
+
+        int index = tile.Y * layer.Width + tile.X;
+        return ClearFlipFlags(layer.Data[index]);
+    }
+
+    public TiledTileData GetTileData(string layerName, Point tile)
+    {
+        int gid = GetTileGid(layerName, tile);
+
+        if (gid == 0)
+            return null;
+
+        TiledTilesetData tileset = GetTileset(gid);
+
+        if (tileset == null)
+            return null;
+
+        int localId = gid - tileset.FirstGid;
+
+        return tileset.Tiles?.FirstOrDefault(tileData => tileData.Id == localId);
+    }
+
+    public TiledPropertyData GetTileProperty(string layerName, Point tile, string propertyName)
+    {
+        TiledTileData tileData = GetTileData(layerName, tile);
+
+        if (tileData?.Properties == null)
+            return null;
+
+        return tileData.Properties.FirstOrDefault(property => property.Name == propertyName);
+    }
+
+    public string GetTilePropertyString(string layerName, Point tile, string propertyName)
+    {
+        return GetTileProperty(layerName, tile, propertyName)?.AsString();
+    }
+
+    public bool GetTilePropertyBool(string layerName, Point tile, string propertyName)
+    {
+        return GetTileProperty(layerName, tile, propertyName)?.AsBool() ?? false;
+    }
+
+    public int GetTilePropertyInt(string layerName, Point tile, string propertyName)
+    {
+        return GetTileProperty(layerName, tile, propertyName)?.AsInt() ?? 0;
     }
 }
 
@@ -214,9 +274,53 @@ public class TiledObjectData
 public class TiledTilesetData
 {
     [JsonPropertyName("firstgid")] public int FirstGid { get; set; }
+    [JsonPropertyName("name")] public string Name { get; set; }
     [JsonPropertyName("image")] public string Image { get; set; }
     [JsonPropertyName("tilewidth")] public int TileWidth { get; set; }
     [JsonPropertyName("tileheight")] public int TileHeight { get; set; }
     [JsonPropertyName("columns")] public int Columns { get; set; }
     [JsonPropertyName("tilecount")] public int TileCount { get; set; }
+    [JsonPropertyName("tiles")] public List<TiledTileData> Tiles { get; set; } = [];
+}
+public class TiledTileData
+{
+    [JsonPropertyName("id")] public int Id { get; set; }
+    [JsonPropertyName("properties")] public List<TiledPropertyData> Properties { get; set; } = [];
+}
+
+public class TiledPropertyData
+{
+    [JsonPropertyName("name")] public string Name { get; set; }
+    [JsonPropertyName("type")] public string Type { get; set; }
+    [JsonPropertyName("value")] public JsonElement Value { get; set; }
+
+    public string AsString()
+    {
+        return Value.ValueKind == JsonValueKind.String ? Value.GetString() : Value.ToString();
+    }
+
+    public bool AsBool()
+    {
+        if (Value.ValueKind == JsonValueKind.True) return true;
+        if (Value.ValueKind == JsonValueKind.False) return false;
+        return bool.TryParse(Value.ToString(), out bool result) && result;
+    }
+
+    public int AsInt()
+    {
+        return Value.TryGetInt32(out int result) ? result : 0;
+    }
+}
+
+public class TiledTileInfo
+{
+    [JsonPropertyName("id")] public int Id { get; set; }
+    [JsonPropertyName("properties")] public List<TiledProperties> Properties { get; set; }
+}
+
+public class TiledProperties
+{
+    [JsonPropertyName("name")] public string Name { get; set; }
+    [JsonPropertyName("type")] public string Type { get; set; }
+    [JsonPropertyName("value")] public dynamic Value { get; set; }
 }
