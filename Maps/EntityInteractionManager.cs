@@ -55,7 +55,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
 
     private void HandleTronco(Entity tronco)
     {
-        if (!_context.State.PlayerHasTool("AxeTool"))
+        if (!_context.State.Inventory.PossuiItem("AxeTool"))
             return;
 
         if (_context.State.Player.IsAnimated)
@@ -78,7 +78,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
 
     private void HandlePedra(Entity pedra)
     {
-        if (!_context.State.PlayerHasTool("PickaxeTool"))
+        if (!_context.State.Inventory.PossuiItem("PickaxeTool"))
             return;
 
         if (_context.State.ActiveEquipe == null)

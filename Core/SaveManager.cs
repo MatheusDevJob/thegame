@@ -43,17 +43,6 @@ public static class SaveManager
             CurrentMap = "city",
             PlayerLife = 75f,
             PlayerPosition = new Vector2(1200, 220),
-            EquipableIds =
-            [
-                "AxeTool",
-                "PickaxeTool",
-                "ShovelTool",
-                "",
-                "",
-                "",
-                "",
-                ""
-            ],
             ActiveEquipe = "",
             BagLevel = 4,
             BagItems = [
@@ -115,18 +104,6 @@ public static class SaveManager
             File.Delete(SavePath);
     }
 
-    private static List<string> NormalizeEquipableIds(List<string> equipableIds)
-    {
-        List<string> normalized = equipableIds ?? [];
-
-        while (normalized.Count < EquipableSlotCount)
-            normalized.Add("");
-
-        if (normalized.Count > EquipableSlotCount)
-            normalized = normalized.GetRange(0, EquipableSlotCount);
-
-        return normalized;
-    }
 
     private static void TryBackupCorruptedSave()
     {
@@ -151,7 +128,6 @@ public static class SaveManager
         public float PlayerLife { get; set; }
         public float PlayerX { get; set; }
         public float PlayerY { get; set; }
-        public List<string> EquipableIds { get; set; } = [];
         public string ActiveEquipe { get; set; } = "";
         public int BagLevel { get; set; }
         public List<ItemStackSave> BagItems { get; set; } = [];
@@ -166,7 +142,6 @@ public static class SaveManager
                 PlayerLife = save.PlayerLife,
                 PlayerX = save.PlayerPosition.X,
                 PlayerY = save.PlayerPosition.Y,
-                EquipableIds = NormalizeEquipableIds(save.EquipableIds),
                 ActiveEquipe = save.ActiveEquipe ?? "",
                 BagLevel = save.BagLevel,
                 BagItems = save.BagItems ?? [],
@@ -182,7 +157,6 @@ public static class SaveManager
                 CurrentMap = string.IsNullOrWhiteSpace(CurrentMap) ? "city" : CurrentMap,
                 PlayerLife = PlayerLife,
                 PlayerPosition = new Vector2(PlayerX, PlayerY),
-                EquipableIds = NormalizeEquipableIds(EquipableIds),
                 ActiveEquipe = ActiveEquipe ?? "",
                 BagLevel = BagLevel <= 0 ? 4 : BagLevel,
                 BagItems = BagItems ?? [],

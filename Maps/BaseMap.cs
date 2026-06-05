@@ -118,7 +118,6 @@ public abstract class BaseMap : IMap
         IsM2Clicked(gameTime, PosicaoMouse);
 
         UpdateMap(gameTime);
-        TrocaTool();
         EntityWorld.Update(gameTime);
     }
 
@@ -171,42 +170,6 @@ public abstract class BaseMap : IMap
     protected virtual void OnTileClicked(Point tile)
     {
         _worldActionService.DigTile(tile, Map);
-    }
-    private void TrocaTool()
-    {
-        InputManager input = Context.Input;
-        if (input.IsKeyPressed(Keys.D1))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D2))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D3))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D4))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D5))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D6))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D7))
-        {
-            Context.State.SetActiveEquipe("");
-        }
-        else if (input.IsKeyPressed(Keys.D8))
-        {
-            Context.State.SetActiveEquipe("");
-        }
     }
     public virtual void DrawDebug(SpriteBatch spriteBatch)
     {

@@ -9,17 +9,17 @@ public class GameSave
     public string CurrentMap { get; set; } = "city";
     public float PlayerLife { get; set; } = 75f;
     public Vector2 PlayerPosition { get; set; } = new(1200, 220);
-    public List<string> EquipableIds { get; set; } =
-    [
-        "AxeTool",
-        "PickaxeTool",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-    ];
+    // public List<string> EquipableIds { get; set; } =
+    // [
+    //     "AxeTool",
+    //     "PickaxeTool",
+    //     "",
+    //     "",
+    //     "",
+    //     "",
+    //     "",
+    //     ""
+    // ];
     public string ActiveEquipe { get; set; } = "";
     public int BagLevel { get; set; } = 4;
     public List<ItemStackSave> BagItems { get; set; } = [];

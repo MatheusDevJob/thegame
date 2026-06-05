@@ -49,20 +49,20 @@ public class GameState
         SaveManager.Save(PlayerSave);
     }
 
-    public bool PlayerHasTool(string toolId)
-    {
-        return PlayerSave.EquipableIds != null && PlayerSave.EquipableIds.Contains(toolId);
-    }
+    // public bool PlayerHasTool(string toolId)
+    // {
+    //     return PlayerSave.EquipableIds != null && PlayerSave.EquipableIds.Contains(toolId);
+    // }
 
     public void AddTool(string toolId)
     {
         if (string.IsNullOrWhiteSpace(toolId))
             return;
 
-        PlayerSave.EquipableIds ??= [];
+        // PlayerSave.EquipableIds ??= [];
 
-        if (!PlayerSave.EquipableIds.Contains(toolId))
-            PlayerSave.EquipableIds.Add(toolId);
+        // if (!PlayerSave.EquipableIds.Contains(toolId))
+        //     PlayerSave.EquipableIds.Add(toolId);
 
         if (string.IsNullOrWhiteSpace(PlayerSave.ActiveEquipe))
             SetActiveEquipe(toolId);
@@ -73,8 +73,8 @@ public class GameState
         if (string.IsNullOrWhiteSpace(toolId))
             return;
 
-        if (!PlayerHasTool(toolId))
-            return;
+        // if (!PlayerHasTool(toolId))
+        //     return;
 
         Entity tool = EntityFactory.Create(_context, new TiledObjectData
         {

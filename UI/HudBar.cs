@@ -33,7 +33,7 @@ public class HudBar
 
     private Rectangle bag;
     private int _selectedBagIndex = -1;
-    private int _selectedHotbarIndex = 0;
+    private int _selectedHotbarIndex = -1;
 
     public HudBar(GameContext context)
     {
@@ -62,7 +62,6 @@ public class HudBar
         bag = GetBagRectangle();
         int limit = gameState.Inventory.GetLimiteItensBag;
 
-        DrawNineSlice(spriteBatch, _layoutUiTexture, bag, 16);
         var (leftArea, rightArea) = DrawNineSliceSplit(spriteBatch, _layoutUiTexture, bag, 16, 0.60f);
         DrawBagSlots(spriteBatch, bag, 8, limit);
         DrawBagSlotsHorizontalDivider(spriteBatch, bag, 8, limit, 16);
@@ -70,8 +69,6 @@ public class HudBar
 
     public void Update(GameTime gameTime)
     {
-        EnsureHotbarSlots();
-
         UpdateBagClick();
         UpdateHotbarClick();
         UpdateBarraAcoesClicada();
@@ -176,21 +173,7 @@ public class HudBar
     private void EquipHotbarSlot(int slotIndex)
     {
         string itemId = GetHotbarSlot(slotIndex);
-
-        if (string.IsNullOrWhiteSpace(itemId))
-            return;
-
-        Entity equipable = EntityFactory.Create(_context, new TiledObjectData
-        {
-            Type = itemId,
-            X = gameState.Player.Posicao.X,
-            Y = gameState.Player.Posicao.Y
-        });
-
-        if (equipable == null)
-            return;
-
-        gameState.ActiveEquipe = equipable;
+        gameState.SetActiveEquipe(itemId);
     }
 
     private bool CanUseAsHotbarItem(string itemId)
@@ -220,8 +203,6 @@ public class HudBar
 
     private void DrawItensOnBar(SpriteBatch spriteBatch)
     {
-        EnsureHotbarSlots();
-
         List<ItemStack> items = gameState.Inventory.Itens;
         for (int i = 0; i < 8; i++)
         {
@@ -373,22 +354,16 @@ public class HudBar
 
     private string GetHotbarSlot(int slotIndex)
     {
-        EnsureHotbarSlots();
-
-        if (slotIndex < 0 || slotIndex >= gameState.PlayerSave.EquipableIds.Count)
+        if (slotIndex < 0 || slotIndex >= 8)
             return "";
-
-        return gameState.PlayerSave.EquipableIds[slotIndex] ?? "";
+        List<ItemStack> items = gameState.Inventory.Itens;
+        ItemStack item = items[slotIndex];
+        return item?.Id ?? "";
     }
 
     private void SetHotbarSlot(int slotIndex, string itemId)
     {
-        EnsureHotbarSlots();
-
-        if (slotIndex < 0 || slotIndex >= gameState.PlayerSave.EquipableIds.Count)
-            return;
-
-        gameState.PlayerSave.EquipableIds[slotIndex] = itemId ?? "";
+        gameState.PlayerSave.ActiveEquipe = itemId ?? "";
     }
 
     private void ClearHotbarSlot(int slotIndex)
@@ -397,17 +372,6 @@ public class HudBar
 
         if (_selectedHotbarIndex == slotIndex)
             gameState.ActiveEquipe = null;
-    }
-
-    private void EnsureHotbarSlots()
-    {
-        gameState.PlayerSave.EquipableIds ??= [];
-
-        while (gameState.PlayerSave.EquipableIds.Count < 8)
-            gameState.PlayerSave.EquipableIds.Add("");
-
-        if (gameState.PlayerSave.EquipableIds.Count > 8)
-            gameState.PlayerSave.EquipableIds.RemoveRange(8, gameState.PlayerSave.EquipableIds.Count - 8);
     }
 
     private Texture2D TryGetItemTexture(string itemId)
