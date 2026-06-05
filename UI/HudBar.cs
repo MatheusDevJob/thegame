@@ -63,7 +63,9 @@ public class HudBar
         int limit = gameState.Inventory.GetLimiteItensBag;
 
         DrawNineSlice(spriteBatch, _layoutUiTexture, bag, 16);
+        var (leftArea, rightArea) = DrawNineSliceSplit(spriteBatch, _layoutUiTexture, bag, 16, 0.60f);
         DrawBagSlots(spriteBatch, bag, 8, limit);
+        DrawBagSlotsHorizontalDivider(spriteBatch, bag, 8, limit, 16);
     }
 
     public void Update(GameTime gameTime)
@@ -289,6 +291,39 @@ public class HudBar
         }
     }
 
+    private void DrawBagSlotsHorizontalDivider(SpriteBatch spriteBatch, Rectangle bag, int columns, int itens, int sliceSize)
+    {
+        if (itens <= columns)
+            return;
+
+        Rectangle firstSlot = GetBagSlotRectangle(bag, columns, itens, 0);
+        Rectangle lastSlotFirstRow = GetBagSlotRectangle(bag, columns, itens, columns - 1);
+        Rectangle firstSlotSecondRow = GetBagSlotRectangle(bag, columns, itens, columns);
+
+        int dividerHeight = sliceSize;
+        int dividerX = firstSlot.X;
+        int dividerWidth = lastSlotFirstRow.Right - firstSlot.X;
+        int emptySpaceStart = firstSlot.Bottom;
+        int emptySpaceEnd = firstSlotSecondRow.Y;
+        int dividerY = emptySpaceStart + ((emptySpaceEnd - emptySpaceStart) / 2) - (dividerHeight / 2);
+
+        Rectangle srcDivider = new(
+            sliceSize,
+            0,
+            _layoutUiTexture.Width - sliceSize * 2,
+            sliceSize
+        );
+
+        Rectangle dstDivider = new(
+            dividerX,
+            dividerY + 5,
+            dividerWidth,
+            dividerHeight
+        );
+
+        spriteBatch.Draw(_layoutUiTexture, dstDivider, srcDivider, Color.White);
+    }
+
     private Rectangle GetBagRectangle()
     {
         Viewport viewport = _context.GraphicsDevice.Viewport;
@@ -305,14 +340,17 @@ public class HudBar
     {
         int slotSize = 64;
         int gap = 2;
-        int rows = Math.Max(1, (int)Math.Ceiling(itens / (double)columns));
-        int totalWidth = columns * slotSize + (columns - 1) * gap;
-        int totalHeight = rows * slotSize + (rows - 1) * gap;
-        int startX = bagRect.X + (bagRect.Width - totalWidth) / 2;
-        int startY = bagRect.Y + (bagRect.Height - totalHeight) / 2 + 30;
+
+
+        int startX = bagRect.X + 40;
+        int startY = bagRect.Y + 30;
         int row = index / columns;
         int col = index % columns;
 
+        if (index > 7)
+        {
+            startY += 20;
+        }
         return new Rectangle(
             startX + col * (slotSize + gap),
             startY + row * (slotSize + gap),
@@ -437,8 +475,47 @@ public class HudBar
         spriteBatch.Draw(texture, dstBottomRight, srcBottomRight, Color.White);
     }
 
+    private static (Rectangle leftArea, Rectangle rightArea) DrawNineSliceSplit(SpriteBatch spriteBatch, Texture2D texture, Rectangle dest, int sliceSize, float leftPercent = 0.60f)
+    {
+        DrawNineSlice(spriteBatch, texture, dest, sliceSize);
 
+        int dividerWidth = sliceSize;
+        int dividerX = dest.X + (int)(dest.Width * leftPercent) - dividerWidth / 2;
 
+        Rectangle srcDivider = new(
+            0,
+            sliceSize,
+            sliceSize,
+            texture.Height - sliceSize * 2
+        );
+
+        Rectangle dstDivider = new(
+            dividerX,
+            dest.Y + sliceSize,
+            dividerWidth,
+            dest.Height - sliceSize * 2
+        );
+
+        spriteBatch.Draw(texture, dstDivider, srcDivider, Color.White);
+
+        Rectangle leftArea = new(
+            dest.X + sliceSize,
+            dest.Y + sliceSize,
+            dividerX - (dest.X + sliceSize),
+            dest.Height - sliceSize * 2
+        );
+
+        Rectangle rightArea = new(
+            dividerX + dividerWidth,
+            dest.Y + sliceSize,
+            dest.Right - sliceSize - (dividerX + dividerWidth),
+            dest.Height - sliceSize * 2
+        );
+
+        return (leftArea, rightArea);
+    }
+
+    // controle dos itens pelo mouse
     private Texture2D texture;
     private void MouseMovendoItem(SpriteBatch spriteBatch)
     {
@@ -461,10 +538,11 @@ public class HudBar
         if (_itemNaMao != null) return;
 
         _itemNaMao ??= items[_selectedBagIndex];
+        if (_itemNaMao == null) return;
         _slotOrigem = _selectedBagIndex;
 
         items[_selectedBagIndex] = null;
-        texture = TryGetItemTexture(_itemNaMao.Id);
+        texture = TryGetItemTexture(_itemNaMao?.Id);
     }
 
     private void CancelarMouseSetItem()

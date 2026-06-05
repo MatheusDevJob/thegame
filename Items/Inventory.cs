@@ -61,16 +61,11 @@ public class Inventory
         if (indice < 0)
             return false;
 
-        ItemStack ItemPorIndice = Itens[(int)indice];
-
-        if (ItemPorIndice != null)
+        ItemStack itemExistente = Itens.FirstOrDefault(i => i?.Id == id);
+        if (itemExistente != null)
         {
-            ItemStack itemExistente = Itens.FirstOrDefault(i => i.Id == id);
-            if (itemExistente != null)
-            {
-                itemExistente.Quantidade += quantidade;
-                return true;
-            }
+            itemExistente.Quantidade += quantidade;
+            return true;
         }
 
         Itens[(int)indice] = new ItemStack(id, nome, quantidade);
