@@ -59,15 +59,18 @@ public static class SaveManager
             BagItems = [
                 new ItemStackSave{
                     ItemId= "AxeTool",
-                    Amount= 1
+                    Amount= 1,
+                    ListIndex = 0
                 },
                 new ItemStackSave{
                     ItemId= "PickaxeTool",
-                    Amount= 1
+                    Amount= 1,
+                    ListIndex = 1
                 },
                 new ItemStackSave  {
                     ItemId= "ShovelTool",
-                    Amount= 1
+                    Amount= 1,
+                    ListIndex = 2
                 },
             ],
             Maps = []

@@ -17,49 +17,64 @@ public class Inventory
         BagLevel = bagLevel;
         UpdateLimiteItens();
 
+        for (int i = 0; i < LimiteItensBag; i++)
+        {
+            Itens.Add(null);
+        }
+
         if (savedItems == null)
             return;
 
-        foreach (ItemStackSave item in savedItems)
+        for (int i = 0; i < savedItems.Count; i++)
         {
+            ItemStackSave item = savedItems[i];
             if (item == null || string.IsNullOrWhiteSpace(item.ItemId) || item.Amount <= 0)
                 continue;
 
-            AddItem(item.ItemId, item.ItemId, item.Amount);
+            AddItem(item.ItemId, item.ItemId, item.Amount, item.ListIndex);
         }
     }
 
     public List<ItemStackSave> ToSaveItems()
     {
-        return Itens
-            .Where(item => item != null && !string.IsNullOrWhiteSpace(item.Id) && item.Quantidade > 0)
-            .Select(item => new ItemStackSave
+        return [.. Itens
+            .Select((item, index) => new { item, index })
+            .Where(x => x.item != null && !string.IsNullOrWhiteSpace(x.item.Id) && x.item.Quantidade > 0)
+            .Select(x => new ItemStackSave
             {
-                ItemId = item.Id,
-                Amount = item.Quantidade
-            })
-            .ToList();
+                ItemId = x.item.Id,
+                Amount = x.item.Quantidade,
+                ListIndex = x.index
+            })];
     }
 
-    public void AddItem(string id, string nome, int quantidade)
+    public bool AddItem(string id, string nome, int quantidade, int? indice = null)
     {
         if (string.IsNullOrWhiteSpace(id) || quantidade <= 0)
-            return;
+            return false;
 
         UpdateLimiteItens();
 
-        ItemStack itemExistente = Itens.FirstOrDefault(i => i.Id == id);
+        indice ??= Itens.FindIndex(item => item == null);
 
-        if (itemExistente != null)
+        // se indice for -1 não achou espaço vazio na bag
+        if (indice < 0)
+            return false;
+
+        ItemStack ItemPorIndice = Itens[(int)indice];
+
+        if (ItemPorIndice != null)
         {
-            itemExistente.Quantidade += quantidade;
-            return;
+            ItemStack itemExistente = Itens.FirstOrDefault(i => i.Id == id);
+            if (itemExistente != null)
+            {
+                itemExistente.Quantidade += quantidade;
+                return true;
+            }
         }
 
-        if (Itens.Count >= LimiteItensBag)
-            return;
-
-        Itens.Add(new ItemStack(id, nome, quantidade));
+        Itens[(int)indice] = new ItemStack(id, nome, quantidade);
+        return true;
     }
 
     public bool RemoveItem(string id, int quantidade)
