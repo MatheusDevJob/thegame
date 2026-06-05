@@ -19,6 +19,17 @@ public class InputManager
         _currentKeyboard = Keyboard.GetState();
         _currentMouse = Mouse.GetState();
     }
+    public void Reset()
+    {
+        MouseState mouse = Mouse.GetState();
+        KeyboardState keyboard = Keyboard.GetState();
+
+        _currentMouse = mouse;
+        _previousMouse = mouse;
+
+        _currentKeyboard = keyboard;
+        _previousKeyboard = keyboard;
+    }
 
     public bool IsKeyDown(Keys key)
     {

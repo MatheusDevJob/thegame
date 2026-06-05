@@ -59,6 +59,12 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        if (!IsActive)
+        {
+            _context.Input.Reset();
+            base.Update(gameTime);
+            return;
+        }
         _context.Input.Update();
         _sceneManager.Update(gameTime);
         inputManager.Update();
