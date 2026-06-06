@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
+using thegame.Maps;
 
 namespace thegame.Core;
 
 public static class SaveManager
 {
     private const int CurrentVersion = 1;
-    private const string SaveFileName = "save_02.json";
+    private const string SaveFileName = "save_03.json";
     private const int EquipableSlotCount = 8;
+    private static GameContext context;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -30,8 +32,9 @@ public static class SaveManager
         return File.Exists(SavePath);
     }
 
-    public static GameSave LoadOrCreate()
+    public static GameSave LoadOrCreate(GameContext _context)
     {
+        context = _context;
         return HasSave() ? Load() : CreateNewSave();
     }
 
@@ -41,30 +44,69 @@ public static class SaveManager
         {
             Version = CurrentVersion,
             CurrentMap = "city",
-            PlayerLife = 75f,
+            PlayerLife = 100f,
             PlayerPosition = new Vector2(1200, 220),
-            ActiveEquipe = "",
+            ActiveEquipe = "AxeTool",
             BagLevel = 4,
-            BagItems = [
-                new ItemStackSave{
-                    ItemId= "AxeTool",
-                    Amount= 1,
-                    ListIndex = 0
-                },
-                new ItemStackSave{
-                    ItemId= "PickaxeTool",
-                    Amount= 1,
-                    ListIndex = 1
-                },
-                new ItemStackSave  {
-                    ItemId= "ShovelTool",
-                    Amount= 1,
-                    ListIndex = 2
-                },
+            BagItems =
+            [
+                new ItemStackSave
+            {
+                ItemId = "AxeTool",
+                Amount = 1,
+                ListIndex = 0
+            },
+            new ItemStackSave
+            {
+                ItemId = "PickaxeTool",
+                Amount = 1,
+                ListIndex = 1
+            },
+            new ItemStackSave
+            {
+                ItemId = "ShovelTool",
+                Amount = 1,
+                ListIndex = 2
+            }
             ],
-            Maps = []
+            Maps = new Dictionary<string, MapSave>
+            {
+                ["city"] = CreateInitialMapSave("city")
+            }
         };
     }
+    private static MapSave CreateInitialMapSave(string mapId)
+    {
+        TiledMap tiledMap = new();
+        MapSave mapSave = new();
+        tiledMap.Load(context.Content, "Maps/HomeMap.tmj");
+
+        TiledLayerData objectsLayer = tiledMap.GetObjects("Objects");
+
+        if (objectsLayer?.Objects == null)
+            return mapSave;
+
+        if (objectsLayer.Visible)
+            foreach (TiledObjectData obj in objectsLayer.Objects)
+            {
+                string entityId = !string.IsNullOrWhiteSpace(obj.Type) ? obj.Type : obj.Name;
+
+                if (string.IsNullOrWhiteSpace(entityId))
+                    continue;
+
+                mapSave.SpawnedEntities.Add(new WorldEntitySave
+                {
+                    SaveId = $"{mapId}:{obj.Id}",
+                    EntityId = entityId,
+                    X = obj.X,
+                    Y = obj.Y,
+                    Data = []
+                });
+            }
+
+        return mapSave;
+    }
+
 
     public static GameSave Load()
     {

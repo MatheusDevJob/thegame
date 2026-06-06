@@ -11,7 +11,7 @@ namespace thegame.Maps;
 
 public class TiledMap
 {
-    private TiledMapData _map;
+    public TiledMapData _map;
     private readonly Dictionary<TiledTilesetData, Texture2D> _textures = [];
     private readonly List<Rectangle> _collisionRectangles = [];
     public int TileWidth => _map.TileWidth;
@@ -67,7 +67,7 @@ public class TiledMap
 
         return false;
     }
-    public IEnumerable<TiledObjectData> GetObjects(string layerName)
+    public TiledLayerData GetObjects(string layerName)
     {
         var layer = _map.Layers.FirstOrDefault(layer =>
             layer.Type == "objectgroup" &&
@@ -75,9 +75,9 @@ public class TiledMap
         );
 
         if (layer == null || layer.Objects == null)
-            return [];
+            return null;
 
-        return layer.Objects;
+        return layer;
     }
     private TiledTilesetData GetTileset(int gid)
     {

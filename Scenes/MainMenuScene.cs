@@ -47,7 +47,7 @@ public class MainMenuScene : IScene
 
         if (_context.Input.WasClicked(_startButton))
         {
-            GameSave save = SaveManager.LoadOrCreate();
+            GameSave save = SaveManager.LoadOrCreate(_context);
 
             _context.State = new GameState(_context, save);
             _context.SceneManager.ChangeScene(new GameScene(_context));
