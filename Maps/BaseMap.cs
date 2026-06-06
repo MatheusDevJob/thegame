@@ -103,7 +103,6 @@ public abstract class BaseMap : IMap
                     // logs.Add($"Clicou na entidade: {entity.GetType().Name}");
                     // logs.Add($"Entity Id: {entity.Id}");
                     // logs.Add($"SaveId: {entity.SaveId}");
-                    entity.Shake();
                     // logs.Add($"Hitbox: {entity.Hitbox}");
                     OnEntityClicked(entity, PosicaoMouse, "left");
                 }

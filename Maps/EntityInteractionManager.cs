@@ -64,6 +64,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
         if (IsEntityFartherThanPlayer(tronco))
             return;
 
+        tronco.Shake();
         tronco.Life -= _context.State.ActiveEquipe.Damage;
 
         if (tronco.Life > 0)
@@ -83,6 +84,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
 
         if (IsEntityFartherThanPlayer(pedra))
             return;
+        pedra.Shake();
         pedra.Life -= _context.State.ActiveEquipe.Damage;
 
         if (pedra.Life > 0)
