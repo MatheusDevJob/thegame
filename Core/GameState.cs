@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using thegame.Entities;
@@ -16,6 +17,7 @@ public class GameState
     public Entity ActiveEquipe { get; set; }
     public bool LayoutMenu = false;
     public bool LayoutBag = false;
+    public readonly EntityWorld EntityWorld = new();
 
     public GameState(GameContext context, GameSave gameSave)
     {
@@ -41,8 +43,31 @@ public class GameState
 
         if (ActiveEquipe != null)
             PlayerSave.ActiveEquipe = ActiveEquipe.Id;
+
+        SyncMapEntity();
     }
 
+    public void SyncMapEntity()
+    {
+        MapSave mapSave = PlayerSave.GetMapSave(PlayerSave.CurrentMap);
+
+        mapSave.SpawnedEntities.Clear();
+
+        foreach (Entity item in EntityWorld._entities)
+        {
+            if (!item.Persistente)
+                continue;
+
+            mapSave.SpawnedEntities.Add(new WorldEntitySave
+            {
+                SaveId = item.SaveId,
+                EntityId = item.Id,
+                X = item.Posicao.X,
+                Y = item.Posicao.Y,
+                // Data = item.GetSaveData()
+            });
+        }
+    }
     public void SaveGame()
     {
         SyncSaveFromRuntime();

@@ -13,7 +13,7 @@ public abstract class BaseMap : IMap
 {
     protected readonly GameContext Context;
     protected readonly TiledMap Map;
-    protected readonly EntityWorld EntityWorld = new();
+    protected readonly EntityWorld EntityWorld;
     protected readonly WorldActionService _worldActionService;
     protected readonly EntityInteractionManager _entityInteractionManager;
 
@@ -36,6 +36,7 @@ public abstract class BaseMap : IMap
     {
         Context = context;
         Id = id;
+        EntityWorld = context.State.EntityWorld;
 
         inputManager = context.Input;
         _worldActionService = new(context, EntityWorld, id);
@@ -50,29 +51,30 @@ public abstract class BaseMap : IMap
     {
         EntityWorld.ClearAll();
 
-        EntityWorld.Add(new Aldeao(
-            Context,
-            "Aldeão",
-            "Olá, viajante!",
-            new Vector2(1100, 205)
-        ));
+        // EntityWorld.Add(new Aldeao(
+        //     Context,
+        //     "Aldeão",
+        //     "Olá, viajante!",
+        //     new Vector2(1100, 205)
+        // ));
 
-        foreach (var obj in Map.GetObjects("Objects"))
-        {
-            Entity entity = EntityFactory.Create(Context, obj);
+        // foreach (var obj in Map.GetObjects("Objects"))
+        // {
+        //     Entity entity = EntityFactory.Create(Context, obj);
 
-            if (entity == null)
-                continue;
+        //     if (entity == null)
+        //         continue;
 
-            entity.SaveId = $"{Id}:{obj.Id}";
+        //     entity.SaveId = $"{Id}:{obj.Id}";
 
-            if (Context.State.IsEntityRemoved(Id, entity.SaveId))
-                continue;
+        //     if (Context.State.IsEntityRemoved(Id, entity.SaveId))
+        //         continue;
 
-            EntityWorld.Add(entity);
-        }
+        //     EntityWorld.Add(entity);
+        // }
 
         _worldActionService.LoadDroppedItems();
+        _worldActionService.LoadEntityMap();
     }
 
     public virtual void OnExit()

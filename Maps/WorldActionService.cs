@@ -139,6 +139,26 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             _entityWorld.Add(item);
         }
     }
+    public void LoadEntityMap()
+    {
+        MapSave mapSave = _context.State.PlayerSave.GetMapSave(_mapId);
+
+        foreach (WorldEntitySave saveEntity in mapSave.SpawnedEntities)
+        {
+            if (saveEntity.EntityId == "")
+                continue;
+
+            Entity item = EntityFactory.Create(_context, new TiledObjectData { Type = saveEntity.EntityId, X = saveEntity.X, Y = saveEntity.Y });
+
+            if (item == null)
+                continue;
+
+            item.SaveId = saveEntity.SaveId;
+            item.Persistente = true;
+
+            _entityWorld.Add(item);
+        }
+    }
 
     public bool IsPlayerFartherThanMe(Point point)
     {

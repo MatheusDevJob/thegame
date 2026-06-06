@@ -7,7 +7,7 @@ namespace thegame.Entities;
 
 public class EntityWorld
 {
-    private readonly List<Entity> _entities = [];
+    public readonly List<Entity> _entities = [];
 
     public IReadOnlyList<Entity> Entities => _entities;
 
