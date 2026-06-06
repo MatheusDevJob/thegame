@@ -20,6 +20,8 @@ public static class EntityTexture2D
             // Itens
             "Dirt" => context.Content.Load<Texture2D>("Items/dirt"),
             "Wood" => context.Content.Load<Texture2D>("Items/wood"),
+            "PedraDrop" => context.Content.Load<Texture2D>("Items/stone"),
+
             "Pedra1" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Outdoor_Decor_Free"),
             "Pedra2" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Outdoor_Decor_Free"),
             "Soil01" => context.Content.Load<Texture2D>("Items/Soil_01"),

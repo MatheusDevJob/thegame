@@ -25,7 +25,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                 HandleTronco(entity);
                 break;
 
-            case "Pedra":
+            case "Pedra1" or "Pedra2":
                 HandlePedra(entity);
                 break;
 
@@ -55,13 +55,10 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
 
     private void HandleTronco(Entity tronco)
     {
-        if (!_context.State.Inventory.PossuiItem("AxeTool"))
+        if (_context.State.ActiveEquipe.Id != "AxeTool")
             return;
 
         if (_context.State.Player.IsAnimated)
-            return;
-
-        if (_context.State.ActiveEquipe == null)
             return;
 
         if (IsEntityFartherThanPlayer(tronco))
@@ -78,10 +75,10 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
 
     private void HandlePedra(Entity pedra)
     {
-        if (!_context.State.Inventory.PossuiItem("PickaxeTool"))
+        if (_context.State.ActiveEquipe.Id != "PickaxeTool")
             return;
 
-        if (_context.State.ActiveEquipe == null)
+        if (_context.State.Player.IsAnimated)
             return;
 
         if (IsEntityFartherThanPlayer(pedra))
@@ -92,7 +89,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
             return;
 
         _worldActions.DestroyEntity(pedra);
-        _worldActions.DropItem("Stone", 1, pedra.Posicao);
+        _worldActions.DropItem("PedraDrop", 1, pedra.Posicao);
     }
 
     private void HandleBau(Entity bau) { }

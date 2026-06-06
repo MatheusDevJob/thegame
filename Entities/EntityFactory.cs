@@ -32,6 +32,7 @@ public static class EntityFactory
             // itens
             "Wood" => new Wood(context, posicao),
             "Dirt" => new Terra(context, posicao),
+            "PedraDrop" => new PedraDrop(context, posicao),
 
             // objetos do mundo
             "Bau" => new Bau(context, posicao),
