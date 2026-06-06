@@ -14,7 +14,7 @@ public class Hud
     protected InputManager inputManager;
 
     private Rectangle bag;
-    private Rectangle _botaoSair;
+    private Rectangle _botaoSalvarSair;
 
     public int screenWidth;
     public int screenHeight;
@@ -62,7 +62,7 @@ public class Hud
 
         _hudBar.Update(gameTime);
 
-        if (gameState.LayoutMenu && _context.Input.WasClicked(_botaoSair))
+        if (gameState.LayoutMenu && _context.Input.WasClicked(_botaoSalvarSair))
         {
             _context.State.SaveGame();
             _context.Game.Exit();
@@ -79,14 +79,18 @@ public class Hud
         bag = new Rectangle(width, height, tamanhoX, tamanhoY);
         DrawNineSlice(spriteBatch, _layoutUiTexture, bag, 16);
 
-        _botaoSair = new Rectangle(
-            bag.X + tamanhoX / 4,
-            bag.Y + tamanhoY - 65,
-            150,
-            30
+        int widthBotao = 230;
+        int heightBotao = 30;
+        int meioBotoes = bag.X + tamanhoX / 2 - widthBotao / 2;
+
+        _botaoSalvarSair = new Rectangle(
+            meioBotoes,
+            bag.Bottom - 105,
+            widthBotao,
+            heightBotao
         );
 
-        _context.UI.DrawButton(spriteBatch, _botaoSair, "Sair");
+        _context.UI.DrawButton(spriteBatch, _botaoSalvarSair, "Salvar e Sair");
     }
 
     private static void DrawNineSlice(SpriteBatch spriteBatch, Texture2D texture, Rectangle dest, int sliceSize)
