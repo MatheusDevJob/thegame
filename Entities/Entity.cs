@@ -17,7 +17,7 @@ public abstract class Entity
     public virtual EntityRenderLayer RenderLayer => EntityRenderLayer.Normal;
     protected readonly GameContext Context;
 
-    public Vector2 Posicao { get; set; }
+    public Vector2 Posicao { get; protected set; }
     public Rectangle Hitbox { get; protected set; }
 
     public virtual bool BloqueiaMovimento { get; set; } = true;
@@ -75,7 +75,7 @@ public abstract class Entity
         return CalcularHitbox(novaPosicao);
     }
 
-    protected void DefinirPosicao(Vector2 novaPosicao)
+    public void DefinirPosicao(Vector2 novaPosicao)
     {
         Posicao = novaPosicao;
         AtualizarHitbox();

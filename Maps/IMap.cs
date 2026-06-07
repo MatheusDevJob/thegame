@@ -14,5 +14,7 @@ public interface IMap
     void Update(GameTime gameTime, TileCursor tileCursor);
     void Draw(SpriteBatch spriteBatch);
     void DrawDebug(SpriteBatch spriteBatch);
+
     bool Collides(Rectangle hitbox);
+    void CheckEventos(Rectangle hitbox);
 }

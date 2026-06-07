@@ -16,6 +16,17 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
     //     // clicou no chão/tile
     // }
 
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        EntityWorld.Add(new Aldeao(
+            Context,
+            "Aldeão",
+            "Olá, viajante!",
+            new Vector2(1100, 205)
+        ));
+    }
+
     protected override void UpdateMap(GameTime gameTime)
     {
         foreach (Npc npc in EntityWorld.GetEntities<Npc>())

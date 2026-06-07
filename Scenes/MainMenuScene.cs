@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
+using thegame.Maps;
 using thegame.UI;
 
 namespace thegame.Scenes;
@@ -50,7 +51,9 @@ public class MainMenuScene : IScene
             GameSave save = SaveManager.LoadOrCreate(_context);
 
             _context.State = new GameState(_context, save);
-            _context.SceneManager.ChangeScene(new GameScene(_context));
+            GameScene gameScene = new(_context, new CityMap(_context));
+            _context.State.GameScene = gameScene;
+            _context.SceneManager.ChangeScene(gameScene);
         }
 
         if (_context.Input.WasClicked(_exitButton))

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities;
-using thegame.Entities.Npcs;
-using thegame.Entities.Tools;
 
 namespace thegame.Maps;
 
@@ -44,42 +43,19 @@ public abstract class BaseMap : IMap
         // debugVisual = new(context);
 
         Map = new TiledMap();
+        Context.State.TiledMap = Map;
         Map.Load(Context.Content, mapPath);
     }
 
     public virtual void OnEnter()
     {
-        EntityWorld.ClearAll();
-
-        // EntityWorld.Add(new Aldeao(
-        //     Context,
-        //     "Aldeão",
-        //     "Olá, viajante!",
-        //     new Vector2(1100, 205)
-        // ));
-
-        // foreach (var obj in Map.GetObjects("Objects"))
-        // {
-        //     Entity entity = EntityFactory.Create(Context, obj);
-
-        //     if (entity == null)
-        //         continue;
-
-        //     entity.SaveId = $"{Id}:{obj.Id}";
-
-        //     if (Context.State.IsEntityRemoved(Id, entity.SaveId))
-        //         continue;
-
-        //     EntityWorld.Add(entity);
-        // }
-
         _worldActionService.LoadDroppedItems();
         _worldActionService.LoadEntityMap();
     }
 
     public virtual void OnExit()
     {
-        // EntityWorld.clearAll();
+        EntityWorld.ClearAll();
     }
 
     public virtual void Update(GameTime gameTime, TileCursor tileCursor)
@@ -128,9 +104,44 @@ public abstract class BaseMap : IMap
         Map.DrawLayers(spriteBatch, LayersBeforeEntities);
         EntityWorld.Draw(spriteBatch, Context.State.Player);
         Map.DrawLayers(spriteBatch, LayersAfterEntities);
-        DrawObjects(spriteBatch);
-
         // DrawDebug(spriteBatch);
+
+        if (_noEvento)
+            DrawEventoIsPerto(spriteBatch);
+    }
+
+    private Vector2 PosicaoBotaoEventoTela;
+    private void DrawEventoIsPerto(SpriteBatch spriteBatch)
+    {
+        Vector2 position = new(PosicaoBotaoEventoTela.X, PosicaoBotaoEventoTela.Y - 16);
+        Context.UI.DrawKeyHint(spriteBatch, "E", position);
+    }
+
+    private bool _noEvento = false;
+    public void CheckEventos(Rectangle hitbox)
+    {
+        Dictionary<string, dynamic> Evento = Map.OnEventCollides(hitbox);
+        if (Evento != null && !_noEvento)
+        {
+            _noEvento = true;
+            PosicaoBotaoEventoTela = Evento["Position"];
+            return;
+        }
+
+        if (Evento == null)
+            _noEvento = false;
+
+        if (_noEvento && Context.Input.IsKeyPressed(Keys.E))
+        {
+            List<TiledPropertyData> listaDatas = Evento["Properties"];
+            TiledPropertyData data = listaDatas.FirstOrDefault((e) => e.Type == "string" && e.Name == "portal");
+            string a = data.Value.ToString();
+            bool r = Context.State.StartEvent(a);
+            if (r)
+            {
+                Context.State.SetPosicaoPlayerMapa(a);
+            }
+        }
     }
 
     public bool Collides(Rectangle hitbox)
@@ -160,9 +171,6 @@ public abstract class BaseMap : IMap
         OnEntityClicked(entity, PosicaoMouse, "right");
     }
 
-    protected virtual void DrawObjects(SpriteBatch spriteBatch)
-    {
-    }
 
     protected virtual void OnEntityClicked(Entity entity, Point PosicaoMouse, string click = "left")
     {

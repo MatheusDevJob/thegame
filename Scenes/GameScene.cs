@@ -16,12 +16,12 @@ public class GameScene : IScene
     protected readonly Hud _hud;
     private readonly TileCursor _tileCursor;
 
-    public GameScene(GameContext context)
+    public GameScene(GameContext context, IMap currentMap)
     {
         _context = context;
         _player = _context.State.Player;
         _hud = new Hud(_context);
-        _currentMap = new CityMap(_context);
+        _currentMap = currentMap;
         _camera = new();
         _tileCursor = context.TileCursor;
 
@@ -41,6 +41,8 @@ public class GameScene : IScene
             _currentMap.PixelHeight
         );
         _hud.Update(gameTime);
+
+        _currentMap.CheckEventos(_player.Hitbox);
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -69,7 +71,7 @@ public class GameScene : IScene
         spriteBatch.End();
     }
 
-    private void ChangeMap(IMap nextMap)
+    public void ChangeMap(IMap nextMap)
     {
         _currentMap.OnExit();
         _currentMap = nextMap;

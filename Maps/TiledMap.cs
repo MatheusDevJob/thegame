@@ -14,6 +14,7 @@ public class TiledMap
     public TiledMapData _map;
     private readonly Dictionary<TiledTilesetData, Texture2D> _textures = [];
     private readonly List<Rectangle> _collisionRectangles = [];
+    private readonly List<Dictionary<string, dynamic>> _eventsRectangles = [];
     public int TileWidth => _map.TileWidth;
     public int TileHeight => _map.TileHeight;
     public int Width => _map.Width;
@@ -44,6 +45,7 @@ public class TiledMap
         }
 
         LoadCollisionObjects();
+        LoadEventObjects();
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -67,6 +69,18 @@ public class TiledMap
 
         return false;
     }
+
+    public Dictionary<string, dynamic> OnEventCollides(Rectangle hitbox)
+    {
+        foreach (Dictionary<string, dynamic> collision in _eventsRectangles)
+        {
+            if (hitbox.Intersects(collision["Rectangle"]))
+                return collision;
+        }
+
+        return null;
+    }
+
     public TiledLayerData GetObjects(string layerName)
     {
         var layer = _map.Layers.FirstOrDefault(layer =>
@@ -115,6 +129,41 @@ public class TiledMap
                     (int)obj.Width,
                     (int)obj.Height
                 ));
+            }
+        }
+    }
+
+    private void LoadEventObjects()
+    {
+        _eventsRectangles.Clear();
+
+        foreach (var layer in _map.Layers)
+        {
+            if (layer.Type != "objectgroup")
+                continue;
+
+            if (layer.Name != "Portal")
+                continue;
+
+            if (layer.Objects == null)
+                continue;
+
+            foreach (TiledObjectData obj in layer.Objects)
+            {
+                _eventsRectangles.Add(
+                    new Dictionary<string, dynamic>
+                    {
+                        ["Nome"] = obj.Name,
+                        ["Position"] = new Vector2(obj.X + obj.Width / 2, obj.Y),
+                        ["Properties"] = obj.Properties,
+                        ["Rectangle"] = new Rectangle(
+                            (int)obj.X,
+                            (int)obj.Y,
+                            (int)obj.Width,
+                            (int)obj.Height
+                        )
+                    }
+                );
             }
         }
     }
@@ -270,6 +319,7 @@ public class TiledObjectData
     [JsonPropertyName("y")] public float Y { get; set; }
     [JsonPropertyName("width")] public float Width { get; set; }
     [JsonPropertyName("height")] public float Height { get; set; }
+    [JsonPropertyName("properties")] public List<TiledPropertyData> Properties { get; set; } = [];
 }
 public class TiledTilesetData
 {

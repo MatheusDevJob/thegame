@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
+using thegame.Scenes;
 
 namespace thegame.UI;
 
@@ -65,7 +66,7 @@ public class Hud
         if (gameState.LayoutMenu && _context.Input.WasClicked(_botaoSalvarSair))
         {
             _context.State.SaveGame();
-            _context.Game.Exit();
+            _context.SceneManager.ChangeScene(new MainMenuScene(_context));
         }
     }
 

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using thegame.Entities;
 using thegame.Items;
 using thegame.Maps;
+using thegame.Scenes;
 
 namespace thegame.Core;
 
@@ -18,6 +19,8 @@ public class GameState
     public bool LayoutMenu = false;
     public bool LayoutBag = false;
     public readonly EntityWorld EntityWorld = new();
+    public GameScene GameScene { get; set; }
+    public TiledMap TiledMap { get; set; }
 
     public GameState(GameContext context, GameSave gameSave)
     {
@@ -74,11 +77,6 @@ public class GameState
         SaveManager.Save(PlayerSave);
     }
 
-    // public bool PlayerHasTool(string toolId)
-    // {
-    //     return PlayerSave.EquipableIds != null && PlayerSave.EquipableIds.Contains(toolId);
-    // }
-
     public void AddTool(string toolId)
     {
         if (string.IsNullOrWhiteSpace(toolId))
@@ -97,9 +95,6 @@ public class GameState
     {
         if (string.IsNullOrWhiteSpace(toolId))
             return;
-
-        // if (!PlayerHasTool(toolId))
-        //     return;
 
         Entity tool = EntityFactory.Create(_context, new TiledObjectData
         {
@@ -176,5 +171,33 @@ public class GameState
 
         MapSave mapSave = PlayerSave.GetMapSave(mapId);
         mapSave.DroppedItems.RemoveAll(i => i.SaveId == saveId);
+    }
+
+    // controle dos eventos do estado do jogo
+    public bool StartEvent(string Evento)
+    {
+        switch (Evento)
+        {
+            case "Caverna":
+                GameScene.ChangeMap(new Caverna(_context));
+                return true;
+
+            case "City":
+                GameScene.ChangeMap(new CityMap(_context));
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    public void SetPosicaoPlayerMapa(string Evento)
+    {
+        TiledLayerData Layers = TiledMap.GetObjects("Portal");
+        TiledObjectData tiledObjectDatas = Layers.Objects.FirstOrDefault((e) => e.Type == "Portal" && e.Name == Evento);
+        if (tiledObjectDatas != null)
+        {
+            Player.DefinirPosicao(new Vector2(tiledObjectDatas.X, tiledObjectDatas.Y));
+        }
     }
 }
