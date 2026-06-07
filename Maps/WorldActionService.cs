@@ -141,7 +141,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
     }
     public void LoadEntityMap()
     {
-        MapSave mapSave = _context.State.PlayerSave.GetMapSave(_mapId);
+        MapSave mapSave = _context.State.PlayerSave.GetMapSave(_context.State.PlayerSave.CurrentMap);
 
         foreach (WorldEntitySave saveEntity in mapSave.SpawnedEntities)
         {

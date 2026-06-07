@@ -71,10 +71,18 @@ public class GameScene : IScene
         spriteBatch.End();
     }
 
-    public void ChangeMap(IMap nextMap)
+    public void ChangeMap(BaseMap nextMap)
     {
+        // primeiro salva
+        _context.State.SyncSaveFromRuntime();
+
+        // segundo limpa
         _currentMap.OnExit();
+
+        // terceiro troca o mapa e o id atual
         _currentMap = nextMap;
+        _context.State.PlayerSave.CurrentMap = nextMap.Id;
+
         _currentMap.OnEnter();
     }
 }

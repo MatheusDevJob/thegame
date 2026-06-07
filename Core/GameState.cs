@@ -37,7 +37,7 @@ public class GameState
         SetActiveEquipe(PlayerSave.ActiveEquipe);
     }
 
-    private void SyncSaveFromRuntime()
+    public void SyncSaveFromRuntime()
     {
         PlayerSave.PlayerPosition = Player.Posicao;
         PlayerSave.PlayerLife = Player.Life;
