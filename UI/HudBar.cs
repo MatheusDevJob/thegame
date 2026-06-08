@@ -181,8 +181,8 @@ public class HudBar
         if (string.IsNullOrWhiteSpace(itemId))
             return false;
 
-        Texture2D texture = TryGetItemTexture(itemId);
-        return texture != null;
+        var result = TryGetItemTexture(itemId);
+        return result.HasValue;
     }
 
     private void DrawCaixaItens(SpriteBatch spriteBatch)
@@ -209,10 +209,12 @@ public class HudBar
             ItemStack item = items[i];
             if (item == null) continue;
 
-            Texture2D texture = TryGetItemTexture(item.Id);
+            var result = TryGetItemTexture(item.Id);
 
-            if (texture == null)
+            if (!result.HasValue)
                 continue;
+            Texture2D texture = result.Value.Item1;
+            Rectangle source = result.Value.Item2;
 
             Rectangle slot = GetHotbarSlotRectangle(i);
             Rectangle itemRect = new(
@@ -222,7 +224,7 @@ public class HudBar
                 slot.Height - 16
             );
 
-            spriteBatch.Draw(texture, itemRect, Color.White);
+            spriteBatch.Draw(texture, itemRect, source, Color.White);
         }
     }
 
@@ -247,9 +249,9 @@ public class HudBar
                 continue;
 
             // busca a  textura da imagem para desenhar no retangulo
-            Texture2D textureItem = TryGetItemTexture(item.Id);
+            var result = TryGetItemTexture(item.Id);
 
-            if (textureItem == null)
+            if (!result.HasValue)
                 continue;
 
             Rectangle itemRect = new(
@@ -258,8 +260,10 @@ public class HudBar
                 slot.Width - 20,
                 slot.Height - 20
             );
+            Texture2D texture = result.Value.Item1;
+            Rectangle source = result.Value.Item2;
 
-            spriteBatch.Draw(textureItem, itemRect, Color.White);
+            spriteBatch.Draw(texture, itemRect, source, Color.White);
 
             string quantidade = item.Quantidade.ToString();
             Vector2 textSize = _font.MeasureString(quantidade) * 0.8f;
@@ -374,14 +378,21 @@ public class HudBar
             gameState.ActiveEquipe = null;
     }
 
-    private Texture2D TryGetItemTexture(string itemId)
+    private (Texture2D, Rectangle)? TryGetItemTexture(string itemId)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(itemId))
                 return null;
+            Entity entity = EntityFactory.Create(_context, new TiledObjectData { Type = itemId, X = 0, Y = 0 });
+            Rectangle source = new(
+                entity.SpriteColumn * entity.FrameWidth,
+                entity.SpriteRow * entity.FrameHeight,
+                entity.FrameWidth,
+                entity.FrameHeight
+            );
 
-            return EntityTexture2D.GetEntityTextureById(_context, itemId);
+            return (entity.Sprite, source);
         }
         catch
         {
@@ -481,6 +492,7 @@ public class HudBar
 
     // controle dos itens pelo mouse
     private Texture2D texture;
+    private Rectangle position;
     private void MouseMovendoItem(SpriteBatch spriteBatch)
     {
         if (texture != null)
@@ -493,7 +505,7 @@ public class HudBar
                 48,
                 48
             );
-            spriteBatch.Draw(texture, rect, Color.White);
+            spriteBatch.Draw(texture, rect, position, Color.White);
         }
 
         if (_selectedBagIndex < 0) return;
@@ -506,7 +518,15 @@ public class HudBar
         _slotOrigem = _selectedBagIndex;
 
         items[_selectedBagIndex] = null;
-        texture = TryGetItemTexture(_itemNaMao?.Id);
+        var result = TryGetItemTexture(_itemNaMao?.Id);
+
+        if (result.HasValue)
+        {
+            var (Texture2D, source) = result.Value;
+            texture = Texture2D;
+            position = source;
+
+        }
     }
 
     private void CancelarMouseSetItem()

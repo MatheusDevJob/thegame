@@ -35,7 +35,35 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         _entityWorld.Remove(entity);
     }
 
-    public void DigTile(Point tile, TiledMap Map)
+    public void OnTileClicked(Point tile, TiledMap Map)
+    {
+        string layer = "Ground";
+        string terrainType = Map.GetTilePropertyString(layer, tile, "terrainType");
+
+        if (string.IsNullOrEmpty(terrainType)) return;
+
+        switch (_context.State.ActiveEquipe.Id)
+        {
+            case "ShovelTool":
+                DigTile(tile, Map);
+                break;
+            case "PickaxeTool":
+                break;
+            case "AxeTool":
+                break;
+            case "SwordTool":
+                break;
+            case "":
+                break;
+
+            default:
+                DefaultEntity(tile, Map);
+                break;
+        }
+
+    }
+
+    private void DigTile(Point tile, TiledMap Map)
     {
         if (IsPlayerFartherThanMe(tile)) return;
 
@@ -44,9 +72,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         bool diggable = Map.GetTilePropertyBool(layer, tile, "diggable");
         string drop = Map.GetTilePropertyString(layer, tile, "drop");
 
-
-        if (string.IsNullOrEmpty(terrainType) || !diggable) return;
-        if (!IsDiggable(terrainType)) return;
+        if (!IsDiggable(terrainType) || !diggable) return;
 
 
         string overrideKey = terrainType switch
@@ -70,6 +96,28 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             tile.Y * tileSize + tileSize / 2
         );
         if (drop != null) DropItem(drop, 3, position);
+    }
+
+    private void DefaultEntity(Point tile, TiledMap Map)
+    {
+        string entidadeId = _context.State.ActiveEquipe.Id;
+        // descobrir se o chão pode receber a entidade
+
+        // descobrir se a entidade é do tipo spawned
+
+        // buscar se a entidade possui quantidade na bag
+        int index = _context.State.Inventory.PossuiItem(entidadeId);
+        if (index < 0) return;
+
+        // invocar entidade no local clicado (Point tile)
+        _entityWorld.Add(EntityFactory.Create(_context, new TiledObjectData
+        {
+            Type = entidadeId,
+            X = tile.X,
+            Y = tile.Y
+        }));
+
+        // remover a quantidade spawnada da bag
     }
 
     public void ChangeEntity(Point tile, Entity beforeEntity, string afterEntity)

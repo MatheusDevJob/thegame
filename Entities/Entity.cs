@@ -30,10 +30,10 @@ public abstract class Entity
     public float Life;
     public float Damage;
     public readonly Texture2D Sprite;
-    protected int FrameWidth = 16;
-    protected int FrameHeight = 16;
-    protected int SpriteRow = 0;
-    protected int SpriteColumn = 0;
+    public int FrameWidth { get; protected set; } = 16;
+    public int FrameHeight { get; protected set; } = 16;
+    public int SpriteRow { get; protected set; } = 0;
+    public int SpriteColumn { get; protected set; } = 0;
 
     protected Entity(GameContext context, string id, Vector2 posicao, float life = 0, float damage = 0)
     {

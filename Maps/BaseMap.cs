@@ -179,7 +179,7 @@ public abstract class BaseMap : IMap
 
     protected virtual void OnTileClicked(Point tile)
     {
-        _worldActionService.DigTile(tile, Map);
+        _worldActionService.OnTileClicked(tile, Map);
     }
     public virtual void DrawDebug(SpriteBatch spriteBatch)
     {

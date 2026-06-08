@@ -109,9 +109,8 @@ public class Inventory
         };
     }
 
-    public bool PossuiItem(string ItemId)
+    public int PossuiItem(string ItemId)
     {
-        int i = Itens.FindIndex(item => item.Id == ItemId);
-        return i >= 0;
+        return Itens.FindIndex(item => item.Id == ItemId);
     }
 }
