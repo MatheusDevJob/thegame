@@ -14,6 +14,7 @@ public class Bau : Entity
         SpriteRow = 30;
         SpriteColumn = 38;
         BloqueiaMovimento = true;
+        IsSpawnavel = true;
         AtualizarHitbox();
     }
 

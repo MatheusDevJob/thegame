@@ -111,6 +111,6 @@ public class Inventory
 
     public int PossuiItem(string ItemId)
     {
-        return Itens.FindIndex(item => item.Id == ItemId);
+        return Itens.FindIndex(item => item?.Id == ItemId);
     }
 }

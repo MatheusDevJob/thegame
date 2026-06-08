@@ -100,10 +100,13 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
 
     private void DefaultEntity(Point tile, TiledMap Map)
     {
-        string entidadeId = _context.State.ActiveEquipe.Id;
+        if (IsPlayerTouchingTile(tile)) return;
         // descobrir se o chão pode receber a entidade
 
         // descobrir se a entidade é do tipo spawned
+        Entity entidade = _context.State.ActiveEquipe;
+        if (!entidade.IsSpawnavel) return;
+        string entidadeId = entidade.Id;
 
         // buscar se a entidade possui quantidade na bag
         int index = _context.State.Inventory.PossuiItem(entidadeId);
@@ -113,11 +116,27 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         _entityWorld.Add(EntityFactory.Create(_context, new TiledObjectData
         {
             Type = entidadeId,
-            X = tile.X,
-            Y = tile.Y
+            X = tile.X * 16,
+            Y = tile.Y * 16
         }));
-
         // remover a quantidade spawnada da bag
+        _context.State.Inventory.RemoveItem(entidadeId, 1);
+    }
+
+    protected bool IsPlayerTouchingTile(Point tile)
+    {
+        const int tileSize = 16;
+
+        if (_context.State.Player == null) return false;
+
+        Rectangle tileRect = new(
+            tile.X * tileSize,
+            tile.Y * tileSize,
+            tileSize,
+            tileSize
+        );
+
+        return _context.State.Player.Hitbox.Intersects(tileRect);
     }
 
     public void ChangeEntity(Point tile, Entity beforeEntity, string afterEntity)
