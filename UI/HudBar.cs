@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,16 +9,11 @@ using thegame.Maps;
 
 namespace thegame.UI;
 
-public class HudBar
+public class HudBar(GameContext context) : BaseHud(context)
 {
-    private readonly GameContext _context;
-    private readonly Texture2D _pixel;
-    private readonly Texture2D _hudBoxItem;
-    private readonly Texture2D _layoutUiTexture;
-    private readonly Texture2D _slotTexture;
-    private readonly SpriteFont _font;
-    private readonly GameState gameState;
-    private readonly InputManager inputManager;
+    private readonly Texture2D _hudBoxItem = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
+    private readonly Texture2D _layoutUiTexture = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown");
+    private readonly InputManager inputManager = context.Input;
     private readonly int _scale = 3;
 
 
@@ -34,21 +27,6 @@ public class HudBar
     private Rectangle bag;
     private int _selectedBagIndex = -1;
     private int _selectedHotbarIndex = -1;
-
-    public HudBar(GameContext context)
-    {
-        _context = context;
-        _pixel = new Texture2D(_context.GraphicsDevice, 1, 1);
-        _pixel.SetData([Color.White]);
-
-        _font = context.Content.Load<SpriteFont>("Fonts/MenuFont");
-        _hudBoxItem = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
-        _layoutUiTexture = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown");
-        _slotTexture = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
-
-        inputManager = context.Input;
-        gameState = _context.State;
-    }
 
     public void Draw(SpriteBatch spriteBatch)
     {
@@ -93,7 +71,7 @@ public class HudBar
         {
             Rectangle slot = GetBagSlotRectangle(bagRect, 8, limit, i);
 
-            if (!_context.Input.WasClicked(slot))
+            if (!Context.Input.WasClicked(slot))
                 continue;
 
             _selectedBagIndex = i;
@@ -107,7 +85,7 @@ public class HudBar
         {
             Rectangle slot = GetHotbarSlotRectangle(i);
 
-            if (!_context.Input.WasClicked(slot))
+            if (!Context.Input.WasClicked(slot))
                 continue;
 
             _selectedHotbarIndex = i;
@@ -266,7 +244,7 @@ public class HudBar
             spriteBatch.Draw(texture, itemRect, source, Color.White);
 
             string quantidade = item.Quantidade.ToString();
-            Vector2 textSize = _font.MeasureString(quantidade) * 0.8f;
+            Vector2 textSize = fonte.MeasureString(quantidade) * 0.8f;
             Vector2 textPosition = new(
                 slot.Right - textSize.X - 8,
                 slot.Bottom - textSize.Y - 6
@@ -311,7 +289,7 @@ public class HudBar
 
     private Rectangle GetBagRectangle()
     {
-        Viewport viewport = _context.GraphicsDevice.Viewport;
+        Viewport viewport = Context.GraphicsDevice.Viewport;
 
         return new Rectangle(
             450,
@@ -321,32 +299,9 @@ public class HudBar
         );
     }
 
-    private static Rectangle GetBagSlotRectangle(Rectangle bagRect, int columns, int itens, int index)
-    {
-        int slotSize = 64;
-        int gap = 2;
-
-
-        int startX = bagRect.X + 40;
-        int startY = bagRect.Y + 30;
-        int row = index / columns;
-        int col = index % columns;
-
-        if (index > 7)
-        {
-            startY += 20;
-        }
-        return new Rectangle(
-            startX + col * (slotSize + gap),
-            startY + row * (slotSize + gap),
-            slotSize,
-            slotSize
-        );
-    }
-
     private Rectangle GetHotbarSlotRectangle(int index)
     {
-        Viewport viewport = _context.GraphicsDevice.Viewport;
+        Viewport viewport = Context.GraphicsDevice.Viewport;
         int itemWidth = 18 * _scale;
         int itemHeight = 19 * _scale;
         int startY = viewport.Height - itemHeight - 10;
@@ -378,76 +333,12 @@ public class HudBar
             gameState.ActiveEquipe = null;
     }
 
-    private (Texture2D, Rectangle)? TryGetItemTexture(string itemId)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(itemId))
-                return null;
-            Entity entity = EntityFactory.Create(_context, new TiledObjectData { Type = itemId, X = 0, Y = 0 });
-            Rectangle source = new(
-                entity.SpriteColumn * entity.FrameWidth,
-                entity.SpriteRow * entity.FrameHeight,
-                entity.FrameWidth,
-                entity.FrameHeight
-            );
-
-            return (entity.Sprite, source);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private void DrawTextOutlined(SpriteBatch spriteBatch, string text, Vector2 position, Color color, float scale)
-    {
-        spriteBatch.DrawString(_font, text, position + new Vector2(1, 1), Color.Black, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-        spriteBatch.DrawString(_font, text, position, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-    }
-
     private void DrawBorder(SpriteBatch spriteBatch, Rectangle rect, Color color, int thickness)
     {
         spriteBatch.Draw(_pixel, new Rectangle(rect.X, rect.Y, rect.Width, thickness), color);
         spriteBatch.Draw(_pixel, new Rectangle(rect.X, rect.Bottom - thickness, rect.Width, thickness), color);
         spriteBatch.Draw(_pixel, new Rectangle(rect.X, rect.Y, thickness, rect.Height), color);
         spriteBatch.Draw(_pixel, new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height), color);
-    }
-
-    private static void DrawNineSlice(SpriteBatch spriteBatch, Texture2D texture, Rectangle dest, int sliceSize)
-    {
-        int w = texture.Width;
-        int h = texture.Height;
-
-        Rectangle srcTopLeft = new(0, 0, sliceSize, sliceSize);
-        Rectangle srcTop = new(sliceSize, 0, w - sliceSize * 2, sliceSize);
-        Rectangle srcTopRight = new(w - sliceSize, 0, sliceSize, sliceSize);
-        Rectangle srcLeft = new(0, sliceSize, sliceSize, h - sliceSize * 2);
-        Rectangle srcCenter = new(sliceSize, sliceSize, w - sliceSize * 2, h - sliceSize * 2);
-        Rectangle srcRight = new(w - sliceSize, sliceSize, sliceSize, h - sliceSize * 2);
-        Rectangle srcBottomLeft = new(0, h - sliceSize, sliceSize, sliceSize);
-        Rectangle srcBottom = new(sliceSize, h - sliceSize, w - sliceSize * 2, sliceSize);
-        Rectangle srcBottomRight = new(w - sliceSize, h - sliceSize, sliceSize, sliceSize);
-
-        Rectangle dstTopLeft = new(dest.X, dest.Y, sliceSize, sliceSize);
-        Rectangle dstTop = new(dest.X + sliceSize, dest.Y, dest.Width - sliceSize * 2, sliceSize);
-        Rectangle dstTopRight = new(dest.Right - sliceSize, dest.Y, sliceSize, sliceSize);
-        Rectangle dstLeft = new(dest.X, dest.Y + sliceSize, sliceSize, dest.Height - sliceSize * 2);
-        Rectangle dstCenter = new(dest.X + sliceSize, dest.Y + sliceSize, dest.Width - sliceSize * 2, dest.Height - sliceSize * 2);
-        Rectangle dstRight = new(dest.Right - sliceSize, dest.Y + sliceSize, sliceSize, dest.Height - sliceSize * 2);
-        Rectangle dstBottomLeft = new(dest.X, dest.Bottom - sliceSize, sliceSize, sliceSize);
-        Rectangle dstBottom = new(dest.X + sliceSize, dest.Bottom - sliceSize, dest.Width - sliceSize * 2, sliceSize);
-        Rectangle dstBottomRight = new(dest.Right - sliceSize, dest.Bottom - sliceSize, sliceSize, sliceSize);
-
-        spriteBatch.Draw(texture, dstTopLeft, srcTopLeft, Color.White);
-        spriteBatch.Draw(texture, dstTop, srcTop, Color.White);
-        spriteBatch.Draw(texture, dstTopRight, srcTopRight, Color.White);
-        spriteBatch.Draw(texture, dstLeft, srcLeft, Color.White);
-        spriteBatch.Draw(texture, dstCenter, srcCenter, Color.White);
-        spriteBatch.Draw(texture, dstRight, srcRight, Color.White);
-        spriteBatch.Draw(texture, dstBottomLeft, srcBottomLeft, Color.White);
-        spriteBatch.Draw(texture, dstBottom, srcBottom, Color.White);
-        spriteBatch.Draw(texture, dstBottomRight, srcBottomRight, Color.White);
     }
 
     private static (Rectangle leftArea, Rectangle rightArea) DrawNineSliceSplit(SpriteBatch spriteBatch, Texture2D texture, Rectangle dest, int sliceSize, float leftPercent = 0.60f)
@@ -531,7 +422,7 @@ public class HudBar
 
     private void CancelarMouseSetItem()
     {
-        if (_context.Input.IsRightClickPressed() && _slotOrigem != null)
+        if (Context.Input.IsRightClickPressed() && _slotOrigem != null)
         {
             List<ItemStack> items = gameState.Inventory.Itens;
             items[(int)_slotOrigem] = _itemNaMao;
@@ -544,7 +435,7 @@ public class HudBar
 
     private void MouseSetItem()
     {
-        if (_context.Input.IsLeftClickPressed() && _slotOrigem != null)
+        if (Context.Input.IsLeftClickPressed() && _slotOrigem != null)
         {
             List<ItemStack> items = gameState.Inventory.Itens;
             ItemStack existente = items[_selectedBagIndex];
