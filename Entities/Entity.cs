@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
@@ -35,6 +36,7 @@ public abstract class Entity
     public int FrameHeight { get; protected set; } = 16;
     public int SpriteRow { get; protected set; } = 0;
     public int SpriteColumn { get; protected set; } = 0;
+    public List<ItemStackSave> Data { get; set; } = [];
 
     protected Entity(GameContext context, string id, Vector2 posicao, float life = 0, float damage = 0)
     {

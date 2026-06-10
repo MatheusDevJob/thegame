@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Entities.WorldObjects.Interactables;
 using thegame.Entities.WorldObjects.Solo;
 
 namespace thegame.Maps;
@@ -222,6 +223,8 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
 
             item.SaveId = saveEntity.SaveId;
             item.Persistente = true;
+            if (item is Bau bau)
+                bau.AlimentarBau(saveEntity.Data);
 
             _entityWorld.Add(item);
         }

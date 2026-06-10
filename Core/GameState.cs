@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using thegame.Entities;
 using thegame.Items;
@@ -16,6 +17,7 @@ public class GameState
     public Player Player { get; private set; }
     public Inventory Inventory { get; private set; } = new();
     public Entity ActiveEquipe { get; set; }
+    public Entity EntidadeEmFoco { get; set; }
     public bool LayoutMenu = false;
     public bool LayoutBag = false;
     public readonly EntityWorld EntityWorld = new();
@@ -67,10 +69,18 @@ public class GameState
                 EntityId = item.Id,
                 X = item.Posicao.X,
                 Y = item.Posicao.Y,
-                // Data = item.GetSaveData()
+                Data = AtualizarDataBau(item.Data)
             });
         }
     }
+    public static Dictionary<string, string> AtualizarDataBau(List<ItemStackSave> itemStackSaves)
+    {
+        return new Dictionary<string, string>
+        {
+            ["items"] = JsonSerializer.Serialize(itemStackSaves)
+        };
+    }
+
     public void SaveGame()
     {
         SyncSaveFromRuntime();

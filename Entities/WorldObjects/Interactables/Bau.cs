@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
@@ -7,6 +10,9 @@ namespace thegame.Entities.WorldObjects.Interactables;
 public class Bau : Entity
 {
     private const int TileSize = 16;
+    public int QtdSlots { get; private set; } = 16;
+    public List<ItemStackSave> Items { get; set; }
+
     public bool Aberto { get; private set; }
 
     public Bau(GameContext context, Vector2 posicao) : base(context, "Bau", posicao)
@@ -15,7 +21,6 @@ public class Bau : Entity
         SpriteColumn = 38;
         BloqueiaMovimento = true;
         IsSpawnavel = true;
-        AtualizarHitbox();
     }
 
     public override void Update(GameTime gameTime)
@@ -54,11 +59,21 @@ public class Bau : Entity
     {
         Aberto = true;
         SpriteColumn = 39;
+        Context.State.EntidadeEmFoco = this;
     }
 
     public void CloseBau()
     {
         Aberto = false;
         SpriteColumn = 38;
+        Context.State.EntidadeEmFoco = null;
+    }
+
+    public void AlimentarBau(Dictionary<string, string> data)
+    {
+        if (!data.TryGetValue("items", out string json) || string.IsNullOrWhiteSpace(json))
+            return;
+
+        Items = JsonSerializer.Deserialize<List<ItemStackSave>>(json) ?? [];
     }
 }

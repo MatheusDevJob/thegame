@@ -40,6 +40,7 @@ public class ItemStackSave
     public string ItemId { get; set; } = "";
     public int Amount { get; set; } = 1;
     public int ListIndex { get; set; }
+    public int QuantidadeMaxima { get; set; } = 99;
 }
 
 public class MapSave
@@ -74,4 +75,5 @@ public class WorldTileSave
     public int X { get; set; }
     public int Y { get; set; }
     public int Quantity { get; set; } = 1;
+    public Dictionary<string, string> Data { get; set; }
 }

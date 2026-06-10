@@ -274,7 +274,7 @@ public class HudBar(GameContext context) : BaseHud(context)
             sliceSize,
             0,
             _layoutUiTexture.Width - sliceSize * 2,
-            sliceSize
+            0
         );
 
         Rectangle dstDivider = new(

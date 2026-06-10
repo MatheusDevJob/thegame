@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
@@ -54,52 +55,52 @@ public class HudBau(GameContext context) : BaseHud(context)
 
     private void DrawItensBau(SpriteBatch spriteBatch, Rectangle bag)
     {
-        /*   List<ItemStack> items = gameState.Inventory.Itens;
-          int itens = gameState.EntidadeEmFoco.itens;
+        List<ItemStackSave> items = gameState.EntidadeEmFoco.Data;
+        Bau bau = gameState.EntidadeEmFoco as Bau;
+        int QtdSlots = bau.QtdSlots;
 
-          for (int i = 0; i < itens; i++)
-          {
-              Rectangle slot = GetBagSlotRectangle(bag, 8, itens, i);
-              spriteBatch.Draw(_slotTexture, slot, Color.White);
+        for (int i = 0; i < QtdSlots; i++)
+        {
+            Rectangle slot = GetBagSlotRectangle(bag, 8, QtdSlots, i);
+            spriteBatch.Draw(_slotTexture, slot, Color.White);
 
-              // if (i == _selectedBagIndex)
-              //     DrawBorder(spriteBatch, slot, new Color(255, 230, 120), 2);
+            // if (i == _selectedBagIndex)
+            //     DrawBorder(spriteBatch, slot, new Color(255, 230, 120), 2);
 
-              if (items.Count <= i)
-                  continue;
+            if (items.Count <= i)
+                continue;
 
-              ItemStack item = items[i];
+            ItemStackSave item = items.FirstOrDefault((item) => item.ListIndex == i);
 
-              if (item == null)
-                  continue;
+            if (item == null)
+                continue;
 
-              // busca a  textura da imagem para desenhar no retangulo
-              var result = TryGetItemTexture(item.Id);
+            // busca a  textura da imagem para desenhar no retangulo
+            var result = TryGetItemTexture(item.ItemId);
 
-              if (!result.HasValue)
-                  continue;
+            if (!result.HasValue)
+                continue;
 
-              Rectangle itemRect = new(
-                  slot.X + 10,
-                  slot.Y + 8,
-                  slot.Width - 20,
-                  slot.Height - 20
-              );
-              Texture2D texture = result.Value.Item1;
-              Rectangle source = result.Value.Item2;
+            Rectangle itemRect = new(
+                slot.X + 10,
+                slot.Y + 8,
+                slot.Width - 20,
+                slot.Height - 20
+            );
+            Texture2D texture = result.Value.Item1;
+            Rectangle source = result.Value.Item2;
 
-              spriteBatch.Draw(texture, itemRect, source, Color.White);
+            spriteBatch.Draw(texture, itemRect, source, Color.White);
 
-              string quantidade = item.Quantidade.ToString();
-              Vector2 textSize = fonte.MeasureString(quantidade) * 0.8f;
-              Vector2 textPosition = new(
-                  slot.Right - textSize.X - 8,
-                  slot.Bottom - textSize.Y - 6
-              );
+            string quantidade = item.Amount.ToString();
+            Vector2 textSize = fonte.MeasureString(quantidade) * 0.8f;
+            Vector2 textPosition = new(
+                slot.Right - textSize.X - 8,
+                slot.Bottom - textSize.Y - 6
+            );
 
-              DrawTextOutlined(spriteBatch, quantidade, textPosition, Color.White, 0.8f);
-          }
-     */
+            DrawTextOutlined(spriteBatch, quantidade, textPosition, Color.White, 0.8f);
+        }
     }
 
     private void DrawBagSlots(SpriteBatch spriteBatch, Rectangle bag, int columns, int itens)
