@@ -21,7 +21,7 @@ public class HudBar(GameContext context) : BaseHud(context)
     private const int HotbarSlots = 8;
     private const int SlotSize = 60;
     private const int SlotGap = 0;
-    private ItemStack _itemNaMao;
+    private ItemStackSave _itemNaMao;
     private int? _slotOrigem;
 
     private Rectangle bag;
@@ -130,20 +130,20 @@ public class HudBar(GameContext context) : BaseHud(context)
         if (_selectedBagIndex < 0)
             return false;
 
-        List<ItemStack> items = gameState.Inventory.Itens;
+        List<ItemStackSave> items = gameState.Inventory.Itens;
 
         if (_selectedBagIndex >= items.Count)
             return false;
 
-        ItemStack item = items[_selectedBagIndex];
+        ItemStackSave item = items[_selectedBagIndex];
 
-        if (item == null || string.IsNullOrWhiteSpace(item.Id))
+        if (item == null || string.IsNullOrWhiteSpace(item.ItemId))
             return false;
 
-        if (!CanUseAsHotbarItem(item.Id))
+        if (!CanUseAsHotbarItem(item.ItemId))
             return false;
 
-        SetHotbarSlot(hotbarIndex, item.Id);
+        SetHotbarSlot(hotbarIndex, item.ItemId);
         EquipHotbarSlot(hotbarIndex);
         return true;
     }
@@ -181,13 +181,13 @@ public class HudBar(GameContext context) : BaseHud(context)
 
     private void DrawItensOnBar(SpriteBatch spriteBatch)
     {
-        List<ItemStack> items = gameState.Inventory.Itens;
+        List<ItemStackSave> items = gameState.Inventory.Itens;
         for (int i = 0; i < 8; i++)
         {
-            ItemStack item = items[i];
+            ItemStackSave item = items[i];
             if (item == null) continue;
 
-            var result = TryGetItemTexture(item.Id);
+            var result = TryGetItemTexture(item.ItemId);
 
             if (!result.HasValue)
                 continue;
@@ -208,7 +208,7 @@ public class HudBar(GameContext context) : BaseHud(context)
 
     private void DrawBagSlots(SpriteBatch spriteBatch, Rectangle bag, int columns, int itens)
     {
-        List<ItemStack> items = gameState.Inventory.Itens;
+        List<ItemStackSave> items = gameState.Inventory.Itens;
 
         for (int i = 0; i < itens; i++)
         {
@@ -221,13 +221,13 @@ public class HudBar(GameContext context) : BaseHud(context)
             if (items.Count <= i)
                 continue;
 
-            ItemStack item = items[i];
+            ItemStackSave item = items[i];
 
             if (item == null)
                 continue;
 
             // busca a  textura da imagem para desenhar no retangulo
-            var result = TryGetItemTexture(item.Id);
+            var result = TryGetItemTexture(item.ItemId);
 
             if (!result.HasValue)
                 continue;
@@ -315,9 +315,9 @@ public class HudBar(GameContext context) : BaseHud(context)
     {
         if (slotIndex < 0 || slotIndex >= 8)
             return "";
-        List<ItemStack> items = gameState.Inventory.Itens;
-        ItemStack item = items[slotIndex];
-        return item?.Id ?? "";
+        List<ItemStackSave> items = gameState.Inventory.Itens;
+        ItemStackSave item = items[slotIndex];
+        return item?.ItemId ?? "";
     }
 
     private void SetHotbarSlot(int slotIndex, string itemId)
@@ -400,7 +400,7 @@ public class HudBar(GameContext context) : BaseHud(context)
         }
 
         if (_selectedBagIndex < 0) return;
-        List<ItemStack> items = gameState.Inventory.Itens;
+        List<ItemStackSave> items = gameState.Inventory.Itens;
         if (items.Count < _selectedBagIndex) return;
         if (_itemNaMao != null) return;
 
@@ -409,7 +409,7 @@ public class HudBar(GameContext context) : BaseHud(context)
         _slotOrigem = _selectedBagIndex;
 
         items[_selectedBagIndex] = null;
-        var result = TryGetItemTexture(_itemNaMao?.Id);
+        var result = TryGetItemTexture(_itemNaMao?.ItemId);
 
         if (result.HasValue)
         {
@@ -424,7 +424,7 @@ public class HudBar(GameContext context) : BaseHud(context)
     {
         if (Context.Input.IsRightClickPressed() && _slotOrigem != null)
         {
-            List<ItemStack> items = gameState.Inventory.Itens;
+            List<ItemStackSave> items = gameState.Inventory.Itens;
             items[(int)_slotOrigem] = _itemNaMao;
             texture = null;
             _selectedBagIndex = -1;
@@ -437,8 +437,8 @@ public class HudBar(GameContext context) : BaseHud(context)
     {
         if (Context.Input.IsLeftClickPressed() && _slotOrigem != null)
         {
-            List<ItemStack> items = gameState.Inventory.Itens;
-            ItemStack existente = items[_selectedBagIndex];
+            List<ItemStackSave> items = gameState.Inventory.Itens;
+            ItemStackSave existente = items[_selectedBagIndex];
 
             if (existente != null)
                 items[(int)_slotOrigem] = existente;

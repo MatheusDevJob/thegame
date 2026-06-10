@@ -38,7 +38,7 @@ public class GameSave
 public class ItemStackSave
 {
     public string ItemId { get; set; } = "";
-    public int Amount { get; set; } = 1;
+    public int Quantidade { get; set; } = 1;
     public int ListIndex { get; set; }
     public int QuantidadeMaxima { get; set; } = 99;
 }
@@ -64,7 +64,7 @@ public class WorldItemSave
 {
     public string SaveId { get; set; } = "";
     public string ItemId { get; set; } = "";
-    public int Amount { get; set; } = 1;
+    public int Quantidade { get; set; } = 1;
     public float X { get; set; }
     public float Y { get; set; }
 }

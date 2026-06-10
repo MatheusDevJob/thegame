@@ -6,7 +6,7 @@ namespace thegame.Items;
 
 public class Inventory
 {
-    public List<ItemStack> Itens { get; private set; } = [];
+    public List<ItemStackSave> Itens { get; private set; } = [];
     public int BagLevel { get; set; } = 1;
     private int LimiteItensBag;
     public int GetLimiteItensBag => LimiteItensBag;
@@ -28,10 +28,10 @@ public class Inventory
         for (int i = 0; i < savedItems.Count; i++)
         {
             ItemStackSave item = savedItems[i];
-            if (item == null || string.IsNullOrWhiteSpace(item.ItemId) || item.Amount <= 0)
+            if (item == null || string.IsNullOrWhiteSpace(item.ItemId) || item.Quantidade <= 0)
                 continue;
 
-            AddItem(item.ItemId, item.ItemId, item.Amount, item.ListIndex);
+            AddItem(item.ItemId, item.ItemId, item.Quantidade, item.ListIndex);
         }
     }
 
@@ -39,11 +39,11 @@ public class Inventory
     {
         return [.. Itens
             .Select((item, index) => new { item, index })
-            .Where(x => x.item != null && !string.IsNullOrWhiteSpace(x.item.Id) && x.item.Quantidade > 0)
+            .Where(x => x.item != null && !string.IsNullOrWhiteSpace(x.item.ItemId) && x.item.Quantidade > 0)
             .Select(x => new ItemStackSave
             {
-                ItemId = x.item.Id,
-                Amount = x.item.Quantidade,
+                ItemId = x.item.ItemId,
+                Quantidade = x.item.Quantidade,
                 ListIndex = x.index
             })];
     }
@@ -61,14 +61,19 @@ public class Inventory
         if (indice < 0)
             return false;
 
-        ItemStack itemExistente = Itens.FirstOrDefault(i => i?.Id == id);
+        ItemStackSave itemExistente = Itens.FirstOrDefault(i => i?.ItemId == id);
         if (itemExistente != null)
         {
             itemExistente.Quantidade += quantidade;
             return true;
         }
 
-        Itens[(int)indice] = new ItemStack(id, nome, quantidade);
+        Itens[(int)indice] = new ItemStackSave
+        {
+            ItemId = id,
+            Quantidade = quantidade,
+            ListIndex = (int)indice
+        };
         return true;
     }
 
@@ -77,7 +82,7 @@ public class Inventory
         if (string.IsNullOrWhiteSpace(id) || quantidade <= 0)
             return false;
 
-        ItemStack item = Itens.FirstOrDefault(i => i.Id == id);
+        ItemStackSave item = Itens.FirstOrDefault(i => i.ItemId == id);
 
         if (item == null || item.Quantidade < quantidade)
             return false;
@@ -92,7 +97,7 @@ public class Inventory
 
     public int GetQuantidade(string id)
     {
-        ItemStack item = Itens.FirstOrDefault(i => i.Id == id);
+        ItemStackSave item = Itens.FirstOrDefault(i => i.ItemId == id);
         return item?.Quantidade ?? 0;
     }
 
@@ -111,6 +116,6 @@ public class Inventory
 
     public int PossuiItem(string ItemId)
     {
-        return Itens.FindIndex(item => item?.Id == ItemId);
+        return Itens.FindIndex(item => item?.ItemId == ItemId);
     }
 }

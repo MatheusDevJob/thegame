@@ -120,14 +120,14 @@ public class GameState
         PlayerSave.ActiveEquipe = toolId;
     }
 
-    public void AddItemToBag(string itemId, int amount = 1)
+    public void AddItemToBag(string itemId, int quantidade = 1)
     {
-        Inventory.AddItem(itemId, itemId, amount);
+        Inventory.AddItem(itemId, itemId, quantidade);
     }
 
-    public bool RemoveItemFromBag(string itemId, int amount = 1)
+    public bool RemoveItemFromBag(string itemId, int quantidade = 1)
     {
-        return Inventory.RemoveItem(itemId, amount);
+        return Inventory.RemoveItem(itemId, quantidade);
     }
 
     public void MarkEntityRemoved(string mapId, string saveId)
@@ -152,9 +152,9 @@ public class GameState
         return mapSave.RemovedEntities.Contains(saveId);
     }
 
-    public void AddDroppedItem(string mapId, string saveId, string itemId, int amount, Vector2 position)
+    public void AddDroppedItem(string mapId, string saveId, string itemId, int quantidade, Vector2 position)
     {
-        if (string.IsNullOrWhiteSpace(mapId) || string.IsNullOrWhiteSpace(saveId) || string.IsNullOrWhiteSpace(itemId) || amount <= 0)
+        if (string.IsNullOrWhiteSpace(mapId) || string.IsNullOrWhiteSpace(saveId) || string.IsNullOrWhiteSpace(itemId) || quantidade <= 0)
             return;
 
         MapSave mapSave = PlayerSave.GetMapSave(mapId);
@@ -168,7 +168,7 @@ public class GameState
         {
             SaveId = saveId,
             ItemId = itemId,
-            Amount = amount,
+            Quantidade = quantidade,
             X = position.X,
             Y = position.Y
         });

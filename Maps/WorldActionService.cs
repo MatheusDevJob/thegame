@@ -158,9 +158,9 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         else if (afterEntity == "Soil03") DropItem("Dirt", 1, position);
     }
 
-    public void DropItem(string itemId, int amount, Vector2 position)
+    public void DropItem(string itemId, int quantidade, Vector2 position)
     {
-        if (string.IsNullOrWhiteSpace(itemId) || amount <= 0)
+        if (string.IsNullOrWhiteSpace(itemId) || quantidade <= 0)
             return;
 
         string saveId = $"{_mapId}:drop:{Guid.NewGuid()}";
@@ -173,7 +173,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         item.Persistente = true;
 
         _entityWorld.Add(item);
-        _context.State.AddDroppedItem(_mapId, saveId, itemId, amount, position);
+        _context.State.AddDroppedItem(_mapId, saveId, itemId, quantidade, position);
     }
 
     public void PickupItem(Entity item)

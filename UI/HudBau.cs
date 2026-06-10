@@ -64,9 +64,6 @@ public class HudBau(GameContext context) : BaseHud(context)
             Rectangle slot = GetBagSlotRectangle(bag, 8, QtdSlots, i);
             spriteBatch.Draw(_slotTexture, slot, Color.White);
 
-            // if (i == _selectedBagIndex)
-            //     DrawBorder(spriteBatch, slot, new Color(255, 230, 120), 2);
-
             if (items.Count <= i)
                 continue;
 
@@ -92,7 +89,7 @@ public class HudBau(GameContext context) : BaseHud(context)
 
             spriteBatch.Draw(texture, itemRect, source, Color.White);
 
-            string quantidade = item.Amount.ToString();
+            string quantidade = item.Quantidade.ToString();
             Vector2 textSize = fonte.MeasureString(quantidade) * 0.8f;
             Vector2 textPosition = new(
                 slot.Right - textSize.X - 8,
@@ -105,26 +102,23 @@ public class HudBau(GameContext context) : BaseHud(context)
 
     private void DrawBagSlots(SpriteBatch spriteBatch, Rectangle bag, int columns, int itens)
     {
-        List<ItemStack> items = gameState.Inventory.Itens;
+        List<ItemStackSave> items = gameState.Inventory.Itens;
 
         for (int i = 0; i < itens; i++)
         {
             Rectangle slot = GetBagSlotRectangle(bag, columns, itens, i);
             spriteBatch.Draw(_slotTexture, slot, Color.White);
 
-            // if (i == _selectedBagIndex)
-            //     DrawBorder(spriteBatch, slot, new Color(255, 230, 120), 2);
-
             if (items.Count <= i)
                 continue;
 
-            ItemStack item = items[i];
+            ItemStackSave item = items[i];
 
             if (item == null)
                 continue;
 
             // busca a  textura da imagem para desenhar no retangulo
-            var result = TryGetItemTexture(item.Id);
+            var result = TryGetItemTexture(item.ItemId);
 
             if (!result.HasValue)
                 continue;
