@@ -315,18 +315,35 @@ public class HudBau(GameContext context) : BaseHud(context)
 
             if (OrdemClicks[0] == "bag" && OrdemClicks[1] == "bau")
             {
-                ItemStackSave existente = bau.Items[_selectedBauIndex];
-                if (existente != null) return;
-                _itemNaMao.ListIndex = _selectedBauIndex;
-                bau.Items[_selectedBauIndex] = _itemNaMao;
+                ItemStackSave slotOcupado = bau.Items[_selectedBauIndex];
+                if (slotOcupado != null) return;
+                ItemStackSave itemJaExiste = bau.Items.FirstOrDefault((e) => e?.ItemId == _itemNaMao.ItemId && e.Quantidade < e.QuantidadeMaxima);
+                if (itemJaExiste == null)
+                {
+                    _itemNaMao.ListIndex = _selectedBauIndex;
+                    bau.Items[_selectedBauIndex] = _itemNaMao;
+                }
+                else
+                {
+                    itemJaExiste.Quantidade += _itemNaMao.Quantidade;
+                }
             }
             else if (OrdemClicks[0] == "bau" && OrdemClicks[1] == "bag")
             {
                 List<ItemStackSave> items = gameState.Inventory.Itens;
-                ItemStackSave existente = items[_selectedBagIndex];
-                if (existente != null) return;
-                _itemNaMao.ListIndex = _selectedBagIndex;
-                items[_selectedBagIndex] = _itemNaMao;
+                ItemStackSave slotOcupado = items[_selectedBagIndex];
+                if (slotOcupado != null) return;
+                ItemStackSave itemJaExiste = items.FirstOrDefault((e) => e?.ItemId == _itemNaMao.ItemId && e.Quantidade < e.QuantidadeMaxima);
+                if (itemJaExiste != null && itemJaExiste.Quantidade < itemJaExiste.QuantidadeMaxima)
+                {
+                    itemJaExiste.Quantidade += _itemNaMao.Quantidade;
+                }
+                else
+                {
+                    _itemNaMao.ListIndex = _selectedBagIndex;
+                    items[_selectedBagIndex] = _itemNaMao;
+                }
+
             }
             else if (OrdemClicks[0] == "bau" && OrdemClicks[1] == "bau")
             {
