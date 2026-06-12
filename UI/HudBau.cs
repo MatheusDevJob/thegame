@@ -164,7 +164,7 @@ public class HudBau(GameContext context) : BaseHud(context)
     private int _selectedBagIndex = -1;
     private int _selectedBauIndex = -1;
     private bool ClickNoBau;
-    private List<string> OrdemClicks = [];
+    private readonly List<string> OrdemClicks = [];
 
     public override void Update(GameTime gameTime)
     {

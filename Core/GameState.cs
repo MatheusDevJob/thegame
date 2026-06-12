@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using thegame.Entities;
+using thegame.Entities.WorldObjects.Interactables;
 using thegame.Items;
 using thegame.Maps;
 using thegame.Scenes;
@@ -69,15 +70,17 @@ public class GameState
                 EntityId = item.Id,
                 X = item.Posicao.X,
                 Y = item.Posicao.Y,
-                Data = AtualizarDataBau(item.Data)
+                Data = AtualizarDataBau(item)
             });
         }
     }
-    public static Dictionary<string, string> AtualizarDataBau(List<ItemStackSave> itemStackSaves)
+    public static Dictionary<string, string> AtualizarDataBau(Entity item)
     {
+        if (item is Bau bau)
+            item.Data = bau.Items;
         return new Dictionary<string, string>
         {
-            ["items"] = JsonSerializer.Serialize(itemStackSaves)
+            ["items"] = JsonSerializer.Serialize(item.Data)
         };
     }
 
