@@ -82,7 +82,7 @@ public class Inventory
         if (string.IsNullOrWhiteSpace(id) || quantidade <= 0)
             return false;
 
-        ItemStackSave item = Itens.FirstOrDefault(i => i.ItemId == id);
+        ItemStackSave item = Itens.FirstOrDefault(i => i?.ItemId == id);
 
         if (item == null || item.Quantidade < quantidade)
             return false;
@@ -97,7 +97,7 @@ public class Inventory
 
     public int GetQuantidade(string id)
     {
-        ItemStackSave item = Itens.FirstOrDefault(i => i.ItemId == id);
+        ItemStackSave item = Itens.FirstOrDefault(i => i?.ItemId == id);
         return item?.Quantidade ?? 0;
     }
 

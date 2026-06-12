@@ -74,6 +74,12 @@ public class Bau : Entity
         if (!data.TryGetValue("items", out string json) || string.IsNullOrWhiteSpace(json))
             return;
 
-        Items = JsonSerializer.Deserialize<List<ItemStackSave>>(json) ?? [];
+        List<ItemStackSave> ItemsSave = JsonSerializer.Deserialize<List<ItemStackSave>>(json) ?? [];
+        while (ItemsSave.Count < QtdSlots)
+        {
+            ItemsSave.Add(null);
+        }
+
+        Items = ItemsSave;
     }
 }

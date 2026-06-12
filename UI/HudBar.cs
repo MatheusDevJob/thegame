@@ -28,7 +28,7 @@ public class HudBar(GameContext context) : BaseHud(context)
     private int _selectedBagIndex = -1;
     private int _selectedHotbarIndex = -1;
 
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch)
     {
         DrawCaixaItens(spriteBatch);
         DrawItensOnBar(spriteBatch);
@@ -45,7 +45,7 @@ public class HudBar(GameContext context) : BaseHud(context)
         DrawBagSlotsHorizontalDivider(spriteBatch, bag, 8, limit, 16);
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         UpdateBagClick();
         UpdateHotbarClick();

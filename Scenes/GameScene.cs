@@ -13,7 +13,7 @@ public class GameScene : IScene
     private readonly Player _player;
     private IMap _currentMap;
     private readonly Camera2D _camera;
-    protected readonly Hud _hud;
+    protected readonly BaseHud _hud;
     private readonly TileCursor _tileCursor;
 
     public GameScene(GameContext context, IMap currentMap)

@@ -17,7 +17,7 @@ public class Hud(GameContext context) : BaseHud(context)
     private Rectangle bag;
     private Rectangle _botaoSalvarSair;
 
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch)
     {
         if (gameState.LayoutMenu)
             DrawLayoutMenu(spriteBatch);
@@ -29,8 +29,9 @@ public class Hud(GameContext context) : BaseHud(context)
         _hudBar.Draw(spriteBatch);
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
         if (inputManager.IsKeyPressed(Keys.I))
         {
             gameState.LayoutBag = !gameState.LayoutBag;
@@ -46,6 +47,7 @@ public class Hud(GameContext context) : BaseHud(context)
         }
 
         _hudBar.Update(gameTime);
+        _hudBau.Update(gameTime);
 
         if (gameState.LayoutMenu && _context.Input.WasClicked(_botaoSalvarSair))
         {

@@ -36,6 +36,8 @@ public class BaseHud
         _pixel.SetData([Color.White]);
     }
 
+    public virtual void Update(GameTime gameTime) { }
+    public virtual void Draw(SpriteBatch spriteBatch) { }
 
     protected void DrawTextOutlined(SpriteBatch spriteBatch, string text, Vector2 position, Color color, float scale)
     {
