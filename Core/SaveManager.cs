@@ -10,7 +10,7 @@ namespace thegame.Core;
 public static class SaveManager
 {
     private const int CurrentVersion = 1;
-    private const string SaveFileName = "save_03.json";
+    private const string SaveFileName = "save_04.json";
     private const int EquipableSlotCount = 8;
     private static GameContext context;
 

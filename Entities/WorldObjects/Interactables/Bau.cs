@@ -71,13 +71,21 @@ public class Bau : Entity
 
     public void AlimentarBau(Dictionary<string, string> data)
     {
+        List<ItemStackSave> ItemsSave = [];
         if (!data.TryGetValue("items", out string json) || string.IsNullOrWhiteSpace(json))
-            return;
-
-        List<ItemStackSave> ItemsSave = JsonSerializer.Deserialize<List<ItemStackSave>>(json) ?? [];
-        while (ItemsSave.Count < QtdSlots)
         {
-            ItemsSave.Add(null);
+            for (int i = 0; i < QtdSlots; i++)
+            {
+                ItemsSave.Add(null);
+            }
+        }
+        else
+        {
+            ItemsSave = JsonSerializer.Deserialize<List<ItemStackSave>>(json) ?? [];
+            while (ItemsSave.Count < QtdSlots)
+            {
+                ItemsSave.Add(null);
+            }
         }
 
         Items = ItemsSave;
