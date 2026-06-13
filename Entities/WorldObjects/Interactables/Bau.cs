@@ -60,6 +60,15 @@ public class Bau : Entity
         Aberto = true;
         SpriteColumn = 39;
         Context.State.EntidadeEmFoco = this;
+        if (Items == null)
+        {
+            List<ItemStackSave> itemsSave = [];
+            for (int i = 0; i < QtdSlots; i++)
+            {
+                itemsSave.Add(null);
+            }
+            Items = itemsSave;
+        }
     }
 
     public void CloseBau()
