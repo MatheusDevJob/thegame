@@ -323,9 +323,13 @@ public class HudBau(GameContext context) : BaseHud(context)
                     _itemNaMao.ListIndex = _selectedBauIndex;
                     bau.Items[_selectedBauIndex] = _itemNaMao;
                 }
-                else
+                else if ((itemJaExiste.Quantidade + _itemNaMao.Quantidade) <= itemJaExiste.QuantidadeMaxima)
                 {
                     itemJaExiste.Quantidade += _itemNaMao.Quantidade;
+                }
+                else
+                {
+                    CancelarSetItem();
                 }
             }
             else if (OrdemClicks[0] == "bau" && OrdemClicks[1] == "bag")
@@ -334,16 +338,19 @@ public class HudBau(GameContext context) : BaseHud(context)
                 ItemStackSave slotOcupado = items[_selectedBagIndex];
                 if (slotOcupado != null) return;
                 ItemStackSave itemJaExiste = items.FirstOrDefault((e) => e?.ItemId == _itemNaMao.ItemId && e.Quantidade < e.QuantidadeMaxima);
-                if (itemJaExiste != null && itemJaExiste.Quantidade < itemJaExiste.QuantidadeMaxima)
+                if (itemJaExiste == null)
+                {
+                    _itemNaMao.ListIndex = _selectedBagIndex;
+                    items[_selectedBagIndex] = _itemNaMao;
+                }
+                else if ((itemJaExiste.Quantidade + _itemNaMao.Quantidade) <= itemJaExiste.QuantidadeMaxima)
                 {
                     itemJaExiste.Quantidade += _itemNaMao.Quantidade;
                 }
                 else
                 {
-                    _itemNaMao.ListIndex = _selectedBagIndex;
-                    items[_selectedBagIndex] = _itemNaMao;
+                    CancelarSetItem();
                 }
-
             }
             else if (OrdemClicks[0] == "bau" && OrdemClicks[1] == "bau")
             {
