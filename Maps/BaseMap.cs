@@ -34,6 +34,7 @@ public abstract class BaseMap : IMap
     protected BaseMap(GameContext context, string id, string mapPath)
     {
         Context = context;
+        context.State.MapaAtualId = id;
         Id = id;
         EntityWorld = context.State.EntityWorld;
 

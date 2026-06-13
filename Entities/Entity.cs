@@ -27,7 +27,7 @@ public abstract class Entity
     public string Id;
     public string SaveId { get; set; } = "";
     public bool Persistente { get; set; } = true;
-    public virtual bool IsColetavel => false;
+    public virtual bool IsColetavel { get; set; } = false;
     public virtual bool IsSpawnavel { get; protected set; } = false;
     public float Life;
     public float Damage;

@@ -24,6 +24,7 @@ public class GameState
     public readonly EntityWorld EntityWorld = new();
     public GameScene GameScene { get; set; }
     public TiledMap TiledMap { get; set; }
+    public string MapaAtualId { get; set; }
 
     public GameState(GameContext context, GameSave gameSave)
     {

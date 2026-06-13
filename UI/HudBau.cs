@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using thegame.Core;
 using thegame.Entities.WorldObjects.Interactables;
+using thegame.Maps;
 
 namespace thegame.UI;
 
@@ -183,6 +184,12 @@ public class HudBau(GameContext context) : BaseHud(context)
         if (!Context.Input.IsLeftClickPressed())
             return;
 
+        // if (!Context.Input.WasClicked(CaixaHudBau))
+        // {
+        //     DropItem();
+        //     return;
+        // }
+
         MouseState mouse = Mouse.GetState();
         int QtdSlots = bau.QtdSlots;
         ClickNoBau = mouse.Y < destLinhaHorizontal.Top;
@@ -298,10 +305,13 @@ public class HudBau(GameContext context) : BaseHud(context)
 
     private void CancelarSetItem()
     {
-        if (OrdemClicks[0] == "bau")
-            bau.Items[(int)_slotOrigem] = _itemNaMao;
-        else
-            gameState.Inventory.Itens[(int)_slotOrigem] = _itemNaMao;
+        if (_slotOrigem != null)
+        {
+            if (OrdemClicks[0] == "bau")
+                bau.Items[(int)_slotOrigem] = _itemNaMao;
+            else
+                gameState.Inventory.Itens[(int)_slotOrigem] = _itemNaMao;
+        }
 
         LimparCacheMoverItens();
     }
