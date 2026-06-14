@@ -10,19 +10,16 @@ namespace thegame.Maps;
 
 public class WorldActionService(GameContext context, EntityWorld entityWorld, string mapId)
 {
-    private readonly GameContext _context = context;
-    private readonly EntityWorld _entityWorld = entityWorld;
-    private readonly string _mapId = mapId;
     private static readonly HashSet<string> DiggableTerrains = new(StringComparer.OrdinalIgnoreCase)
         {
             "Grass",
             "Sand",
             "Dirt"
         };
-
+    private string TerrainType;
     public bool IsDiggable(string terrainType)
     {
-        return !string.IsNullOrEmpty(terrainType) && DiggableTerrains.Contains(terrainType) && _context.State.ActiveEquipe.Id == "ShovelTool";
+        return !string.IsNullOrEmpty(terrainType) && DiggableTerrains.Contains(terrainType) && context.State.ActiveEquipe.Id == "ShovelTool";
     }
 
     public void DestroyEntity(Entity entity)
@@ -31,24 +28,27 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             return;
 
         if (entity.Persistente)
-            _context.State.MarkEntityRemoved(_mapId, entity.SaveId);
+            context.State.MarkEntityRemoved(mapId, entity.SaveId);
 
-        _entityWorld.Remove(entity);
+        entityWorld.Remove(entity);
     }
 
     public void OnTileClicked(Point tile, TiledMap Map)
     {
         string layer = "Ground";
-        string terrainType = Map.GetTilePropertyString(layer, tile, "terrainType");
+        TerrainType = Map.GetTilePropertyString(layer, tile, "terrainType");
 
-        if (string.IsNullOrEmpty(terrainType)) return;
+        if (string.IsNullOrEmpty(TerrainType)) return;
 
-        switch (_context.State.ActiveEquipe.Id)
+        switch (context.State.ActiveEquipe.Id)
         {
             case "ShovelTool":
                 DigTile(tile, Map);
                 break;
             case "PickaxeTool":
+                if (IsPlayerFartherThanMe(tile)) break;
+
+                Farming.ArarCampo(context, tile);
                 break;
             case "AxeTool":
                 break;
@@ -69,14 +69,13 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         if (IsPlayerFartherThanMe(tile)) return;
 
         string layer = "Ground";
-        string terrainType = Map.GetTilePropertyString(layer, tile, "terrainType");
         bool diggable = Map.GetTilePropertyBool(layer, tile, "diggable");
         string drop = Map.GetTilePropertyString(layer, tile, "drop");
 
-        if (!IsDiggable(terrainType) || !diggable) return;
+        if (!IsDiggable(TerrainType) || !diggable) return;
 
 
-        string overrideKey = terrainType switch
+        string overrideKey = TerrainType switch
         {
             "Grass" => "DugGrass",
             "Sand" => "DugSand",
@@ -85,7 +84,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         };
         if (overrideKey == null) return;
 
-        _entityWorld.Add(new Soil01(_context, new Vector2(
+        entityWorld.Add(new Soil01(context, new Vector2(
             tile.X * 16,
             tile.Y * 16
         )));
@@ -105,30 +104,30 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         // descobrir se o chão pode receber a entidade
 
         // descobrir se a entidade é do tipo spawned
-        Entity entidade = _context.State.ActiveEquipe;
+        Entity entidade = context.State.ActiveEquipe;
         if (!entidade.IsSpawnavel) return;
         string entidadeId = entidade.Id;
 
         // buscar se a entidade possui quantidade na bag
-        int index = _context.State.Inventory.PossuiItem(entidadeId);
+        int index = context.State.Inventory.PossuiItem(entidadeId);
         if (index < 0) return;
 
         // invocar entidade no local clicado (Point tile)
-        _entityWorld.Add(EntityFactory.Create(_context, new TiledObjectData
+        entityWorld.Add(EntityFactory.Create(context, new TiledObjectData
         {
             Type = entidadeId,
             X = tile.X * 16,
             Y = tile.Y * 16
         }));
         // remover a quantidade spawnada da bag
-        _context.State.Inventory.RemoveItem(entidadeId, 1);
+        context.State.Inventory.RemoveItem(entidadeId, 1);
     }
 
     protected bool IsPlayerTouchingTile(Point tile)
     {
         const int tileSize = 16;
 
-        if (_context.State.Player == null) return false;
+        if (context.State.Player == null) return false;
 
         Rectangle tileRect = new(
             tile.X * tileSize,
@@ -137,14 +136,14 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             tileSize
         );
 
-        return _context.State.Player.Hitbox.Intersects(tileRect);
+        return context.State.Player.Hitbox.Intersects(tileRect);
     }
 
     public void ChangeEntity(Point tile, Entity beforeEntity, string afterEntity)
     {
         DestroyEntity(beforeEntity);
-        Entity item = EntityFactory.Create(_context, new TiledObjectData { Type = afterEntity, X = tile.X * 16, Y = tile.Y * 16 });
-        _entityWorld.Add(item);
+        Entity item = EntityFactory.Create(context, new TiledObjectData { Type = afterEntity, X = tile.X * 16, Y = tile.Y * 16 });
+        entityWorld.Add(item);
 
         // dropar item no meio do Tile.
         int tileSize = 16;
@@ -163,8 +162,8 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         if (string.IsNullOrWhiteSpace(itemId) || quantidade <= 0)
             return;
 
-        string saveId = $"{_mapId}:drop:{Guid.NewGuid()}";
-        Entity item = EntityFactory.Create(_context, new TiledObjectData { Type = itemId, X = position.X, Y = position.Y });
+        string saveId = $"{mapId}:drop:{Guid.NewGuid()}";
+        Entity item = EntityFactory.Create(context, new TiledObjectData { Type = itemId, X = position.X, Y = position.Y });
 
         if (item == null)
             return;
@@ -172,8 +171,8 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         item.SaveId = saveId;
         item.Persistente = true;
 
-        _entityWorld.Add(item);
-        _context.State.AddDroppedItem(_mapId, saveId, itemId, quantidade, position);
+        entityWorld.Add(item);
+        context.State.AddDroppedItem(mapId, saveId, itemId, quantidade, position);
     }
 
     public void PickupItem(Entity item)
@@ -181,22 +180,22 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         if (item == null || !item.IsColetavel)
             return;
 
-        _context.State.AddItemToBag(item.Id, 1);
-        _context.State.RemoveDroppedItem(_mapId, item.SaveId);
+        context.State.AddItemToBag(item.Id, 1);
+        context.State.RemoveDroppedItem(mapId, item.SaveId);
 
-        _entityWorld.Remove(item);
+        entityWorld.Remove(item);
     }
 
     public void LoadDroppedItems()
     {
-        MapSave mapSave = _context.State.PlayerSave.GetMapSave(_mapId);
+        MapSave mapSave = context.State.PlayerSave.GetMapSave(mapId);
 
         foreach (WorldItemSave savedItem in mapSave.DroppedItems)
         {
             if (!int.TryParse(savedItem.ItemId, out int itemId))
                 continue;
 
-            Entity item = EntityFactory.Create(_context, new TiledObjectData { Id = itemId, X = savedItem.X, Y = savedItem.Y });
+            Entity item = EntityFactory.Create(context, new TiledObjectData { Id = itemId, X = savedItem.X, Y = savedItem.Y });
 
             if (item == null)
                 continue;
@@ -204,19 +203,19 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             item.SaveId = savedItem.SaveId;
             item.Persistente = true;
 
-            _entityWorld.Add(item);
+            entityWorld.Add(item);
         }
     }
     public void LoadEntityMap()
     {
-        MapSave mapSave = _context.State.PlayerSave.GetMapSave(_context.State.PlayerSave.CurrentMap);
+        MapSave mapSave = context.State.PlayerSave.GetMapSave(context.State.PlayerSave.CurrentMap);
 
         foreach (WorldEntitySave saveEntity in mapSave.SpawnedEntities)
         {
             if (saveEntity.EntityId == "")
                 continue;
 
-            Entity item = EntityFactory.Create(_context, new TiledObjectData { Type = saveEntity.EntityId, X = saveEntity.X, Y = saveEntity.Y });
+            Entity item = EntityFactory.Create(context, new TiledObjectData { Type = saveEntity.EntityId, X = saveEntity.X, Y = saveEntity.Y });
 
             if (item == null)
                 continue;
@@ -226,7 +225,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
             if (item is Bau bau)
                 bau.AlimentarBau(saveEntity.Data);
 
-            _entityWorld.Add(item);
+            entityWorld.Add(item);
         }
     }
 
@@ -236,8 +235,8 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         int maxTiles = 1;
 
         Point playerTile = new(
-            _context.State.Player.Hitbox.Center.X / tileSize,
-            _context.State.Player.Hitbox.Center.Y / tileSize
+            context.State.Player.Hitbox.Center.X / tileSize,
+            context.State.Player.Hitbox.Center.Y / tileSize
         );
 
         int distanceX = Math.Abs(point.X - playerTile.X);

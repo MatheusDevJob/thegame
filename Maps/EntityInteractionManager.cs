@@ -47,6 +47,10 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                         bau.OpenBau();
                 }
                 break;
+            case "CampoArado":
+                CampoArado campo = (CampoArado)entity;
+                campo.Molhar();
+                break;
             default:
                 HandleIsGround(entity, point);
                 break;

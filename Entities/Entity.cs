@@ -31,7 +31,7 @@ public abstract class Entity
     public virtual bool IsSpawnavel { get; protected set; } = false;
     public float Life;
     public float Damage;
-    public readonly Texture2D Sprite;
+    public Texture2D Sprite;
     public int FrameWidth { get; protected set; } = 16;
     public int FrameHeight { get; protected set; } = 16;
     public int SpriteRow { get; protected set; } = 0;

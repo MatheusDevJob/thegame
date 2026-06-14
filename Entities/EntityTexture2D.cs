@@ -28,6 +28,10 @@ public static class EntityTexture2D
             "Soil02" => context.Content.Load<Texture2D>("Items/Soil_03"),
             "Soil03" => context.Content.Load<Texture2D>("Items/Soil_04"),
             "Bau" => context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px"),
+
+
+            "CampoArado" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Tiles/Merged_image (1)"),
+            "CampoAradoMolhado" => context.Content.Load<Texture2D>("Farming/CampoAradoMolhado"),
             _ => throw new System.AccessViolationException($"Entidade não encontrada: {entityId}")
         };
     }
