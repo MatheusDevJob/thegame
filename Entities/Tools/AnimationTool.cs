@@ -11,6 +11,7 @@ public static class AnimationTool
             "AxeTool" => (10, 8),
             "PickaxeTool" => (11, 8),
             "ShovelTool" => (12, 11),
+            "WaterTool" => (3, 4),
             "IsJobing" => (6, 6),
             _ => (6, 6)
         };

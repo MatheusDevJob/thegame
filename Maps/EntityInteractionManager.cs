@@ -101,6 +101,8 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
     private void HandleBau(Entity bau) { }
     private void HandleIsGround(Entity ground, Point point)
     {
+        if (_context.State.ActiveEquipe.Id != "ShovelTool") return;
+
         if (ground is Soil01)
         {
             _worldActions.ChangeEntity(point, ground, "Soil02");

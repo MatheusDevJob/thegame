@@ -16,6 +16,7 @@ public static class EntityTexture2D
             "ShovelTool" => context.Content.Load<Texture2D>("Items/shovel"),
             "AxeTool" => context.Content.Load<Texture2D>("Items/axe"),
             "PickaxeTool" => context.Content.Load<Texture2D>("Items/pickaxe"),
+            "WaterTool" => context.Content.Load<Texture2D>("Items/Tools/water"),
 
             // Itens
             "Dirt" => context.Content.Load<Texture2D>("Items/dirt"),

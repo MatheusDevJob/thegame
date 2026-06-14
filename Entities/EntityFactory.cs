@@ -26,6 +26,7 @@ public static class EntityFactory
             "AxeTool" => new AxeTool(context, posicao),
             "PickaxeTool" => new PickaxeTool(context, posicao),
             "ShovelTool" => new ShovelTool(context, posicao),
+            "WaterTool" => new WaterTool(context, posicao),
 
             "Tronco" => new Tronco(context, posicao),
 

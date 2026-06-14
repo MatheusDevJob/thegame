@@ -54,18 +54,28 @@ public static class SaveManager
             {
                 ItemId = "AxeTool",
                 Quantidade = 1,
+                QuantidadeMaxima = 1,
                 ListIndex = 0
             },
             new ItemStackSave
             {
                 ItemId = "PickaxeTool",
                 Quantidade = 1,
+                QuantidadeMaxima = 1,
+                ListIndex = 1
+            },
+            new ItemStackSave
+            {
+                ItemId = "WaterTool",
+                Quantidade = 1,
+                QuantidadeMaxima = 1,
                 ListIndex = 1
             },
             new ItemStackSave
             {
                 ItemId = "ShovelTool",
                 Quantidade = 1,
+                QuantidadeMaxima = 1,
                 ListIndex = 2
             }
             ],

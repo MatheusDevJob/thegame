@@ -1256,6 +1256,18 @@
 /processorParam:TextureFormat=Color
 /build:Items/sunflower_05.png
 
+#begin Items/Tools/water.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/Tools/water.png
+
 #begin Items/wheat_00.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -24,6 +24,7 @@ public class CampoArado : Entity
 
     public void Molhar()
     {
+        if (Context.State.ActiveEquipe.Id != "WaterTool") return;
         EstadoCampo = EntityEstadoCampo.Molhado;
         Sprite = EntityTexture2D.GetEntityTextureById(Context, "CampoAradoMolhado");
         SpriteRow = 0;
