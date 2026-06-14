@@ -81,23 +81,26 @@ public abstract class BaseMap : IMap
                     // logs.Add($"Entity Id: {entity.Id}");
                     // logs.Add($"SaveId: {entity.SaveId}");
                     // logs.Add($"Hitbox: {entity.Hitbox}");
-                    OnEntityClicked(entity, PosicaoMouse, "left");
+                    _entityInteractionManager.HandleClick(entity, PosicaoMouse, "left");
+
                 }
                 else
                 {
                     // logs.Add($"Clicou no tile: {_tileCursor.TilePosition}");
                     // logs.Add($"Mouse World: {_tileCursor.WorldPosition}");
-                    OnTileClicked(PosicaoMouse);
+                    _worldActionService.OnTileClicked(PosicaoMouse, Map);
+                }
+
+                if (!isKeyPressed)
+                {
+                    Context.State.Player.ResetarAnimacao();
                 }
             });
 
             // if (logs.Count > 6)
             // // logs.RemoveRange(0, logs.Count - 6);
         }
-        else if (!isKeyPressed)
-        {
-            Context.State.Player.ResetarAnimacao();
-        }
+
         IsM2Clicked(gameTime, PosicaoMouse);
 
         UpdateMap(gameTime);
@@ -173,19 +176,10 @@ public abstract class BaseMap : IMap
         Entity entity = EntityUnderMouse;
         if (entity == null) return;
 
-        OnEntityClicked(entity, PosicaoMouse, "right");
+        _entityInteractionManager.HandleClick(entity, PosicaoMouse, "right");
     }
 
 
-    protected virtual void OnEntityClicked(Entity entity, Point PosicaoMouse, string click = "left")
-    {
-        _entityInteractionManager.HandleClick(entity, PosicaoMouse, click);
-    }
-
-    protected virtual void OnTileClicked(Point tile)
-    {
-        _worldActionService.OnTileClicked(tile, Map);
-    }
     public virtual void DrawDebug(SpriteBatch spriteBatch)
     {
         // debugVisual.Draw(spriteBatch, logs);
