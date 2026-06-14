@@ -62,7 +62,7 @@ public abstract class BaseMap : IMap
     public virtual void Update(GameTime gameTime, TileCursor tileCursor)
     {
         _tileCursor = tileCursor;
-        isKeyPressed = inputManager.IsLeftClickPressed();
+        isKeyPressed = inputManager.IsLeftClickPress();
         GameState State = Context.State;
         Point PosicaoMouse = _tileCursor.TilePosition;
         if (_worldActionService.IsPlayerFartherThanMe(PosicaoMouse))

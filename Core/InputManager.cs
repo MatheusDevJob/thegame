@@ -65,4 +65,9 @@ public class InputManager
                mouse.LeftButton == ButtonState.Pressed &&
                _previousMouse.LeftButton == ButtonState.Released;
     }
+
+    public bool IsLeftClickPress()
+    {
+        return _currentMouse.LeftButton == ButtonState.Pressed;
+    }
 }
