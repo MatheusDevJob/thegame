@@ -162,6 +162,11 @@ public class Player : Entity
         _onAnimationFinished = null;
     }
 
+    public void ResetarAnimacao()
+    {
+        _currentRow = 0;
+    }
+
     public override void Draw(SpriteBatch spriteBatch)
     {
         Rectangle sourceRectangle = new(

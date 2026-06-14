@@ -94,6 +94,10 @@ public abstract class BaseMap : IMap
             // if (logs.Count > 6)
             // // logs.RemoveRange(0, logs.Count - 6);
         }
+        else if (!isKeyPressed)
+        {
+            Context.State.Player.ResetarAnimacao();
+        }
         IsM2Clicked(gameTime, PosicaoMouse);
 
         UpdateMap(gameTime);
