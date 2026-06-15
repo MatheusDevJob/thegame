@@ -26,12 +26,14 @@ public static class Farming
         GameState state = context.State;
         int possuiItem = state.Inventory.PossuiItem(plantacao.Id);
         if (possuiItem < 1) return;
+        state.Inventory.RemoveItem(plantacao.Id, 1);
 
         Plantacao a = plantacao.Id switch
         {
-            "SementeCenoura" => new Cenoura01(context, new Vector2(posicao.X, posicao.Y)),
+            "SementeCenoura" => new Cenoura01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
             _ => null,
         };
+        if (a == null) return;
         a.SetSolo(solo);
         // a.DefinirPosicao(new Vector2(a.Posicao.X, a.Posicao.Y));
 

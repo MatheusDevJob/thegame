@@ -43,7 +43,7 @@ public static class EntityFactory
             // FAZENDA
             "SementeCenoura" => new SementeCenoura(context, posicao),
             "Cenoura01" => new Cenoura01(context, posicao),
-            // "Cenoura02" => new Cenoura02(context, posicao),
+            "Cenoura" => new Cenoura(context, posicao),
             // "Cenoura03" => new Cenoura03(context, posicao),
             // "Cenoura04" => new Cenoura04(context, posicao),
 

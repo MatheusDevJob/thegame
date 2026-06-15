@@ -11,52 +11,55 @@ public class Cenoura01 : Plantacao
         FrameWidth = 7;
         FrameHeight = 7;
         SegundosPorEstagio = 1;
+        DropItemId = "Cenoura";
+        DropItemQtd = 1;
         AtualizarSpritePorEstagio();
     }
 
 
     protected override void AtualizarSpritePorEstagio()
     {
+        string NovoId;
         switch (EstagioAtual)
         {
             case 0:
-                Id = "Cenoura01";
+                NovoId = "Cenoura01";
                 FrameWidth = 6;
                 FrameHeight = 7;
-                
+
                 break;
 
             case 1:
-                Id = "Cenoura01";
+                NovoId = "Cenoura01";
                 FrameWidth = 6;
                 FrameHeight = 7;
                 break;
 
             case 2:
-                Id = "Cenoura02";
+                NovoId = "Cenoura02";
                 FrameWidth = 6;
                 FrameHeight = 7;
                 break;
 
             case 3:
-                Id = "Cenoura03";
+                NovoId = "Cenoura03";
                 FrameWidth = 8;
                 FrameHeight = 10;
                 break;
 
             case 4:
-                Id = "Cenoura04";
+                NovoId = "Cenoura04";
                 FrameWidth = 10;
                 FrameHeight = 13;
                 break;
 
             default:
-                Id = "Cenoura04";
+                NovoId = "Cenoura04";
                 FrameWidth = 10;
                 FrameHeight = 13;
                 break;
         }
 
-        AtualizarSprite(Id);
+        AtualizarSprite(NovoId);
     }
 }

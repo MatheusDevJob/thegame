@@ -11,8 +11,6 @@ namespace thegame.Maps;
 
 public class EntityInteractionManager(GameContext context, WorldActionService worldActions)
 {
-    private readonly GameContext _context = context;
-    private readonly WorldActionService _worldActions = worldActions;
     private string Click;
 
     public void HandleClick(Entity entity, Point point, string click = "left")
@@ -20,6 +18,12 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
         Click = click;
         if (entity == null)
             return;
+
+        if (entity is Plantacao p)
+        {
+            HandlePlantacao(p, point);
+            return;
+        }
 
         switch (entity.Id)
         {
@@ -32,7 +36,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                 break;
 
             case "Wood":
-                _worldActions.PickupItem(entity);
+                worldActions.PickupItem(entity);
                 break;
 
             // objetos do mundo
@@ -67,59 +71,74 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
         }
     }
 
-    private void HandleTronco(Entity tronco)
+    private void HandlePlantacao(Plantacao plantacao, Point point)
     {
-        if (_context.State.ActiveEquipe.Id != "AxeTool")
+
+        if (context.State.Player.IsAnimated)
             return;
 
-        if (_context.State.Player.IsAnimated)
+        if (IsEntityFartherThanPlayer(plantacao))
+            return;
+
+        if (plantacao.IsColhivel)
+        {
+            worldActions.DestroyEntity(plantacao);
+            worldActions.DropItem(plantacao.DropItemId, plantacao.DropItemQtd, plantacao.Posicao);
+        }
+    }
+    private void HandleTronco(Entity tronco)
+    {
+        if (context.State.ActiveEquipe.Id != "AxeTool")
+            return;
+
+        if (context.State.Player.IsAnimated)
             return;
 
         if (IsEntityFartherThanPlayer(tronco))
             return;
 
         tronco.Shake();
-        tronco.Life -= _context.State.ActiveEquipe.Damage;
+        tronco.Life -= context.State.ActiveEquipe.Damage;
 
         if (tronco.Life > 0)
             return;
 
-        _worldActions.DestroyEntity(tronco);
-        _worldActions.DropItem("Wood", 1, tronco.Posicao);
+        worldActions.DestroyEntity(tronco);
+        worldActions.DropItem("Wood", 1, tronco.Posicao);
     }
 
     private void HandlePedra(Entity pedra)
     {
-        if (_context.State.ActiveEquipe.Id != "PickaxeTool")
+        if (context.State.ActiveEquipe.Id != "PickaxeTool")
             return;
 
-        if (_context.State.Player.IsAnimated)
+        if (context.State.Player.IsAnimated)
             return;
 
         if (IsEntityFartherThanPlayer(pedra))
             return;
         pedra.Shake();
-        pedra.Life -= _context.State.ActiveEquipe.Damage;
+        pedra.Life -= context.State.ActiveEquipe.Damage;
 
         if (pedra.Life > 0)
             return;
 
-        _worldActions.DestroyEntity(pedra);
-        _worldActions.DropItem("PedraDrop", 1, pedra.Posicao);
+        worldActions.DestroyEntity(pedra);
+        worldActions.DropItem("PedraDrop", 1, pedra.Posicao);
     }
 
     private void HandleBau(Entity bau) { }
     private void HandleIsGround(Entity ground, Point point)
     {
-        if (_context.State.ActiveEquipe.Id != "ShovelTool") return;
+        if (context.State.ActiveEquipe.Id != "ShovelTool") return;
 
         if (ground is Soil01)
         {
-            _worldActions.ChangeEntity(point, ground, "Soil02");
+            worldActions.ChangeEntity(point, ground, "Soil02");
         }
         else if (ground is Soil02)
         {
-            _worldActions.ChangeEntity(point, ground, "Soil03");
+            worldActions.ChangeEntity(point, ground, "Soil03");
         }
     }
     protected bool IsEntityFartherThanPlayer(Entity entity, int maxTiles = 2)
@@ -127,8 +146,8 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
         int tileSize = 16;
 
         Point playerTile = new(
-            _context.State.Player.Hitbox.Center.X / tileSize,
-            _context.State.Player.Hitbox.Center.Y / tileSize
+            context.State.Player.Hitbox.Center.X / tileSize,
+            context.State.Player.Hitbox.Center.Y / tileSize
         );
 
         Point entityTile = new(

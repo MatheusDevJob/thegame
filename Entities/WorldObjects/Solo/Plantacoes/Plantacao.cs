@@ -14,6 +14,10 @@ public abstract class Plantacao : Entity
     protected int EstagioMaximo = 4;
     protected int SegundosPorEstagio = 30;
 
+    public bool IsColhivel { get; protected set; } = false;
+    public string DropItemId { get; protected set; }
+    public int DropItemQtd { get; protected set; }
+
     protected long PlantadoEmUnix;
 
     private double _timerVerificacao;
@@ -21,9 +25,10 @@ public abstract class Plantacao : Entity
     private Entity Solo;
 
     protected Plantacao(GameContext context, string entityId, Vector2 tilePosicao)
-        : base(context, entityId, tilePosicao * TileSize)
+        : base(context, entityId, tilePosicao)
     {
         BloqueiaMovimento = false;
+        IsColetavel = false;
 
         PlantadoEmUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
@@ -132,8 +137,11 @@ public abstract class Plantacao : Entity
     public void AtualizaSolo()
     {
         if (EstagioAtual < EstagioMaximo)
-            Solo.AtualizarSprite("Soil02");
+            Solo?.AtualizarSprite("Soil02");
         else
-            Solo.AtualizarSprite("Soil03");
+        {
+            Solo?.AtualizarSprite("Soil03");
+            IsColhivel = true;
+        }
     }
 }

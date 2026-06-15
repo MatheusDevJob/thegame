@@ -75,7 +75,8 @@ public class EntityWorld
         return _entities
             .Where(entity => entity != ignore)
             .Where(entity => entity.Hitbox.Contains(point))
-            .OrderByDescending(entity => entity.SortY)
+            .OrderByDescending(entity => (int)entity.RenderLayer)
+            .ThenByDescending(entity => entity.SortY)
             .FirstOrDefault();
     }
 
