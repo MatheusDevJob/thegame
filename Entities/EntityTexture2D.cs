@@ -33,10 +33,10 @@ public static class EntityTexture2D
 
             // PLANTAÇÃO
             "SementeCenoura" => context.Content.Load<Texture2D>("Items/carrot_00"),
-            "Cenoura1" => context.Content.Load<Texture2D>("Items/carrot_01"),
-            "Cenoura2" => context.Content.Load<Texture2D>("Items/carrot_02"),
-            "Cenoura3" => context.Content.Load<Texture2D>("Items/carrot_03"),
-            "Cenoura4" => context.Content.Load<Texture2D>("Items/carrot_04"),
+            "Cenoura01" => context.Content.Load<Texture2D>("Items/carrot_01"),
+            "Cenoura02" => context.Content.Load<Texture2D>("Items/carrot_02"),
+            "Cenoura03" => context.Content.Load<Texture2D>("Items/carrot_03"),
+            "Cenoura04" => context.Content.Load<Texture2D>("Items/carrot_04"),
             "Cenoura" => context.Content.Load<Texture2D>("Items/carrot_05"),
 
             "CampoArado" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Tiles/Merged_image (1)"),

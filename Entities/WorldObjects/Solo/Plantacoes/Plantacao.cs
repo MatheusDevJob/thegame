@@ -1,31 +1,72 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using thegame.Core;
 
 namespace thegame.Entities.WorldObjects.Solo.Plantacoes;
 
 public abstract class Plantacao : Entity
 {
+    private const int TileSize = 16;
+
     protected int EstagioAtual = 0;
-    protected int EstagioMaximo = 3;
+    protected int EstagioMaximo = 4;
     protected int SegundosPorEstagio = 30;
 
     protected long PlantadoEmUnix;
 
     private double _timerVerificacao;
     public Dictionary<string, string> InfoPlantacao = [];
+    private Entity Solo;
 
-    protected Plantacao(GameContext context, string entityId, Vector2 posicao) : base(context, entityId, posicao)
+    protected Plantacao(GameContext context, string entityId, Vector2 tilePosicao)
+        : base(context, entityId, tilePosicao * TileSize)
     {
         BloqueiaMovimento = false;
 
         PlantadoEmUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-        InfoPlantacao["PlantadoEm"] = PlantadoEmUnix.ToString();
-        InfoPlantacao["Estagio"] = EstagioAtual.ToString();
+        InfoPlantacao["plantadoEm"] = PlantadoEmUnix.ToString();
+        InfoPlantacao["estagio"] = EstagioAtual.ToString();
+    }
 
-        // AtualizarSpritePorEstagio();
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        float tileCenterX = Posicao.X + TileSize / 2f;
+        float tileCenterY = Posicao.Y + TileSize / 2f;
+
+        float spriteAnchorX = FrameWidth / 2f;
+        float spriteAnchorY = FrameHeight;
+
+        float drawX = tileCenterX - spriteAnchorX;
+        float drawY = tileCenterY - spriteAnchorY;
+
+        Rectangle destination = new(
+            (int)MathF.Round(drawX + DrawOffset.X),
+            (int)MathF.Round(drawY + DrawOffset.Y),
+            FrameWidth,
+            FrameHeight
+        );
+
+        Rectangle source = new(
+            SpriteColumn * FrameWidth,
+            SpriteRow * FrameHeight,
+            FrameWidth,
+            FrameHeight
+        );
+
+        spriteBatch.Draw(Sprite, destination, source, Color.White);
+    }
+
+    protected override Rectangle CalcularHitbox(Vector2 posicao)
+    {
+        return new Rectangle(
+            (int)posicao.X,
+            (int)posicao.Y,
+            TileSize,
+            TileSize
+        );
     }
 
     public override void Update(GameTime gameTime)
@@ -34,7 +75,6 @@ public abstract class Plantacao : Entity
 
         _timerVerificacao += gameTime.ElapsedGameTime.TotalSeconds;
 
-        // Não precisa verificar todo frame.
         if (_timerVerificacao < 1)
             return;
 
@@ -47,6 +87,7 @@ public abstract class Plantacao : Entity
     {
         long agora = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         long segundosPassados = agora - PlantadoEmUnix;
+
         int novoEstagio = (int)(segundosPassados / SegundosPorEstagio);
         novoEstagio = Math.Clamp(novoEstagio, 0, EstagioMaximo);
 
@@ -55,7 +96,9 @@ public abstract class Plantacao : Entity
 
         EstagioAtual = novoEstagio;
         InfoPlantacao["estagio"] = EstagioAtual.ToString();
+
         AtualizarSpritePorEstagio();
+        AtualizaSolo();
     }
 
     public void CarregarData()
@@ -79,5 +122,18 @@ public abstract class Plantacao : Entity
     public bool EstaMadura()
     {
         return EstagioAtual >= EstagioMaximo;
+    }
+
+    public void SetSolo(Entity solo)
+    {
+        Solo = solo;
+    }
+
+    public void AtualizaSolo()
+    {
+        if (EstagioAtual < EstagioMaximo)
+            Solo.AtualizarSprite("Soil02");
+        else
+            Solo.AtualizarSprite("Soil03");
     }
 }

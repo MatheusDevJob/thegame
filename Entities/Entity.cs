@@ -45,8 +45,13 @@ public abstract class Entity
         Id = id;
         Life = life;
         Damage = damage;
-        Sprite = EntityTexture2D.GetEntityTextureById(context, id);
+        AtualizarSprite(id);
         AtualizarHitbox();
+    }
+
+    public void AtualizarSprite(string id)
+    {
+        Sprite = EntityTexture2D.GetEntityTextureById(Context, id);
     }
 
     public virtual void Update(GameTime gameTime)

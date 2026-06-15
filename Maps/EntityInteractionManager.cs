@@ -58,7 +58,7 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                 }
                 else if (ItemNaMao is Plantacao plantacao)
                 {
-                    PlantacaoManager.Plantar(context, point, plantacao);
+                    Farming.Plantar(context, point, plantacao, entity);
                 }
                 break;
             default:
