@@ -15,20 +15,17 @@ public class CampoArado : Entity
     private EntityEstadoCampo EstadoCampo = EntityEstadoCampo.Arado;
 
     public override EntityRenderLayer RenderLayer => EntityRenderLayer.Ground;
-    public CampoArado(GameContext context, Vector2 posicao) : base(context, "CampoArado", posicao)
+    public CampoArado(GameContext context, Vector2 posicao) : base(context, "Soil", posicao)
     {
         BloqueiaMovimento = false;
-        SpriteRow = 1;
-        SpriteColumn = 1;
+        FrameHeight = 12;
     }
 
     public void Molhar()
     {
         if (Context.State.ActiveEquipe.Id != "WaterTool") return;
         EstadoCampo = EntityEstadoCampo.Molhado;
-        Sprite = EntityTexture2D.GetEntityTextureById(Context, "CampoAradoMolhado");
-        SpriteRow = 0;
-        SpriteColumn = 0;
+        Sprite = EntityTexture2D.GetEntityTextureById(Context, "Soil01");
     }
 
     public bool IsMolhado()

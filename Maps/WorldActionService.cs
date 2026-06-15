@@ -43,7 +43,9 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         switch (context.State.ActiveEquipe.Id)
         {
             case "ShovelTool":
-                DigTile(tile, Map);
+                if (IsPlayerFartherThanMe(tile)) break;
+
+                Farming.ArarCampo(context, tile);
                 break;
             case "PickaxeTool":
                 if (IsPlayerFartherThanMe(tile)) break;
@@ -84,7 +86,7 @@ public class WorldActionService(GameContext context, EntityWorld entityWorld, st
         };
         if (overrideKey == null) return;
 
-        entityWorld.Add(new Soil01(context, new Vector2(
+        entityWorld.Add(new CampoArado(context, new Vector2(
             tile.X * 16,
             tile.Y * 16
         )));

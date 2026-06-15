@@ -5,6 +5,7 @@ using thegame.Entities.WorldObjects.Interactables;
 using thegame.Entities.Tools;
 using thegame.Maps;
 using thegame.Entities.WorldObjects.Solo;
+using thegame.Entities.WorldObjects.Solo.Plantacoes;
 
 namespace thegame.Entities;
 
@@ -18,6 +19,7 @@ public static class EntityFactory
         {
             "Pedra1" => new PedraPequena(context, posicao),
             "Pedra2" => new PedraMedia(context, posicao),
+            "Soil" => new CampoArado(context, posicao),
             "Soil01" => new Soil01(context, posicao),
             "Soil02" => new Soil02(context, posicao),
             "Soil03" => new Soil03(context, posicao),
@@ -37,6 +39,9 @@ public static class EntityFactory
 
             // objetos do mundo
             "Bau" => new Bau(context, posicao),
+
+            // FAZENDA
+            "SementeCenoura" => new SementeCenoura(context, posicao),
 
             _ => null
         };

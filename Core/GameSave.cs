@@ -41,6 +41,8 @@ public class ItemStackSave
     public int Quantidade { get; set; } = 1;
     public int ListIndex { get; set; }
     public int QuantidadeMaxima { get; set; } = 99;
+    public string PlantadoEm { get; set; }
+    public string Estagio { get; set; }
 }
 
 public class MapSave

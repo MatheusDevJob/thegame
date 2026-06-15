@@ -2,8 +2,10 @@ using System;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
+using thegame.Entities.Tools;
 using thegame.Entities.WorldObjects.Interactables;
 using thegame.Entities.WorldObjects.Solo;
+using thegame.Entities.WorldObjects.Solo.Plantacoes;
 
 namespace thegame.Maps;
 
@@ -47,9 +49,17 @@ public class EntityInteractionManager(GameContext context, WorldActionService wo
                         bau.OpenBau();
                 }
                 break;
-            case "CampoArado":
-                CampoArado campo = (CampoArado)entity;
-                campo.Molhar();
+            case "Soil":
+                Entity ItemNaMao = context.State.ActiveEquipe;
+                if (ItemNaMao is WaterTool)
+                {
+                    CampoArado campo = (CampoArado)entity;
+                    campo.Molhar();
+                }
+                else if (ItemNaMao is Plantacao plantacao)
+                {
+                    PlantacaoManager.Plantar(context, point, plantacao);
+                }
                 break;
             default:
                 HandleIsGround(entity, point);
