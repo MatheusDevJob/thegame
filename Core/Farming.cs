@@ -31,6 +31,7 @@ public static class Farming
         Plantacao a = plantacao.Id switch
         {
             "SementeCenoura" => new Cenoura01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
+            "SementeBeterraba" => new Beterraba01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
             _ => null,
         };
         if (a == null) return;

@@ -38,6 +38,12 @@ public static class EntityTexture2D
             "Cenoura03" => context.Content.Load<Texture2D>("Items/carrot_03"),
             "Cenoura04" => context.Content.Load<Texture2D>("Items/carrot_04"),
             "Cenoura" => context.Content.Load<Texture2D>("Items/carrot_05"),
+            "SementeBeterraba" => context.Content.Load<Texture2D>("Items/beetroot_00"),
+            "Beterraba01" => context.Content.Load<Texture2D>("Items/beetroot_01"),
+            "Beterraba02" => context.Content.Load<Texture2D>("Items/beetroot_02"),
+            "Beterraba03" => context.Content.Load<Texture2D>("Items/beetroot_03"),
+            "Beterraba04" => context.Content.Load<Texture2D>("Items/beetroot_04"),
+            "Beterraba" => context.Content.Load<Texture2D>("Items/beetroot_05"),
 
             "CampoArado" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Tiles/Merged_image (1)"),
             "CampoAradoMolhado" => context.Content.Load<Texture2D>("Farming/CampoAradoMolhado"),
