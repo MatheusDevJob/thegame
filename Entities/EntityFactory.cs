@@ -47,6 +47,9 @@ public static class EntityFactory
             "SementeBeterraba" => new SementeBeterraba(context, posicao),
             "Beterraba01" => new Beterraba01(context, posicao),
             "Beterraba" => new Beterraba(context, posicao),
+            "SementeRepolho" => new SementeRepolho(context, posicao),
+            "Repolho01" => new Repolho01(context, posicao),
+            "Repolho" => new Repolho(context, posicao),
             // "Cenoura03" => new Cenoura03(context, posicao),
             // "Cenoura04" => new Cenoura04(context, posicao),
 
