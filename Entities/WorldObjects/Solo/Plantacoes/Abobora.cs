@@ -9,7 +9,7 @@ public class Abobora : Plantacao
     {
         BloqueiaMovimento = false;
         FrameWidth = 12;
-        FrameHeight = 12;
+        FrameHeight = 14;
         SegundosPorEstagio = 1;
         DropItemId = "Abobora";
         IsColetavel = true;

@@ -24,39 +24,39 @@ public class Abobora01 : Plantacao
         {
             case 0:
                 NovoId = "Abobora01";
-                FrameWidth = 6;
+                FrameWidth = 8;
                 FrameHeight = 7;
 
                 break;
 
             case 1:
                 NovoId = "Abobora01";
-                FrameWidth = 6;
+                FrameWidth = 8;
                 FrameHeight = 7;
                 break;
 
             case 2:
                 NovoId = "Abobora02";
-                FrameWidth = 6;
-                FrameHeight = 7;
+                FrameWidth = 9;
+                FrameHeight = 9;
                 break;
 
             case 3:
                 NovoId = "Abobora03";
-                FrameWidth = 8;
-                FrameHeight = 10;
+                FrameWidth = 12;
+                FrameHeight = 11;
                 break;
 
             case 4:
                 NovoId = "Abobora04";
-                FrameWidth = 10;
-                FrameHeight = 13;
+                FrameWidth = 12;
+                FrameHeight = 14;
                 break;
 
             default:
                 NovoId = "Abobora04";
-                FrameWidth = 10;
-                FrameHeight = 13;
+                FrameWidth = 12;
+                FrameHeight = 14;
                 break;
         }
 
