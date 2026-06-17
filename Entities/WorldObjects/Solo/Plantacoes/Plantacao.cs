@@ -140,7 +140,6 @@ public abstract class Plantacao : Entity
             Solo?.AtualizarSprite("Soil02");
         else
         {
-            Solo?.AtualizarSprite("Soil03");
             IsColhivel = true;
         }
     }
