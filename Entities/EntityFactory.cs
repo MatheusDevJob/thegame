@@ -50,6 +50,9 @@ public static class EntityFactory
             "SementeRepolho" => new SementeRepolho(context, posicao),
             "Repolho01" => new Repolho01(context, posicao),
             "Repolho" => new Repolho(context, posicao),
+            "SementeCouveFlor" => new SementeCouveFlor(context, posicao),
+            "CouveFlor01" => new CouveFlor01(context, posicao),
+            "CouveFlor" => new CouveFlor(context, posicao),
             // "Cenoura03" => new Cenoura03(context, posicao),
             // "Cenoura04" => new Cenoura04(context, posicao),
 
