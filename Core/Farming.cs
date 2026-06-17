@@ -34,6 +34,7 @@ public static class Farming
             "SementeBeterraba" => new Beterraba01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
             "SementeRepolho" => new Repolho01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
             "SementeCouveFlor" => new CouveFlor01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
+            "SementeCouve" => new Couve01(context, new Vector2(posicao.X * 16, posicao.Y * 16)),
             _ => null,
         };
         if (a == null) return;
