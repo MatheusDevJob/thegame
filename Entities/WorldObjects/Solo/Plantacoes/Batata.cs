@@ -8,8 +8,8 @@ public class Batata : Plantacao
     public Batata(GameContext context, Vector2 posicao) : base(context, "Batata", posicao)
     {
         BloqueiaMovimento = false;
-        FrameWidth = 12;
-        FrameHeight = 12;
+        FrameWidth = 10;
+        FrameHeight = 10;
         SegundosPorEstagio = 1;
         DropItemId = "Batata";
         IsColetavel = true;
