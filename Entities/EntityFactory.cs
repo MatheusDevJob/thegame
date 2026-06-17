@@ -80,6 +80,10 @@ public static class EntityFactory
             "SementeGiraSol" => new SementeGiraSol(context, posicao),
             "GiraSol01" => new GiraSol01(context, posicao),
             "GiraSol" => new GiraSol(context, posicao),
+
+            "SementeTrigo" => new SementeTrigo(context, posicao),
+            "Trigo01" => new Trigo01(context, posicao),
+            "Trigo" => new Trigo(context, posicao),
             // "Cenoura03" => new Cenoura03(context, posicao),
             // "Cenoura04" => new Cenoura04(context, posicao),
 
