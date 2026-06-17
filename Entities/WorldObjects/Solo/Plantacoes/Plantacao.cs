@@ -39,7 +39,7 @@ public abstract class Plantacao : Entity
     public override void Draw(SpriteBatch spriteBatch)
     {
         float tileCenterX = Posicao.X + TileSize / 2f;
-        float tileCenterY = Posicao.Y + TileSize / 2f;
+        float tileCenterY = Posicao.Y + (EstaMadura() ? TileSize / 1.5f : TileSize / 2f);
 
         float spriteAnchorX = FrameWidth / 2f;
         float spriteAnchorY = FrameHeight;
@@ -140,6 +140,7 @@ public abstract class Plantacao : Entity
             Solo?.AtualizarSprite("Soil02");
         else
         {
+            Solo?.AtualizarSprite("Soil03");
             IsColhivel = true;
         }
     }
