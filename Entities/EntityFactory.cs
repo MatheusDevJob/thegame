@@ -60,6 +60,10 @@ public static class EntityFactory
             "SementeCouve" => new SementeCouve(context, posicao),
             "Couve01" => new Couve01(context, posicao),
             "Couve" => new Couve(context, posicao),
+  
+            "SementeChirivia" => new SementeChirivia(context, posicao),
+            "Chirivia01" => new Chirivia01(context, posicao),
+            "Chirivia" => new Chirivia(context, posicao),
             // "Cenoura03" => new Cenoura03(context, posicao),
             // "Cenoura04" => new Cenoura04(context, posicao),
 
