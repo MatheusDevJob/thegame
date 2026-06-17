@@ -74,6 +74,13 @@ public static class EntityTexture2D
             "Chirivia04" => context.Content.Load<Texture2D>("Items/pastinaca_04"),
             "Chirivia" => context.Content.Load<Texture2D>("Items/pastinaca_05"),
 
+            "SementeBatata" => context.Content.Load<Texture2D>("Items/potato_00"),
+            "Batata01" => context.Content.Load<Texture2D>("Items/potato_01"),
+            "Batata02" => context.Content.Load<Texture2D>("Items/potato_02"),
+            "Batata03" => context.Content.Load<Texture2D>("Items/potato_03"),
+            "Batata04" => context.Content.Load<Texture2D>("Items/potato_04"),
+            "Batata" => context.Content.Load<Texture2D>("Items/potato_05"),
+
             "CampoArado" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Tiles/Merged_image (1)"),
             "CampoAradoMolhado" => context.Content.Load<Texture2D>("Farming/CampoAradoMolhado"),
             _ => throw new System.AccessViolationException($"Entidade não encontrada: {entityId}")
