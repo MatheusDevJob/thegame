@@ -16,7 +16,7 @@ public class HudLoja(GameContext context) : BaseHud(context)
         if (Context.UIState.LojaAberta)
         {
             int tamanhoX = 590;
-            int tamanhoY = 350;
+            int tamanhoY = 550;
             int width = screenWidth / 2 - tamanhoX / 2;
             int height = screenHeight / 2 - tamanhoY / 2;
 
@@ -30,6 +30,13 @@ public class HudLoja(GameContext context) : BaseHud(context)
             DrawNineSlice(spriteBatch, _layoutUiTexture, dest, sliceSize);
             DrawSpriteNpc(spriteBatch);
             DrawProdutos(spriteBatch);
+            DrawTextOutlined(spriteBatch, $"R$ {Context.State.Player.Carteira}", new(dest.X + 25, dest.Y * 2), Color.White, 0.6f);
+            DrawBagSlots(spriteBatch, new(
+                dest.X,
+                dest.Y * 2,
+                dest.Width,
+                dest.Height
+            ), 8, limit);
         }
     }
 
@@ -47,6 +54,7 @@ public class HudLoja(GameContext context) : BaseHud(context)
 
         DrawTextOutlined(spriteBatch, fala, new(dest.X + 25, dest.Bottom + 5), Color.White, 0.5f);
     }
+
     private string TratarWidthFala(string fala, float larguraMaxima, float scale)
     {
         if (string.IsNullOrWhiteSpace(fala))
@@ -124,6 +132,51 @@ public class HudLoja(GameContext context) : BaseHud(context)
             );
 
             DrawTextOutlined(spriteBatch, Preco, textPosition, Color.White, 0.6f);
+        }
+    }
+
+    private void DrawBagSlots(SpriteBatch spriteBatch, Rectangle bag, int columns, int itens)
+    {
+        List<ItemStackSave> items = gameState.Inventory.Itens;
+
+        for (int i = 0; i < itens; i++)
+        {
+            Rectangle slot = GetBagSlotRectangle(bag, columns, i);
+            spriteBatch.Draw(_slotTexture, slot, Color.White);
+
+            if (items.Count <= i)
+                continue;
+
+            ItemStackSave item = items[i];
+
+            if (item == null)
+                continue;
+
+            // busca a  textura da imagem para desenhar no retangulo
+            var result = TryGetItemTexture(item.ItemId);
+
+            if (!result.HasValue)
+                continue;
+
+            Rectangle itemRect = new(
+                slot.X + 10,
+                slot.Y + 8,
+                slot.Width - 20,
+                slot.Height - 20
+            );
+            Texture2D texture = result.Value.Item1;
+            Rectangle source = result.Value.Item2;
+
+            spriteBatch.Draw(texture, itemRect, source, Color.White);
+
+            string quantidade = item.Quantidade.ToString();
+            Vector2 textSize = fonte.MeasureString(quantidade) * 0.8f;
+            Vector2 textPosition = new(
+                slot.Right - textSize.X - 8,
+                slot.Bottom - textSize.Y - 6
+            );
+
+            DrawTextOutlined(spriteBatch, quantidade, textPosition, Color.White, 0.8f);
         }
     }
 

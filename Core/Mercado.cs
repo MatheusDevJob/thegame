@@ -21,9 +21,8 @@ public class Mercado
         LojaItens item = lojaItens.FirstOrDefault(e => e.ItemId == ItemId);
         if (item == null || item?.Preco == null) return;
 
-        int carteira = context.State.Player.Carteira;
-        if (carteira < item.Preco) return;
-        carteira -= item.Preco;
+        if (context.State.Player.Carteira < item.Preco) return;
+        context.State.Player.Carteira -= item.Preco;
 
         context.State.Inventory.AddItem(item.ItemCompraId, "", Quantidade);
     }
