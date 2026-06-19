@@ -45,6 +45,7 @@ public static class SaveManager
             Version = CurrentVersion,
             CurrentMap = "city",
             PlayerLife = 100f,
+            PlayerCarteira = 500,
             PlayerPosition = new Vector2(1200, 220),
             ActiveEquipe = "AxeTool",
             BagLevel = 4,
@@ -178,6 +179,7 @@ public static class SaveManager
         public int Version { get; set; } = CurrentVersion;
         public string CurrentMap { get; set; } = "city";
         public float PlayerLife { get; set; }
+        public int PlayerCarteira { get; set; }
         public float PlayerX { get; set; }
         public float PlayerY { get; set; }
         public string ActiveEquipe { get; set; } = "";
@@ -190,6 +192,7 @@ public static class SaveManager
             return new SaveFileData
             {
                 Version = CurrentVersion,
+                PlayerCarteira = save.PlayerCarteira,
                 CurrentMap = save.CurrentMap ?? "city",
                 PlayerLife = save.PlayerLife,
                 PlayerX = save.PlayerPosition.X,
@@ -206,6 +209,7 @@ public static class SaveManager
             return new GameSave
             {
                 Version = Version,
+                PlayerCarteira = PlayerCarteira,
                 CurrentMap = string.IsNullOrWhiteSpace(CurrentMap) ? "city" : CurrentMap,
                 PlayerLife = PlayerLife,
                 PlayerPosition = new Vector2(PlayerX, PlayerY),

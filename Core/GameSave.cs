@@ -7,6 +7,7 @@ namespace thegame.Core;
 public class GameSave
 {
     public int Version { get; set; } = 1;
+    public int PlayerCarteira { get; set; }
     public string CurrentMap { get; set; } = "city";
     public float PlayerLife { get; set; } = 75f;
     public Vector2 PlayerPosition { get; set; } = new(1200, 220);

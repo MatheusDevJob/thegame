@@ -32,9 +32,11 @@ public class Player : Entity
     private Action _onAnimationFinished;
     private int _animationFrames;
     public bool IsAnimated => _isAnimated;
+    public int Carteira;
     public Player(GameContext context, GameSave save) : base(context, "Player", save.PlayerPosition, save.PlayerLife)
     {
         _texture = Sprite;
+        Carteira = save.PlayerCarteira;
         _hitboxPixel = new Texture2D(Context.GraphicsDevice, 1, 1);
         _hitboxPixel.SetData([Color.White]);
         AtualizarHitbox();

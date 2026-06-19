@@ -45,6 +45,7 @@ public class GameState
     {
         PlayerSave.PlayerPosition = Player.Posicao;
         PlayerSave.PlayerLife = Player.Life;
+        PlayerSave.PlayerCarteira = Player.Carteira;
         PlayerSave.BagLevel = Inventory.BagLevel;
         PlayerSave.BagItems = Inventory.ToSaveItems();
 
