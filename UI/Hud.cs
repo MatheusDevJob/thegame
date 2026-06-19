@@ -30,7 +30,7 @@ public class Hud(GameContext context) : BaseHud(context)
         if (inputManager.IsKeyPressed(Keys.I))
         {
             gameState.LayoutBag = !gameState.LayoutBag;
-            gameState.LayoutMenu = false;
+            Context.UIState.SetMenuAberto(false);
 
 
         }
@@ -38,10 +38,10 @@ public class Hud(GameContext context) : BaseHud(context)
         if (inputManager.IsKeyPressed(Keys.Escape))
         {
             gameState.LayoutBag = false;
-            gameState.LayoutMenu = !gameState.LayoutMenu;
+            Context.UIState.SetMenuAberto(!Context.UIState.MenuAberto);
         }
 
-        if (gameState.LayoutMenu && _context.Input.WasClicked(_botaoSalvarSair))
+        if (Context.UIState.MenuAberto && _context.Input.WasClicked(_botaoSalvarSair))
         {
             _context.State.SaveGame();
             _context.SceneManager.ChangeScene(new MainMenuScene(_context));

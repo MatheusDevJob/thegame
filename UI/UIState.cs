@@ -15,6 +15,10 @@ public class UIState
     public Texture2D LojaSprite { get; private set; }
     public List<LojaItens> ListProdutosLoja { get; private set; } = [];
 
+    public void SetMenuAberto(bool StatusMenu)
+    {
+        MenuAberto = StatusMenu;
+    }
 
     private Guid? _lojaDonoId;
 
