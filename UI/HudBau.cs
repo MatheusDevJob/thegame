@@ -74,7 +74,7 @@ public class HudBau(GameContext context) : BaseHud(context)
 
         for (int i = 0; i < QtdSlots; i++)
         {
-            Rectangle slot = GetBagSlotRectangle(bag, 8, QtdSlots, i);
+            Rectangle slot = GetBagSlotRectangle(bag, 8, i);
             spriteBatch.Draw(_slotTexture, slot, Color.White);
 
             if (items.Count <= i)
@@ -119,7 +119,7 @@ public class HudBau(GameContext context) : BaseHud(context)
 
         for (int i = 0; i < itens; i++)
         {
-            Rectangle slot = GetBagSlotRectangle(bag, columns, itens, i);
+            Rectangle slot = GetBagSlotRectangle(bag, columns, i);
             spriteBatch.Draw(_slotTexture, slot, Color.White);
 
             if (items.Count <= i)
@@ -169,7 +169,6 @@ public class HudBau(GameContext context) : BaseHud(context)
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
         BauAberto = gameState.EntidadeEmFoco is Bau;
         if (!BauAberto) return;
         UpdateBagClick();
@@ -203,7 +202,7 @@ public class HudBau(GameContext context) : BaseHud(context)
         {
             for (int i = 0; i < QtdSlots; i++)
             {
-                Rectangle slot = GetBagSlotRectangle(CaixaHudBau, 8, QtdSlots, i);
+                Rectangle slot = GetBagSlotRectangle(CaixaHudBau, 8, i);
                 if (!Context.Input.WasClicked(slot))
                     continue;
                 _selectedBauIndex = i;
@@ -218,7 +217,7 @@ public class HudBau(GameContext context) : BaseHud(context)
 
             for (int i = 0; i < limit; i++)
             {
-                Rectangle slot = GetBagSlotRectangle(CaixaHudBag, 8, limit, i);
+                Rectangle slot = GetBagSlotRectangle(CaixaHudBag, 8, i);
 
                 if (!Context.Input.WasClicked(slot))
                     continue;

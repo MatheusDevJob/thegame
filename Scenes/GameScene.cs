@@ -20,7 +20,7 @@ public class GameScene : IScene
     {
         _context = context;
         _player = _context.State.Player;
-        _hud = new Hud(_context);
+        _hud = new HudManager(_context);
         _currentMap = currentMap;
         _camera = new();
         _tileCursor = context.TileCursor;

@@ -19,20 +19,24 @@ public abstract class Npc : Entity
     private readonly int _frameHeight = 32;
     private readonly int _currentRow = 0;
     private readonly float _scale = 0.7f;
-    private readonly Texture2D _texture;
 
     protected float DistanciaInteracao = 30f;
     protected bool PlayerPerto;
     protected Vector2 Center => Posicao + new Vector2(_frameWidth * _scale / 2f, _frameHeight * _scale / 2f);
 
-    private bool _mostrarFala;
+    protected bool MostrarFala;
 
     protected Npc(GameContext context, string nome, string fala, Vector2 posicao) : base(context, nome, posicao, 0)
     {
         Nome = nome;
         Fala = fala;
-        _texture = Sprite;
         AtualizarHitbox();
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        UpdateAnimation(gameTime);
     }
 
     protected int UpdateAnimation(GameTime gameTime)
@@ -58,13 +62,15 @@ public abstract class Npc : Entity
 
         if (!PlayerPerto)
         {
-            _mostrarFala = false;
+            MostrarFala = false;
             return;
         }
 
         if (Context.Input.IsKeyPressed(Keys.E))
-            _mostrarFala = !_mostrarFala;
+            NpcAction();
     }
+
+    protected abstract void NpcAction();
 
     public override void Draw(SpriteBatch spriteBatch)
     {
@@ -81,7 +87,7 @@ public abstract class Npc : Entity
         );
 
         spriteBatch.Draw(
-            _texture,
+            Sprite,
             drawPosition,
             sourceRectangle,
             Color.White,
@@ -92,13 +98,13 @@ public abstract class Npc : Entity
             0f
         );
 
-        if (PlayerPerto && !_mostrarFala)
+        if (PlayerPerto && !MostrarFala)
         {
             Vector2 position = new(Center.X, Posicao.Y - 16);
             Context.UI.DrawKeyHint(spriteBatch, "E", position);
         }
 
-        if (_mostrarFala)
+        if (MostrarFala)
             Context.UI.DrawNpcSpeech(spriteBatch, Fala, Center, Posicao.Y);
     }
 

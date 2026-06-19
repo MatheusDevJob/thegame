@@ -6,7 +6,7 @@ using thegame.Maps;
 
 namespace thegame.UI;
 
-public class BaseHud
+public abstract class BaseHud
 {
     protected readonly GameContext Context;
     protected readonly GameState gameState;
@@ -19,12 +19,14 @@ public class BaseHud
     protected readonly Texture2D _pixel;
     protected readonly SpriteFont fonte;
 
-    public BaseHud(GameContext context)
+    protected BaseHud(GameContext context)
     {
         Context = context;
         gameState = context.State;
+
         nineSlice = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown_inlay");
         _slotTexture = context.Content.Load<Texture2D>("UI/Hud/itemdisc_01");
+
         viewport = context.GraphicsDevice.Viewport;
 
         screenWidth = viewport.Width;
@@ -36,8 +38,9 @@ public class BaseHud
         _pixel.SetData([Color.White]);
     }
 
-    public virtual void Update(GameTime gameTime) { }
-    public virtual void Draw(SpriteBatch spriteBatch) { }
+    public abstract void Update(GameTime gameTime);
+
+    public abstract void Draw(SpriteBatch spriteBatch);
 
     protected void DrawTextOutlined(SpriteBatch spriteBatch, string text, Vector2 position, Color color, float scale)
     {
@@ -45,11 +48,10 @@ public class BaseHud
         spriteBatch.DrawString(fonte, text, position, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
     }
 
-    protected static Rectangle GetBagSlotRectangle(Rectangle bagRect, int columns, int itens, int index)
+    protected static Rectangle GetBagSlotRectangle(Rectangle bagRect, int columns, int index)
     {
         int slotSize = 64;
         int gap = 2;
-
 
         int startX = bagRect.X + 40;
         int startY = bagRect.Y + 30;
@@ -57,9 +59,8 @@ public class BaseHud
         int col = index % columns;
 
         if (index > 7)
-        {
             startY += 20;
-        }
+
         return new Rectangle(
             startX + col * (slotSize + gap),
             startY + row * (slotSize + gap),
@@ -74,7 +75,14 @@ public class BaseHud
         {
             if (string.IsNullOrWhiteSpace(itemId))
                 return null;
-            Entity entity = EntityFactory.Create(Context, new TiledObjectData { Type = itemId, X = 0, Y = 0 });
+
+            Entity entity = EntityFactory.Create(Context, new TiledObjectData
+            {
+                Type = itemId,
+                X = 0,
+                Y = 0
+            });
+
             Rectangle source = new(
                 entity.SpriteColumn * entity.FrameWidth,
                 entity.SpriteRow * entity.FrameHeight,

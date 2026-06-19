@@ -33,6 +33,8 @@ public class HudBar(GameContext context) : BaseHud(context)
         DrawCaixaItens(spriteBatch);
         DrawItensOnBar(spriteBatch);
         MouseMovendoItem(spriteBatch);
+        if (Context.UIState.BagAberta)
+            DrawBag(spriteBatch);
     }
 
     public void DrawBag(SpriteBatch spriteBatch)
@@ -69,7 +71,7 @@ public class HudBar(GameContext context) : BaseHud(context)
 
         for (int i = 0; i < limit; i++)
         {
-            Rectangle slot = GetBagSlotRectangle(bagRect, 8, limit, i);
+            Rectangle slot = GetBagSlotRectangle(bagRect, 8, i);
 
             if (!Context.Input.WasClicked(slot))
                 continue;
@@ -212,7 +214,7 @@ public class HudBar(GameContext context) : BaseHud(context)
 
         for (int i = 0; i < itens; i++)
         {
-            Rectangle slot = GetBagSlotRectangle(bag, columns, itens, i);
+            Rectangle slot = GetBagSlotRectangle(bag, columns, i);
             spriteBatch.Draw(_slotTexture, slot, Color.White);
 
             // if (i == _selectedBagIndex)
@@ -259,9 +261,9 @@ public class HudBar(GameContext context) : BaseHud(context)
         if (itens <= columns)
             return;
 
-        Rectangle firstSlot = GetBagSlotRectangle(bag, columns, itens, 0);
-        Rectangle lastSlotFirstRow = GetBagSlotRectangle(bag, columns, itens, columns - 1);
-        Rectangle firstSlotSecondRow = GetBagSlotRectangle(bag, columns, itens, columns);
+        Rectangle firstSlot = GetBagSlotRectangle(bag, columns, 0);
+        Rectangle lastSlotFirstRow = GetBagSlotRectangle(bag, columns, columns - 1);
+        Rectangle firstSlotSecondRow = GetBagSlotRectangle(bag, columns, columns);
 
         int dividerHeight = sliceSize;
         int dividerX = firstSlot.X;

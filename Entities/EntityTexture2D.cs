@@ -10,7 +10,10 @@ public static class EntityTexture2D
         return entityId switch
         {
             "Aldeão" => context.Content.Load<Texture2D>("npc-pack/Old man/Old man walk-Sheet"),
+            "Eduarda" => context.Content.Load<Texture2D>("npc-pack/Woman/Woman Walk-Sheet"),
             "Player" => context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes"),
+            "Soldado" => context.Content.Load<Texture2D>("npc-pack/Soldier/Soldier Walk-Sheet"),
+
             "Tronco" => context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px"),
             // Ferramentas
             "ShovelTool" => context.Content.Load<Texture2D>("Items/shovel"),

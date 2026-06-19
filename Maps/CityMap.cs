@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
@@ -24,6 +25,32 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
             "Aldeão",
             "Olá, viajante!",
             new Vector2(1100, 205)
+        ));
+
+        List<LojaItens> lojaItensEduarda = [
+            new LojaItens{ItemId= "Cenoura", Quantidade = 3},
+            new LojaItens{ItemId= "Beterraba", Quantidade = 3},
+            new LojaItens{ItemId= "Repolho", Quantidade = 3}
+        ];
+
+        EntityWorld.Add(new Vendedor(
+            Context,
+            "Eduarda",
+            "Olá, viajante!",
+            new Vector2(1295, 125),
+            lojaItensEduarda
+        ));
+
+        EntityWorld.Add(new Vendedor(
+            Context,
+            "Soldado",
+            "Olá, viajante!",
+            new Vector2(1445, 125),
+            [
+                new LojaItens{ItemId= "Couve", Quantidade = 5},
+                new LojaItens{ItemId= "Chirivia", Quantidade = 1},
+                new LojaItens{ItemId= "Batata", Quantidade = 3}
+            ]
         ));
     }
 

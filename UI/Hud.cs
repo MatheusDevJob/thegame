@@ -10,8 +10,6 @@ public class Hud(GameContext context) : BaseHud(context)
 {
     private readonly GameContext _context = context;
     private readonly Texture2D _layoutUiTexture = context.Content.Load<Texture2D>("UI/Hud/9-slice/Ancient/brown");
-    private readonly HudBar _hudBar = new HudBar(context);
-    private readonly HudBau _hudBau = new HudBau(context);
     protected InputManager inputManager = context.Input;
 
     private Rectangle bag;
@@ -19,19 +17,16 @@ public class Hud(GameContext context) : BaseHud(context)
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (gameState.LayoutMenu)
+        if (Context.UIState.MenuAberto)
             DrawLayoutMenu(spriteBatch);
 
-        if (gameState.LayoutBag)
-            _hudBar.DrawBag(spriteBatch);
 
-        _hudBau.Draw(spriteBatch);
-        _hudBar.Draw(spriteBatch);
+        // _hudBau.Draw(spriteBatch);
+        // _hudBar.Draw(spriteBatch);
     }
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
         if (inputManager.IsKeyPressed(Keys.I))
         {
             gameState.LayoutBag = !gameState.LayoutBag;
@@ -45,9 +40,6 @@ public class Hud(GameContext context) : BaseHud(context)
             gameState.LayoutBag = false;
             gameState.LayoutMenu = !gameState.LayoutMenu;
         }
-
-        _hudBar.Update(gameTime);
-        _hudBau.Update(gameTime);
 
         if (gameState.LayoutMenu && _context.Input.WasClicked(_botaoSalvarSair))
         {
