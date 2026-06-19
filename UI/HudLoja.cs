@@ -42,6 +42,48 @@ public class HudLoja(GameContext context) : BaseHud(context)
             165, 153
         );
         spriteBatch.Draw(sprite, dest, Color.White);
+
+        string fala = TratarWidthFala(Context.UIState.LojaFala, 165, 0.5f);
+
+        DrawTextOutlined(spriteBatch, fala, new(dest.X + 25, dest.Bottom + 5), Color.White, 0.5f);
+    }
+    private string TratarWidthFala(string fala, float larguraMaxima, float scale)
+    {
+        if (string.IsNullOrWhiteSpace(fala))
+            return "";
+
+        string[] palavras = fala.Split(' ');
+        string linhaAtual = "";
+        List<string> linhas = [];
+
+        foreach (string palavra in palavras)
+        {
+            string testeLinha;
+
+            if (string.IsNullOrEmpty(linhaAtual))
+                testeLinha = palavra;
+            else
+                testeLinha = linhaAtual + " " + palavra;
+
+            float larguraTexto = fonte.MeasureString(testeLinha).X * scale;
+
+            if (larguraTexto <= larguraMaxima)
+            {
+                linhaAtual = testeLinha;
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(linhaAtual))
+                    linhas.Add(linhaAtual);
+
+                linhaAtual = palavra;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(linhaAtual))
+            linhas.Add(linhaAtual);
+
+        return string.Join("\n", linhas);
     }
 
     private void DrawProdutos(SpriteBatch spriteBatch)
@@ -75,14 +117,13 @@ public class HudLoja(GameContext context) : BaseHud(context)
 
             spriteBatch.Draw(texture, itemRect, source, Color.White);
 
-            string quantidade = produtos.Quantidade.ToString();
-            Vector2 textSize = fonte.MeasureString(quantidade) * 0.8f;
+            string Preco = $"R$ {produtos.Preco}";
             Vector2 textPosition = new(
-                slot.Right - textSize.X - 8,
-                slot.Bottom - textSize.Y - 6
+                itemRect.X,
+                itemRect.Y + itemRect.Height + 15
             );
 
-            DrawTextOutlined(spriteBatch, quantidade, textPosition, Color.White, 0.8f);
+            DrawTextOutlined(spriteBatch, Preco, textPosition, Color.White, 0.6f);
         }
     }
 

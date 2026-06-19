@@ -36,7 +36,7 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
         EntityWorld.Add(new Vendedor(
             Context,
             "Eduarda",
-            "Olá, viajante!",
+           "Tenho sementes fresquinhas para quem quer ver a terra florescer.",
             new Vector2(1295, 125),
             lojaItensEduarda
         ));
@@ -44,7 +44,7 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
         EntityWorld.Add(new Vendedor(
             Context,
             "Soldado",
-            "Olá, viajante!",
+            "Minha missão é proteger esta cidade. Enquanto eu estiver aqui, a paz será mantida.",
             new Vector2(1445, 125),
             [
                 new LojaItens{ItemId= "Couve", ItemCompraId = "SementeCouve", Preco = 25, Quantidade = 5},

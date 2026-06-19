@@ -13,6 +13,7 @@ public class UIState
     public bool BagAberta { get; private set; }
     public bool BauAberto { get; private set; }
     public Texture2D LojaSprite { get; private set; }
+    public string LojaFala { get; private set; }
     public List<LojaItens> ListProdutosLoja { get; private set; } = [];
 
     public void SetMenuAberto(bool StatusMenu)
@@ -32,7 +33,7 @@ public class UIState
         return LojaAberta && _lojaDonoId == lojaId;
     }
 
-    public void ToggleLoja(GameContext context, Guid lojaId, string spriteId, List<LojaItens> produtos)
+    public void ToggleLoja(GameContext context, Guid lojaId, string spriteId, string fala, List<LojaItens> produtos)
     {
         if (LojaAberta && _lojaDonoId == lojaId)
         {
@@ -40,6 +41,7 @@ public class UIState
             return;
         }
 
+        LojaFala = fala;
         LojaAberta = true;
         _lojaDonoId = lojaId;
         ListProdutosLoja = produtos;

@@ -22,6 +22,6 @@ public class Vendedor(GameContext context, string nome, string fala, Vector2 pos
 
     protected override void NpcAction()
     {
-        Context.UIState.ToggleLoja(Context, _lojaId, nome, lojaItens);
+        Context.UIState.ToggleLoja(Context, _lojaId, nome, fala, lojaItens);
     }
 }
