@@ -67,12 +67,12 @@ public static class EntityTexture2D
             "Couve04" => context.Content.Load<Texture2D>("Items/kale_04"),
             "Couve" => context.Content.Load<Texture2D>("Items/kale_05"),
 
-            "SementeChirivia" => context.Content.Load<Texture2D>("Items/pastinaca_00"),
-            "Chirivia01" => context.Content.Load<Texture2D>("Items/pastinaca_01"),
-            "Chirivia02" => context.Content.Load<Texture2D>("Items/pastinaca_02"),
-            "Chirivia03" => context.Content.Load<Texture2D>("Items/pastinaca_03"),
-            "Chirivia04" => context.Content.Load<Texture2D>("Items/pastinaca_04"),
-            "Chirivia" => context.Content.Load<Texture2D>("Items/pastinaca_05"),
+            "SementeChirivia" => context.Content.Load<Texture2D>("Items/parsnip_00"),
+            "Chirivia01" => context.Content.Load<Texture2D>("Items/parsnip_01"),
+            "Chirivia02" => context.Content.Load<Texture2D>("Items/parsnip_02"),
+            "Chirivia03" => context.Content.Load<Texture2D>("Items/parsnip_03"),
+            "Chirivia04" => context.Content.Load<Texture2D>("Items/parsnip_04"),
+            "Chirivia" => context.Content.Load<Texture2D>("Items/parsnip_05"),
 
             "SementeBatata" => context.Content.Load<Texture2D>("Items/potato_00"),
             "Batata01" => context.Content.Load<Texture2D>("Items/potato_01"),
