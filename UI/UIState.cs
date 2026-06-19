@@ -20,6 +20,11 @@ public class UIState
         MenuAberto = StatusMenu;
     }
 
+    public void ToogleBag()
+    {
+        BagAberta = !BagAberta;
+    }
+
     private Guid? _lojaDonoId;
 
     public bool LojaPertenceAo(Guid lojaId)

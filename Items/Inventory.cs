@@ -118,4 +118,10 @@ public class Inventory
     {
         return Itens.FindIndex(item => item?.ItemId == ItemId);
     }
+
+    public bool InventarioCheio()
+    {
+        int r = Itens.FindIndex(item => item == null);
+        return r < 0;
+    }
 }

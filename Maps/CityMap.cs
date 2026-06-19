@@ -28,9 +28,9 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
         ));
 
         List<LojaItens> lojaItensEduarda = [
-            new LojaItens{ItemId= "Cenoura", Quantidade = 3},
-            new LojaItens{ItemId= "Beterraba", Quantidade = 3},
-            new LojaItens{ItemId= "Repolho", Quantidade = 3}
+            new LojaItens{ItemId= "Cenoura", ItemCompraId = "SementeCenoura", Preco = 25, Quantidade = 3},
+            new LojaItens{ItemId= "Beterraba", ItemCompraId = "SementeBeterraba", Preco = 25, Quantidade = 3},
+            new LojaItens{ItemId= "Repolho", ItemCompraId = "SementeRepolho", Preco = 25, Quantidade = 3}
         ];
 
         EntityWorld.Add(new Vendedor(
@@ -47,9 +47,9 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
             "Olá, viajante!",
             new Vector2(1445, 125),
             [
-                new LojaItens{ItemId= "Couve", Quantidade = 5},
-                new LojaItens{ItemId= "Chirivia", Quantidade = 1},
-                new LojaItens{ItemId= "Batata", Quantidade = 3}
+                new LojaItens{ItemId= "Couve", ItemCompraId = "SementeCouve", Preco = 25, Quantidade = 5},
+                new LojaItens{ItemId= "Chirivia", ItemCompraId = "SementeChirivia", Preco = 25, Quantidade = 1},
+                new LojaItens{ItemId= "Batata", ItemCompraId = "SementeBatata", Preco = 25, Quantidade = 3}
             ]
         ));
     }

@@ -29,7 +29,7 @@ public class Hud(GameContext context) : BaseHud(context)
     {
         if (inputManager.IsKeyPressed(Keys.I))
         {
-            gameState.LayoutBag = !gameState.LayoutBag;
+            Context.UIState.ToogleBag();
             Context.UIState.SetMenuAberto(false);
 
 

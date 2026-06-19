@@ -55,6 +55,8 @@ public class HudLoja(GameContext context) : BaseHud(context)
             Rectangle slot = GetBagSlotRectangle(CaixaHud, 8, i);
             spriteBatch.Draw(_slotTexture, slot, Color.White);
 
+            if (Context.Input.WasClicked(slot))
+                Mercado.Comprar(context, produtos.ItemId, 1);
 
             // busca a  textura da imagem para desenhar no retangulo
             var result = TryGetItemTexture(produtos.ItemId);
@@ -84,5 +86,34 @@ public class HudLoja(GameContext context) : BaseHud(context)
         }
     }
 
-    public override void Update(GameTime gameTime) { }
+    public override void Update(GameTime gameTime)
+    {
+        if (!Context.UIState.LojaAberta)
+            return;
+
+        VerificarClickProdutos();
+    }
+
+    private void VerificarClickProdutos()
+    {
+        List<LojaItens> produtosLoja = Context.UIState.ListProdutosLoja;
+
+        for (int i = 0; i < produtosLoja.Count; i++)
+        {
+            LojaItens produto = produtosLoja[i];
+
+            CaixaHud.X = InicioDesenhoItensLoja;
+
+            Rectangle slot = GetBagSlotRectangle(CaixaHud, 8, i);
+
+            if (Context.Input.WasRightClicked(slot))
+            {
+                if (string.IsNullOrWhiteSpace(produto.ItemId))
+                    return;
+
+                Mercado.Comprar(Context, produto.ItemId, 1);
+                return;
+            }
+        }
+    }
 }

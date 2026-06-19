@@ -17,6 +17,7 @@ public class GameContext(Game game, ContentManager content, GraphicsDevice graph
     public InputManager Input { get; } = input;
     public TileCursor TileCursor { get; private set; }
     public UIState UIState { get; } = new();
+    public Mercado Mercado { get; } = new();
     public void LoadContent()
     {
         UI = new UiRenderer(this);
