@@ -7,6 +7,7 @@ public class Repolho : Plantacao
 {
     public Repolho(GameContext context, Vector2 posicao) : base(context, "Repolho", posicao)
     {
+        Preco = 3;
         BloqueiaMovimento = false;
         FrameWidth = 12;
         FrameHeight = 11;

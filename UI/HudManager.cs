@@ -11,6 +11,7 @@ public class HudManager(GameContext context) : BaseHud(context)
             new Hud(context),
             new HudBar(context),
             new HudBau(context),
+            new HudCaminhaoVenda(context),
             new HudLoja(context)
         ];
 

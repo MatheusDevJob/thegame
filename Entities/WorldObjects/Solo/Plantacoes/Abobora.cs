@@ -7,6 +7,7 @@ public class Abobora : Plantacao
 {
     public Abobora(GameContext context, Vector2 posicao) : base(context, "Abobora", posicao)
     {
+        Preco = 15;
         BloqueiaMovimento = false;
         FrameWidth = 12;
         FrameHeight = 14;
@@ -15,7 +16,6 @@ public class Abobora : Plantacao
         IsColetavel = true;
         AtualizarSpritePorEstagio();
     }
-
 
     protected override void AtualizarSpritePorEstagio() { }
 }

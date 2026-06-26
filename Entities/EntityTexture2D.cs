@@ -13,6 +13,7 @@ public static class EntityTexture2D
             "Eduarda" => context.Content.Load<Texture2D>("npc-pack/Woman/Woman Walk-Sheet"),
             "Player" => context.Content.Load<Texture2D>("Player/spr_basecharacter_allframes"),
             "Soldado" => context.Content.Load<Texture2D>("npc-pack/Soldier/Soldier Walk-Sheet"),
+            "CaminhaoVenda" => context.Content.Load<Texture2D>("caminhao_feno"),
 
             "Tronco" => context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px"),
             // Ferramentas

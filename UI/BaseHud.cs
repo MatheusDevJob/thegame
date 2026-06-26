@@ -133,4 +133,139 @@ public abstract class BaseHud
         spriteBatch.Draw(texture, dstBottom, srcBottom, Color.White);
         spriteBatch.Draw(texture, dstBottomRight, srcBottomRight, Color.White);
     }
+
+    protected Rectangle GetButtonRectangle(
+        Vector2 position,
+        string text,
+        float textScale = 1f,
+        int paddingX = 12,
+        int paddingY = 6
+    )
+    {
+        Vector2 textSize = fonte.MeasureString(text) * textScale;
+
+        return new Rectangle(
+            (int)position.X,
+            (int)position.Y,
+            (int)(textSize.X + paddingX * 2),
+            (int)(textSize.Y + paddingY * 2)
+        );
+    }
+
+    protected void DrawButton(
+        SpriteBatch spriteBatch,
+        Vector2 position,
+        string text,
+        Color buttonColor,
+        bool enabled = true
+    )
+    {
+        DrawButton(spriteBatch, position, text, buttonColor, enabled, Color.White, 1f);
+    }
+
+    protected Rectangle DrawButton(
+        SpriteBatch spriteBatch,
+        Vector2 position,
+        string text,
+        Color buttonColor,
+        bool enabled = true,
+        Color? textColor = null,
+        float textScale = 1f,
+        int paddingX = 12,
+        int paddingY = 6
+    )
+    {
+        Color finalTextColor = textColor ?? Color.White;
+
+        Rectangle rectangle = GetButtonRectangle(
+            position,
+            text,
+            textScale,
+            paddingX,
+            paddingY
+        );
+
+        bool isHover = enabled && rectangle.Contains(Context.Input.Position);
+
+        Color finalButtonColor;
+
+        if (!enabled)
+        {
+            finalButtonColor = Color.Gray * 0.55f;
+            finalTextColor = Color.White * 0.45f;
+        }
+        else if (isHover)
+        {
+            finalButtonColor = LightenColor(buttonColor, 0.22f);
+        }
+        else
+        {
+            finalButtonColor = buttonColor;
+        }
+
+        Color finalBorderColor = !enabled
+            ? Color.Black * 0.35f
+            : isHover
+                ? Color.White * 0.75f
+                : Color.Black * 0.45f;
+
+        spriteBatch.Draw(_pixel, rectangle, finalButtonColor);
+
+        DrawRectangleBorder(spriteBatch, rectangle, finalBorderColor, isHover ? 2 : 1);
+
+        Vector2 textSize = fonte.MeasureString(text) * textScale;
+
+        Vector2 textPosition = new(
+            rectangle.X + rectangle.Width / 2f - textSize.X / 2f,
+            rectangle.Y + rectangle.Height / 2f - textSize.Y / 2f
+        );
+
+        spriteBatch.DrawString(
+            fonte,
+            text,
+            textPosition + new Vector2(1, 1),
+            Color.Black * 0.55f,
+            0f,
+            Vector2.Zero,
+            textScale,
+            SpriteEffects.None,
+            0f
+        );
+
+        spriteBatch.DrawString(
+            fonte,
+            text,
+            textPosition,
+            finalTextColor,
+            0f,
+            Vector2.Zero,
+            textScale,
+            SpriteEffects.None,
+            0f
+        );
+
+        return rectangle;
+    }
+
+    protected void DrawRectangleBorder(
+        SpriteBatch spriteBatch,
+        Rectangle rectangle,
+        Color color,
+        int thickness = 1
+    )
+    {
+        spriteBatch.Draw(_pixel, new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, thickness), color);
+        spriteBatch.Draw(_pixel, new Rectangle(rectangle.X, rectangle.Bottom - thickness, rectangle.Width, thickness), color);
+        spriteBatch.Draw(_pixel, new Rectangle(rectangle.X, rectangle.Y, thickness, rectangle.Height), color);
+        spriteBatch.Draw(_pixel, new Rectangle(rectangle.Right - thickness, rectangle.Y, thickness, rectangle.Height), color);
+    }
+
+    private static Color LightenColor(Color color, float amount)
+    {
+        byte r = (byte)MathHelper.Clamp(color.R + (255 - color.R) * amount, 0, 255);
+        byte g = (byte)MathHelper.Clamp(color.G + (255 - color.G) * amount, 0, 255);
+        byte b = (byte)MathHelper.Clamp(color.B + (255 - color.B) * amount, 0, 255);
+
+        return new Color(r, g, b, color.A);
+    }
 }

@@ -7,6 +7,7 @@ public class SementeAbobora : Plantacao
 {
     public SementeAbobora(GameContext context, Vector2 posicao) : base(context, "SementeAbobora", posicao)
     {
+        Preco = 1;
         BloqueiaMovimento = false;
         FrameWidth = 7;
         FrameHeight = 7;

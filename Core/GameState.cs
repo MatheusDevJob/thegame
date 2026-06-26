@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -13,6 +14,7 @@ namespace thegame.Core;
 public class GameState
 {
     private readonly GameContext _context;
+    public double TempoJogoSegundos { get; set; }
 
     public GameSave PlayerSave { get; private set; }
     public Player Player { get; private set; }
@@ -127,7 +129,7 @@ public class GameState
 
     public void AddItemToBag(string itemId, int quantidade = 1)
     {
-        Inventory.AddItem(itemId, itemId, quantidade);
+        Inventory.AddItem(itemId, quantidade);
     }
 
     public bool RemoveItemFromBag(string itemId, int quantidade = 1)
@@ -215,4 +217,23 @@ public class GameState
             Player.DefinirPosicao(new Vector2(tiledObjectDatas.X, tiledObjectDatas.Y));
         }
     }
+
+    // Estados do caminhão de venda
+    public CaminhaoVendaState Venda { get; set; } = new();
+}
+
+public enum CaminhaoVendaStatus
+{
+    Disponivel,
+    EmRota,
+    AguardandoColeta
+}
+
+public class CaminhaoVendaState
+{
+    public Guid LojaId { get; set; }
+    public CaminhaoVendaStatus Status { get; set; } = CaminhaoVendaStatus.Disponivel;
+    public double RetornaEmTempoJogo { get; set; }
+    public int DinheiroPendente { get; set; }
+    public List<ItemStackSave> ItensEnviados { get; set; } = [];
 }

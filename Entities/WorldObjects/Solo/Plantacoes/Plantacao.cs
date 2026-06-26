@@ -6,7 +6,7 @@ using thegame.Core;
 
 namespace thegame.Entities.WorldObjects.Solo.Plantacoes;
 
-public abstract class Plantacao : Entity
+public abstract class Plantacao : Vendivel
 {
     private const int TileSize = 16;
 
@@ -18,7 +18,7 @@ public abstract class Plantacao : Entity
     public string DropItemId { get; protected set; }
     public int DropItemQtd { get; protected set; }
 
-    protected long PlantadoEmUnix;
+    protected double PlantadoEmTempoJogo;
 
     private double _timerVerificacao;
     public Dictionary<string, string> InfoPlantacao = [];
@@ -30,9 +30,9 @@ public abstract class Plantacao : Entity
         BloqueiaMovimento = false;
         IsColetavel = false;
 
-        PlantadoEmUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        PlantadoEmTempoJogo = Context.State.TempoJogoSegundos;
 
-        InfoPlantacao["plantadoEm"] = PlantadoEmUnix.ToString();
+        InfoPlantacao["plantadoEmTempoJogo"] = PlantadoEmTempoJogo.ToString();
         InfoPlantacao["estagio"] = EstagioAtual.ToString();
     }
 
@@ -90,8 +90,11 @@ public abstract class Plantacao : Entity
 
     protected void AtualizarCrescimento()
     {
-        long agora = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        long segundosPassados = agora - PlantadoEmUnix;
+        double agora = Context.State.TempoJogoSegundos;
+        double segundosPassados = agora - PlantadoEmTempoJogo;
+
+        if (segundosPassados < 0)
+            segundosPassados = 0;
 
         int novoEstagio = (int)(segundosPassados / SegundosPorEstagio);
         novoEstagio = Math.Clamp(novoEstagio, 0, EstagioMaximo);
@@ -108,17 +111,25 @@ public abstract class Plantacao : Entity
 
     public void CarregarData()
     {
-        if (InfoPlantacao.TryGetValue("plantadoEm", out string plantadoEmString) &&
-            long.TryParse(plantadoEmString, out long plantadoEm))
+        if (InfoPlantacao.TryGetValue("estagio", out string estagioString) &&
+            int.TryParse(estagioString, out int estagio))
         {
-            PlantadoEmUnix = plantadoEm;
+            EstagioAtual = Math.Clamp(estagio, 0, EstagioMaximo);
+        }
+
+        if (InfoPlantacao.TryGetValue("plantadoEmTempoJogo", out string plantadoEmTempoJogoString) &&
+            double.TryParse(plantadoEmTempoJogoString, out double plantadoEmTempoJogo))
+        {
+            PlantadoEmTempoJogo = plantadoEmTempoJogo;
         }
         else
         {
-            PlantadoEmUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            InfoPlantacao["plantadoEm"] = PlantadoEmUnix.ToString();
+            PlantadoEmTempoJogo = Context.State.TempoJogoSegundos - (EstagioAtual * SegundosPorEstagio);
+            InfoPlantacao["plantadoEmTempoJogo"] = PlantadoEmTempoJogo.ToString();
         }
 
+        AtualizarSpritePorEstagio();
+        AtualizaSolo();
         AtualizarCrescimento();
     }
 
@@ -137,7 +148,10 @@ public abstract class Plantacao : Entity
     public void AtualizaSolo()
     {
         if (EstagioAtual < EstagioMaximo)
+        {
             Solo?.AtualizarSprite("Soil02");
+            IsColhivel = false;
+        }
         else
         {
             Solo?.AtualizarSprite("Soil03");

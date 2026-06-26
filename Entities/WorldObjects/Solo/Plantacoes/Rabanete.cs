@@ -7,6 +7,7 @@ public class Rabanete : Plantacao
 {
     public Rabanete(GameContext context, Vector2 posicao) : base(context, "Rabanete", posicao)
     {
+        Preco = 3;
         BloqueiaMovimento = false;
         FrameWidth = 12;
         FrameHeight = 15;

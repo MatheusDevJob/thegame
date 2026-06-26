@@ -42,6 +42,7 @@ public class GameScene : IScene
         );
         _hud.Update(gameTime);
 
+        _context.State.TempoJogoSegundos += gameTime.ElapsedGameTime.TotalSeconds;
         _currentMap.CheckEventos(_player.Hitbox);
     }
 

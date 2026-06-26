@@ -7,6 +7,7 @@ public class Beterraba : Plantacao
 {
     public Beterraba(GameContext context, Vector2 posicao) : base(context, "Beterraba", posicao)
     {
+        Preco = 10;
         BloqueiaMovimento = false;
         FrameWidth = 16;
         FrameHeight = 16;

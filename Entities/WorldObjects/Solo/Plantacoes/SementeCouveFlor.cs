@@ -7,6 +7,7 @@ public class SementeCouveFlor : Plantacao
 {
     public SementeCouveFlor(GameContext context, Vector2 tilePosicao) : base(context, "SementeCouveFlor", tilePosicao)
     {
+        Preco = 1;
         BloqueiaMovimento = false;
         FrameWidth = 5;
         FrameHeight = 5;

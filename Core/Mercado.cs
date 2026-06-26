@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using thegame.Entities;
 
 namespace thegame.Core;
 
@@ -24,6 +25,38 @@ public class Mercado
         if (context.State.Player.Carteira < item.Preco) return;
         context.State.Player.Carteira -= item.Preco;
 
-        context.State.Inventory.AddItem(item.ItemCompraId, "", Quantidade);
+        context.State.Inventory.AddItem(item.ItemCompraId, Quantidade);
+    }
+
+    public static bool ComprarItem(GameContext context, string ItemId, int Quantidade)
+    {
+        if (context.State.Inventory.InventarioCheio()) return false;
+
+        Entity entity = EntityFactory.Create(context, new() { Type = ItemId, X = 0, Y = 0 });
+        if (entity is Vendivel venda)
+        {
+            bool removeu = context.State.Inventory.AddItem(ItemId, Quantidade);
+            if (removeu)
+            {
+                context.State.Venda.DinheiroPendente -= venda.Preco;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static bool VenderItem(GameContext context, string ItemId, int Quantidade)
+    {
+        Entity entity = EntityFactory.Create(context, new() { Type = ItemId, X = 0, Y = 0 });
+        if (entity is Vendivel venda)
+        {
+            bool removeu = context.State.Inventory.RemoveItem(ItemId, Quantidade);
+            if (removeu)
+            {
+                context.State.Venda.DinheiroPendente += venda.Preco;
+                return true;
+            }
+        }
+        return false;
     }
 }

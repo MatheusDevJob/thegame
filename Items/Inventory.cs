@@ -31,7 +31,7 @@ public class Inventory
             if (item == null || string.IsNullOrWhiteSpace(item.ItemId) || item.Quantidade <= 0)
                 continue;
 
-            AddItem(item.ItemId, item.ItemId, item.Quantidade, item.ListIndex);
+            AddItem(item.ItemId, item.Quantidade, item.ListIndex);
         }
     }
 
@@ -48,7 +48,7 @@ public class Inventory
             })];
     }
 
-    public bool AddItem(string id, string nome, int quantidade, int? indice = null)
+    public bool AddItem(string id, int quantidade, int? indice = null)
     {
         if (string.IsNullOrWhiteSpace(id) || quantidade <= 0)
             return false;
@@ -82,7 +82,8 @@ public class Inventory
         if (string.IsNullOrWhiteSpace(id) || quantidade <= 0)
             return false;
 
-        ItemStackSave item = Itens.FirstOrDefault(i => i?.ItemId == id);
+        int itemIndex = PossuiItem(id);
+        ItemStackSave item = Itens[itemIndex];
 
         if (item == null || item.Quantidade < quantidade)
             return false;
@@ -90,7 +91,7 @@ public class Inventory
         item.Quantidade -= quantidade;
 
         if (item.Quantidade <= 0)
-            Itens.Remove(item);
+            Itens[itemIndex] = null;
 
         return true;
     }

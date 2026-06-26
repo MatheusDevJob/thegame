@@ -7,6 +7,7 @@ public class CouveFlor : Plantacao
 {
     public CouveFlor(GameContext context, Vector2 posicao) : base(context, "CouveFlor", posicao)
     {
+        Preco = 7;
         BloqueiaMovimento = false;
         FrameWidth = 12;
         FrameHeight = 12;

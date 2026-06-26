@@ -7,6 +7,7 @@ public class Chirivia : Plantacao
 {
     public Chirivia(GameContext context, Vector2 posicao) : base(context, "Chirivia", posicao)
     {
+        Preco = 37;
         BloqueiaMovimento = false;
         FrameWidth = 14;
         FrameHeight = 14;

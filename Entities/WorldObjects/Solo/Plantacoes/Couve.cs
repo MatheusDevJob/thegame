@@ -7,6 +7,7 @@ public class Couve : Plantacao
 {
     public Couve(GameContext context, Vector2 posicao) : base(context, "Couve", posicao)
     {
+        Preco = 7;
         BloqueiaMovimento = false;
         FrameWidth = 14;
         FrameHeight = 11;

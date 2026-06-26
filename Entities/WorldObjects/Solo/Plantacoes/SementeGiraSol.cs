@@ -7,6 +7,7 @@ public class SementeGiraSol : Plantacao
 {
     public SementeGiraSol(GameContext context, Vector2 posicao) : base(context, "SementeGiraSol", posicao)
     {
+        Preco = 1;
         BloqueiaMovimento = false;
         FrameWidth = 7;
         FrameHeight = 7;

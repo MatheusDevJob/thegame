@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using thegame.Core;
 using thegame.Entities;
 using thegame.Entities.Npcs;
+using thegame.Entities.WorldObjects.Interactables;
 
 namespace thegame.Maps;
 
@@ -36,7 +37,7 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
         EntityWorld.Add(new Vendedor(
             Context,
             "Eduarda",
-           "Tenho sementes fresquinhas para quem quer ver a terra florescer.",
+            "Tenho sementes fresquinhas para quem quer ver a terra florescer.",
             new Vector2(1295, 125),
             lojaItensEduarda
         ));
@@ -52,12 +53,20 @@ public class CityMap(GameContext context) : BaseMap(context, "city", "Maps/HomeM
                 new LojaItens{ItemId= "Batata", ItemCompraId = "SementeBatata", Preco = 25, Quantidade = 3}
             ]
         ));
+
+        EntityWorld.Add(new CaminhaoVenda(
+            Context,
+            new Vector2(1445, 225)
+        ));
     }
 
     protected override void UpdateMap(GameTime gameTime)
     {
         foreach (Npc npc in EntityWorld.GetEntities<Npc>())
             npc.UpdateInteraction(Context.State.Player);
+
+        foreach (CaminhaoVenda caminhaoVenda in EntityWorld.GetEntities<CaminhaoVenda>())
+            caminhaoVenda.UpdateInteraction(Context.State.Player);
 
         base.UpdateMap(gameTime);
     }

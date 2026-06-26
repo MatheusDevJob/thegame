@@ -7,6 +7,7 @@ public class GiraSol : Plantacao
 {
     public GiraSol(GameContext context, Vector2 posicao) : base(context, "GiraSol", posicao)
     {
+        Preco = 27;
         BloqueiaMovimento = false;
         FrameWidth = 13;
         FrameHeight = 16;

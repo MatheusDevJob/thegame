@@ -7,6 +7,7 @@ public class Trigo : Plantacao
 {
     public Trigo(GameContext context, Vector2 posicao) : base(context, "Trigo", posicao)
     {
+        Preco = 3;
         BloqueiaMovimento = false;
         FrameWidth = 13;
         FrameHeight = 13;

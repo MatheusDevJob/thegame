@@ -16,7 +16,7 @@ public class Vendedor(GameContext context, string nome, string fala, Vector2 pos
 
         if (Context.UIState.LojaPertenceAo(_lojaId) && IsPlayerFartherThanMe(2))
         {
-            Context.UIState.FecharLoja();
+            Context.UIState.ResetarTudo();
         }
     }
 
