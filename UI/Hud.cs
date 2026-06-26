@@ -38,7 +38,10 @@ public class Hud(GameContext context) : BaseHud(context)
         if (inputManager.IsKeyPressed(Keys.Escape))
         {
             gameState.LayoutBag = false;
-            Context.UIState.SetMenuAberto(!Context.UIState.MenuAberto);
+            bool antigoEstado = Context.UIState.MenuAberto;
+
+            Context.UIState.ResetarTudo();
+            Context.UIState.SetMenuAberto(!antigoEstado);
         }
 
         if (Context.UIState.MenuAberto && _context.Input.WasClicked(_botaoSalvarSair))
