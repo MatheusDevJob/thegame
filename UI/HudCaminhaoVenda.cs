@@ -48,7 +48,7 @@ public class HudCaminhaoVenda(GameContext context) : BaseHud(context)
                 "Enviar",
                 new Color(90, 60, 35),
                 state.Status == CaminhaoVendaStatus.Disponivel,
-                Color.Black,
+                Color.White,
                 0.7f
             );
 
@@ -58,7 +58,7 @@ public class HudCaminhaoVenda(GameContext context) : BaseHud(context)
                 "Receber",
                 new Color(90, 60, 35),
                 state.Status == CaminhaoVendaStatus.AguardandoColeta,
-                Color.Black,
+                Color.White,
                 0.7f
             );
 
@@ -93,8 +93,11 @@ public class HudCaminhaoVenda(GameContext context) : BaseHud(context)
 
         if (Context.Input.WasClicked(BotaoEnviar))
         {
+            ItemStackSave qtd = CaminhaoItens.FirstOrDefault(e => e != null);
+            if (qtd == null) return;
             CaminhaoVenda caminhaoVenda = Context.UIState.EntityEmFoco as CaminhaoVenda;
             caminhaoVenda.EnviarParaVenda();
+            CaminhaoItens.Clear();
         }
 
         if (Context.Input.WasClicked(BotaoReceber))
