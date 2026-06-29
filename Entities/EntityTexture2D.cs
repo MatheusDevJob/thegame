@@ -15,6 +15,9 @@ public static class EntityTexture2D
             "Soldado" => context.Content.Load<Texture2D>("npc-pack/Soldier/Soldier Walk-Sheet"),
             "CaminhaoVenda" => context.Content.Load<Texture2D>("caminhao_feno"),
 
+            // Decorações
+            "Cerca" => context.Content.Load<Texture2D>("Cute_Fantasy_Free/Outdoor decoration/Fences"),
+
             "Tronco" => context.Content.Load<Texture2D>("Items/spr_tileset_sunnysideworld_16px"),
             // Ferramentas
             "ShovelTool" => context.Content.Load<Texture2D>("Items/shovel"),

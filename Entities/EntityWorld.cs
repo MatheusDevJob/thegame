@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using thegame.Entities.Decoracoes;
 
 namespace thegame.Entities;
 
@@ -13,14 +14,29 @@ public class EntityWorld
 
     public void Add(Entity entity)
     {
-        if (entity != null && !_entities.Contains(entity))
-            _entities.Add(entity);
+        if (entity == null || _entities.Contains(entity))
+            return;
+
+        _entities.Add(entity);
+
+        if (entity is Cerca cerca)
+            AtualizarCercaEVizinhas(cerca.TilePosition);
     }
 
     public void Remove(Entity entity)
     {
-        if (entity != null)
-            _entities.Remove(entity);
+        if (entity == null)
+            return;
+
+        Point? cercaTile = null;
+
+        if (entity is Cerca cerca)
+            cercaTile = cerca.TilePosition;
+
+        _entities.Remove(entity);
+
+        if (cercaTile.HasValue)
+            AtualizarCercaEVizinhas(cercaTile.Value);
     }
 
     public IEnumerable<T> GetEntities<T>() where T : Entity
@@ -107,5 +123,49 @@ public class EntityWorld
     public void ClearAll()
     {
         _entities.Clear();
+    }
+
+    public Cerca GetCercaAt(Point tile, Entity ignore = null)
+    {
+        foreach (Cerca cerca in GetEntities<Cerca>())
+        {
+            if (cerca == ignore)
+                continue;
+
+            if (cerca.TilePosition == tile)
+                return cerca;
+        }
+
+        return null;
+    }
+
+    public bool HasCercaAt(Point tile, Entity ignore = null)
+    {
+        return GetCercaAt(tile, ignore) != null;
+    }
+
+    private void AtualizarCercaEVizinhas(Point tile)
+    {
+        AtualizarCercaNoTile(tile);
+        AtualizarCercaNoTile(new Point(tile.X, tile.Y - 1));
+        AtualizarCercaNoTile(new Point(tile.X + 1, tile.Y));
+        AtualizarCercaNoTile(new Point(tile.X, tile.Y + 1));
+        AtualizarCercaNoTile(new Point(tile.X - 1, tile.Y));
+    }
+
+    private void AtualizarCercaNoTile(Point tile)
+    {
+        Cerca cerca = GetCercaAt(tile);
+
+        if (cerca == null)
+            return;
+
+        cerca.AtualizarSprite(this);
+    }
+
+    public void AtualizarTodasAsCercas()
+    {
+        foreach (Cerca cerca in GetEntities<Cerca>())
+            cerca.AtualizarSprite(this);
     }
 }

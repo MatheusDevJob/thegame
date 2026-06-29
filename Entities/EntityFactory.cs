@@ -6,6 +6,7 @@ using thegame.Entities.Tools;
 using thegame.Maps;
 using thegame.Entities.WorldObjects.Solo;
 using thegame.Entities.WorldObjects.Solo.Plantacoes;
+using thegame.Entities.Decoracoes;
 
 namespace thegame.Entities;
 
@@ -39,6 +40,7 @@ public static class EntityFactory
 
             // objetos do mundo
             "Bau" => new Bau(context, posicao),
+            "Cerca" => new Cerca(context, posicao),
 
             // FAZENDA
             "SementeCenoura" => new SementeCenoura(context, posicao),
